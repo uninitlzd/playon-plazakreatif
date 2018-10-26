@@ -15,6 +15,24 @@ a.text-orange-primary {
     }
 }
 
+.vertical-text__scroll-down {
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 8pt;
+    font-weight: 600;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: $orange-primary;
+
+    & svg {
+        width: 15px;
+        height: 15px;
+    }
+}
+
 .bg-orange-gradient {
     background: $orange-gradient;
 }
@@ -52,6 +70,11 @@ html {
     height: 100%;
 }
 
+body {
+    z-index: -2;
+    position: relative;
+}
+
 .main-nav {
     position: fixed;
     left: 0;
@@ -75,7 +98,6 @@ html {
     background-size: calc(100% - 51px) 100%;
     background-position-x: 52px;
     position: relative;
-    height: 100vh;
 }
 
 .page-container {
@@ -90,7 +112,7 @@ html {
     margin-left: 50px;
 
     &__title {
-        font-size: 32pt;
+        font-size: $font-big;
     }
 
     &__campus {
@@ -98,7 +120,7 @@ html {
     }
 
     &__date {
-        font-size: 32pt;
+        font-size: $font-big;
     }
 
     &__month, &__place {
@@ -134,6 +156,41 @@ html {
     }
 }
 
-.right-side-background {
+.right-side-background, .left-side-background {
     background-size: cover !important;
 }
+
+.tentang__content {
+    margin-left: 31px;
+
+    &__title {
+        font-size: $font-big;
+    }
+}
+
+h1.shadowed-text {
+    position: relative;
+}
+
+h1.shadowed-text::before {
+    content: attr(name);
+    top: -20vh;
+    left: -10vh;
+    position: absolute;
+    font-size: 100pt;
+    color: rgba(11, 46, 19, 0.05);
+    z-index: -1;
+}
+
+.playon-section {
+    height: 100vh;
+}
+
+#playon-circle {
+    animation: spin 800s infinite;
+    transform-origin: center center;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

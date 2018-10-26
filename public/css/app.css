@@ -12,6 +12,26 @@ a.text-orange-primary:hover {
   color: #d68900;
 }
 
+.vertical-text__scroll-down {
+  -webkit-writing-mode: vertical-lr;
+      -ms-writing-mode: tb-lr;
+          writing-mode: vertical-lr;
+  text-orientation: mixed;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 8pt;
+  font-weight: 600;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: #ffa600;
+}
+
+.vertical-text__scroll-down svg {
+  width: 15px;
+  height: 15px;
+}
+
 .bg-orange-gradient {
   background: linear-gradient(60deg, #ffc000 0%, #ffa600 100%);
 }
@@ -68,6 +88,11 @@ html {
   height: 100%;
 }
 
+body {
+  z-index: -2;
+  position: relative;
+}
+
 .main-nav {
   position: fixed;
   left: 0;
@@ -91,7 +116,6 @@ html {
   background-size: calc(100% - 51px) 100%;
   background-position-x: 52px;
   position: relative;
-  height: 100vh;
 }
 
 .page-container {
@@ -150,7 +174,54 @@ html {
   text-decoration: none;
 }
 
-.right-side-background {
+.right-side-background,
+.left-side-background {
   background-size: cover !important;
+}
+
+.tentang__content {
+  margin-left: 31px;
+}
+
+.tentang__content__title {
+  font-size: 32pt;
+}
+
+h1.shadowed-text {
+  position: relative;
+}
+
+h1.shadowed-text::before {
+  content: attr(name);
+  top: -20vh;
+  left: -10vh;
+  position: absolute;
+  font-size: 100pt;
+  color: rgba(11, 46, 19, 0.05);
+  z-index: -1;
+}
+
+.playon-section {
+  height: 100vh;
+}
+
+#playon-circle {
+  -webkit-animation: spin 800s infinite;
+          animation: spin 800s infinite;
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+}
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 

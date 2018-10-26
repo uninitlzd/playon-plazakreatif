@@ -9,6 +9,7 @@
     <title>Plaza Kreatif XIIV</title>
     <link rel="stylesheet" href="/css/vendor.css">
     <link rel="stylesheet" href="/css/app.css">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
 <div id="app">
