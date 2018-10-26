@@ -1,0 +1,139 @@
+@import "variables";
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.text-orange-primary {
+    color: $orange-primary;
+}
+
+a.text-orange-primary {
+    &:hover {
+        color: $orange-primary-hover;
+    }
+}
+
+.bg-orange-gradient {
+    background: $orange-gradient;
+}
+
+.row {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+h1,h2,h3,h4,h5,h6,p,span,i {
+    color: #1a1a1a;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 600;
+}
+
+h1,h2,h3,h4,h5,h6,a {
+    font-family: "Lato", sans-serif;
+}
+
+p {
+    font-family: "Roboto", sans-serif;
+}
+
+[class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+    overflow: visible;
+}
+
+html {
+    background: white;
+    height: 100%;
+}
+
+.main-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 50px;
+    border-right: 2px solid $orange-primary;
+    position: relative;
+
+    &__button {
+        width: inherit;
+        height: 50px;
+        background: $orange-primary;
+    }
+}
+
+.main-container {
+    width: calc(100% - 50px);
+    margin-left: 50px;
+    background: repeating-linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.05  ) 1px,transparent 0,transparent 8.33333333333%);
+    background-size: calc(100% - 51px) 100%;
+    background-position-x: 52px;
+    position: relative;
+    height: 100vh;
+}
+
+.page-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero__greet {
+    margin-left: 50px;
+
+    &__title {
+        font-size: 32pt;
+    }
+
+    &__campus {
+        font-size: 18pt;
+    }
+
+    &__date {
+        font-size: 32pt;
+    }
+
+    &__month, &__place {
+        font-size: 12pt;
+        line-height: 10pt;
+        vertical-align: bottom;
+        margin-top: 6pt;
+    }
+
+    &__maps-link {
+
+        font-weight: 600;
+        color: $orange-primary !important;
+
+        & i {
+            font-size: 8pt;
+        }
+    }
+}
+
+.homepage-button__left-button-wrapper {
+    width: calc(100% + 31px) !important;
+}
+
+.homepage-button__left-button {
+    height: 50px;
+    vertical-align: middle;
+    background: $orange-primary;
+    width: calc(100% + 25px);
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.right-side-background {
+    background-size: cover !important;
+}
