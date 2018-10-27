@@ -5,8 +5,8 @@ webpackJsonp([0],[
 "use strict";
 
 
-var bind = __webpack_require__(7);
-var isBuffer = __webpack_require__(30);
+var bind = __webpack_require__(8);
+var isBuffer = __webpack_require__(31);
 
 /*global toString:true*/
 
@@ -317,7 +317,7 @@ module.exports = {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(32);
+var normalizeHeaderName = __webpack_require__(33);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -333,10 +333,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(9);
+    adapter = __webpack_require__(10);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(9);
+    adapter = __webpack_require__(10);
   }
   return adapter;
 }
@@ -411,10 +411,119 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 /*
@@ -496,7 +605,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -855,7 +964,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3396,7 +3505,7 @@ Popper.Defaults = Defaults;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -13767,7 +13876,7 @@ return jQuery;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13785,20 +13894,20 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 8 */,
-/* 9 */
+/* 9 */,
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(33);
-var buildURL = __webpack_require__(35);
-var parseHeaders = __webpack_require__(36);
-var isURLSameOrigin = __webpack_require__(37);
-var createError = __webpack_require__(10);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(38);
+var settle = __webpack_require__(34);
+var buildURL = __webpack_require__(36);
+var parseHeaders = __webpack_require__(37);
+var isURLSameOrigin = __webpack_require__(38);
+var createError = __webpack_require__(11);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(39);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -13895,7 +14004,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(39);
+      var cookies = __webpack_require__(40);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -13973,13 +14082,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(34);
+var enhanceError = __webpack_require__(35);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -13998,7 +14107,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14010,7 +14119,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14036,122 +14145,13 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 13 */,
-/* 14 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
+/* 14 */,
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(16);
-__webpack_require__(53);
-module.exports = __webpack_require__(54);
+__webpack_require__(57);
+module.exports = __webpack_require__(58);
 
 
 /***/ }),
@@ -14166,6 +14166,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_fullpage_vue_src_fullpage_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_fullpage_vue_src_fullpage_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fullpage_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fullpage_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_fullpage_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__chenfengyuan_vue_countdown__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive__);
+
 
 
 
@@ -14176,9 +14180,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(23);
+__webpack_require__(24);
 
-window.Vue = __webpack_require__(13);
+window.Vue = __webpack_require__(14);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -14188,11 +14192,19 @@ window.Vue = __webpack_require__(13);
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_fullpage_vue___default.a);
 
-Vue.component('example-component', __webpack_require__(49));
-Vue.component('homepage-component', __webpack_require__(52));
+Vue.component(__WEBPACK_IMPORTED_MODULE_3__chenfengyuan_vue_countdown__["a" /* default */].name, __WEBPACK_IMPORTED_MODULE_3__chenfengyuan_vue_countdown__["a" /* default */]);
+Vue.component('example-component', __webpack_require__(50));
+Vue.component('homepage-component', __webpack_require__(53));
+Vue.component('homepage-countdown', __webpack_require__(54));
+Vue.component('slider-acara', __webpack_require__(65));
+Vue.component('fullpage-wrapper', __webpack_require__(68));
+
+// or for a single instance
+
 
 var app = new Vue({
-  el: '#app'
+  el: '#app',
+  directives: { Sticky: __WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive___default.a }
 });
 
 /***/ }),
@@ -14210,7 +14222,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(5)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -14230,7 +14242,7 @@ if(false) {
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(false);
+exports = module.exports = __webpack_require__(4)(false);
 // imports
 
 
@@ -14350,7 +14362,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(5)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -14370,7 +14382,7 @@ if(false) {
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(false);
+exports = module.exports = __webpack_require__(4)(false);
 // imports
 
 
@@ -14899,13 +14911,345 @@ return fullpage;
 
 /***/ }),
 /* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/*!
+ * vue-countdown v1.0.0
+ * https://fengyuanchen.github.io/vue-countdown
+ *
+ * Copyright 2018-present Chen Fengyuan
+ * Released under the MIT license
+ *
+ * Date: 2018-10-21T09:06:58.941Z
+ */
+
+var MILLISECONDS_SECOND = 1000;
+var MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
+var MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
+var MILLISECONDS_DAY = 24 * MILLISECONDS_HOUR;
+var index = {
+  name: 'countdown',
+  data: function data() {
+    return {
+      /**
+       * It is counting down.
+       * @type {boolean}
+       */
+      counting: false,
+
+      /**
+       * The remaining milliseconds.
+       * @type {number}
+       */
+      totalMilliseconds: 0
+    };
+  },
+  props: {
+    /**
+     * Starts the countdown automatically when initialized.
+     */
+    autoStart: {
+      type: Boolean,
+      default: true
+    },
+
+    /**
+     * Emits the countdown events.
+     */
+    emitEvents: {
+      type: Boolean,
+      default: true
+    },
+
+    /**
+     * The interval time (in milliseconds) of the countdown progress.
+     */
+    interval: {
+      type: Number,
+      default: 1000,
+      validator: function validator(value) {
+        return value >= 0;
+      }
+    },
+
+    /**
+     * The tag name of the component's root element.
+     */
+    tag: {
+      type: String,
+      default: 'span'
+    },
+
+    /**
+     * The time (in milliseconds) to count down from.
+     */
+    time: {
+      type: Number,
+      default: 0,
+      validator: function validator(value) {
+        return value >= 0;
+      }
+    },
+
+    /**
+     * Transforms the output props before render.
+     */
+    transform: {
+      type: Function,
+      default: function _default(props) {
+        return props;
+      }
+    }
+  },
+  computed: {
+    /**
+     * Remaining days.
+     * @returns {number} The computed value.
+     */
+    days: function days() {
+      return Math.floor(this.totalMilliseconds / MILLISECONDS_DAY);
+    },
+
+    /**
+     * Remaining hours.
+     * @returns {number} The computed value.
+     */
+    hours: function hours() {
+      return Math.floor(this.totalMilliseconds % MILLISECONDS_DAY / MILLISECONDS_HOUR);
+    },
+
+    /**
+     * Remaining minutes.
+     * @returns {number} The computed value.
+     */
+    minutes: function minutes() {
+      return Math.floor(this.totalMilliseconds % MILLISECONDS_HOUR / MILLISECONDS_MINUTE);
+    },
+
+    /**
+     * Remaining seconds.
+     * @returns {number} The computed value.
+     */
+    seconds: function seconds() {
+      return Math.floor(this.totalMilliseconds % MILLISECONDS_MINUTE / MILLISECONDS_SECOND);
+    },
+
+    /**
+     * Remaining milliseconds.
+     * @returns {number} The computed value.
+     */
+    milliseconds: function milliseconds() {
+      return Math.floor(this.totalMilliseconds % MILLISECONDS_SECOND);
+    },
+
+    /**
+     * Total remaining days.
+     * @returns {number} The computed value.
+     */
+    totalDays: function totalDays() {
+      return this.days;
+    },
+
+    /**
+     * Total remaining hours.
+     * @returns {number} The computed value.
+     */
+    totalHours: function totalHours() {
+      return Math.floor(this.totalMilliseconds / MILLISECONDS_HOUR);
+    },
+
+    /**
+     * Total remaining minutes.
+     * @returns {number} The computed value.
+     */
+    totalMinutes: function totalMinutes() {
+      return Math.floor(this.totalMilliseconds / MILLISECONDS_MINUTE);
+    },
+
+    /**
+     * Total remaining seconds.
+     * @returns {number} The computed value.
+     */
+    totalSeconds: function totalSeconds() {
+      return Math.floor(this.totalMilliseconds / MILLISECONDS_SECOND);
+    }
+  },
+  render: function render(createElement) {
+    return createElement(this.tag, this.$scopedSlots.default ? [this.$scopedSlots.default(this.transform({
+      days: this.days,
+      hours: this.hours,
+      minutes: this.minutes,
+      seconds: this.seconds,
+      milliseconds: this.milliseconds,
+      totalDays: this.totalDays,
+      totalHours: this.totalHours,
+      totalMinutes: this.totalMinutes,
+      totalSeconds: this.totalSeconds,
+      totalMilliseconds: this.totalMilliseconds
+    }))] : this.$slots.default);
+  },
+  watch: {
+    $prop: {
+      deep: true,
+      immediate: true,
+      handler: function handler() {
+        var _this = this;
+
+        this.totalMilliseconds = this.time;
+
+        if (this.autoStart) {
+          this.$nextTick(function () {
+            _this.start();
+          });
+        }
+      }
+    }
+  },
+  methods: {
+    /**
+     * Starts to countdown.
+     * @public
+     * @emits Countdown#start
+     */
+    start: function start() {
+      if (this.counting) {
+        return;
+      }
+
+      this.counting = true;
+
+      if (this.emitEvents) {
+        /**
+         * Countdown start event.
+         * @event Countdown#start
+         */
+        this.$emit('start');
+      }
+
+      this.continue();
+    },
+
+    /**
+     * Continues the countdown.
+     * @private
+     */
+    continue: function _continue() {
+      if (!this.counting) {
+        return;
+      }
+
+      var delay = Math.min(this.totalMilliseconds, this.interval);
+
+      if (delay > 0) {
+        this.timeout = setTimeout(this.progress, delay, this);
+      } else {
+        this.end();
+      }
+    },
+
+    /**
+     * Pauses the countdown.
+     * @private
+     */
+    pause: function pause() {
+      clearTimeout(this.timeout);
+    },
+
+    /**
+     * Progresses to countdown.
+     * @private
+     * @emits Countdown#progress
+     */
+    progress: function progress() {
+      if (!this.counting) {
+        return;
+      }
+
+      this.totalMilliseconds -= this.interval;
+
+      if (this.emitEvents && this.totalMilliseconds > 0) {
+        /**
+         * Countdown progress event.
+         * @event Countdown#progress
+         */
+        this.$emit('progress', {
+          days: this.days,
+          hours: this.hours,
+          minutes: this.minutes,
+          seconds: this.seconds,
+          totalDays: this.totalDays,
+          totalHours: this.totalHours,
+          totalMinutes: this.totalMinutes,
+          totalSeconds: this.totalSeconds
+        });
+      }
+
+      this.continue();
+    },
+
+    /**
+     * Aborts the countdown.
+     * @public
+     * @emits Countdown#abort
+     */
+    abort: function abort() {
+      if (!this.counting) {
+        return;
+      }
+
+      this.pause();
+      this.counting = false;
+
+      if (this.emitEvents) {
+        /**
+         * Countdown abort event.
+         * @event Countdown#abort
+         */
+        this.$emit('abort');
+      }
+    },
+
+    /**
+     * Ends the countdown.
+     * @public
+     * @emits Countdown#end
+     */
+    end: function end() {
+      if (!this.counting) {
+        return;
+      }
+
+      this.pause();
+      this.totalMilliseconds = 0;
+      this.counting = false;
+
+      if (this.emitEvents) {
+        /**
+         * Countdown end event.
+         * @event Countdown#end
+         */
+        this.$emit('end');
+      }
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.pause();
+  }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (index);
+
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(24);
-window.Popper = __webpack_require__(5).default;
+window._ = __webpack_require__(25);
+window.Popper = __webpack_require__(6).default;
 
-var feather = __webpack_require__(26);
+var feather = __webpack_require__(27);
 feather.replace();
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -14914,10 +15258,9 @@ feather.replace();
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(6);
-  window.$.scrollify = __webpack_require__(58);
+  window.$ = window.jQuery = __webpack_require__(7);
 
-  __webpack_require__(27);
+  __webpack_require__(28);
 } catch (e) {}
 
 /**
@@ -14926,7 +15269,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(28);
+window.axios = __webpack_require__(29);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -14962,7 +15305,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -32074,10 +32417,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(25)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(26)(module)))
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -32105,7 +32448,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -33850,7 +34193,7 @@ module.exports = __webpack_require__(/*! /home/travis/build/feathericons/feather
 //# sourceMappingURL=feather.js.map
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -33859,7 +34202,7 @@ module.exports = __webpack_require__(/*! /home/travis/build/feathericons/feather
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(6), __webpack_require__(5)) :
+   true ? factory(exports, __webpack_require__(7), __webpack_require__(6)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -37800,21 +38143,21 @@ module.exports = __webpack_require__(/*! /home/travis/build/feathericons/feather
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(29);
+module.exports = __webpack_require__(30);
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(7);
-var Axios = __webpack_require__(31);
+var bind = __webpack_require__(8);
+var Axios = __webpack_require__(32);
 var defaults = __webpack_require__(2);
 
 /**
@@ -37848,15 +38191,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(12);
-axios.CancelToken = __webpack_require__(45);
-axios.isCancel = __webpack_require__(11);
+axios.Cancel = __webpack_require__(13);
+axios.CancelToken = __webpack_require__(46);
+axios.isCancel = __webpack_require__(12);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(46);
+axios.spread = __webpack_require__(47);
 
 module.exports = axios;
 
@@ -37865,7 +38208,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 /*!
@@ -37892,7 +38235,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -37900,8 +38243,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(40);
-var dispatchRequest = __webpack_require__(41);
+var InterceptorManager = __webpack_require__(41);
+var dispatchRequest = __webpack_require__(42);
 
 /**
  * Create a new instance of Axios
@@ -37978,7 +38321,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -37997,13 +38340,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(10);
+var createError = __webpack_require__(11);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -38030,7 +38373,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38058,7 +38401,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38131,7 +38474,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38191,7 +38534,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38266,7 +38609,7 @@ module.exports = (
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38309,7 +38652,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38369,7 +38712,7 @@ module.exports = (
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38428,18 +38771,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(42);
-var isCancel = __webpack_require__(11);
+var transformData = __webpack_require__(43);
+var isCancel = __webpack_require__(12);
 var defaults = __webpack_require__(2);
-var isAbsoluteURL = __webpack_require__(43);
-var combineURLs = __webpack_require__(44);
+var isAbsoluteURL = __webpack_require__(44);
+var combineURLs = __webpack_require__(45);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -38521,7 +38864,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38548,7 +38891,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38569,7 +38912,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38590,13 +38933,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(12);
+var Cancel = __webpack_require__(13);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -38654,7 +38997,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38688,17 +39031,17 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 47 */,
 /* 48 */,
-/* 49 */
+/* 49 */,
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(14)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(50)
+var __vue_script__ = __webpack_require__(51)
 /* template */
-var __vue_template__ = __webpack_require__(51)
+var __vue_template__ = __webpack_require__(52)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -38737,7 +39080,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38766,7 +39109,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -38809,10 +39152,10 @@ if (false) {
 }
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var normalizeComponent = __webpack_require__(14)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = null
 /* template */
@@ -38839,868 +39182,812 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 53 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 54 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery Scrollify
- * Version 1.0.19
- *
- * Requires:
- * - jQuery 1.7 or higher
- *
- * https://github.com/lukehaas/Scrollify
- *
- * Copyright 2016, Luke Haas
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(55)
+/* template */
+var __vue_template__ = __webpack_require__(56)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/HomepageCountdown.vue"
 
-
-
-if touchScroll is false - update index
-
- */
-(function (global,factory) {
-  "use strict";
-  if (true) {
-    // AMD. Register as an anonymous module.
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(6)], __WEBPACK_AMD_DEFINE_RESULT__ = (function($) {
-      return factory($, global, global.document);
-    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if (typeof module === 'object' && module.exports) {
-    // Node/CommonJS
-    module.exports = factory(require('jquery'), global, global.document);
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3e7654f0", Component.options)
   } else {
-    // Browser globals
-    factory(jQuery, global, global.document);
+    hotAPI.reload("data-v-3e7654f0", Component.options)
   }
-}(typeof window !== 'undefined' ? window : this, function ($, window, document, undefined) {
-  "use strict";
-  var heights = [],
-    names = [],
-    elements = [],
-    overflow = [],
-    index = 0,
-    currentIndex = 0,
-    interstitialIndex = 1,
-    hasLocation = false,
-    timeoutId,
-    timeoutId2,
-    $window = $(window),
-    portHeight,
-    top = $window.scrollTop(),
-    scrollable = false,
-    locked = false,
-    scrolled = false,
-    manualScroll,
-    swipeScroll,
-    util,
-    disabled = false,
-    scrollSamples = [],
-    scrollTime = new Date().getTime(),
-    firstLoad = true,
-    initialised = false,
-    destination = 0,
-    wheelEvent = 'onwheel' in document ? 'wheel' : document.onmousewheel !== undefined ? 'mousewheel' : 'DOMMouseScroll',
-    settings = {
-      //section should be an identifier that is the same for each section
-      section: ".section",
-      sectionName: "section-name",
-      interstitialSection: "",
-      easing: "easeOutExpo",
-      scrollSpeed: 1100,
-      offset: 0,
-      scrollbars: true,
-      target:"html,body",
-      standardScrollElements: false,
-      setHeights: true,
-      overflowScroll:true,
-      updateHash: true,
-      touchScroll:true,
-      before:function() {},
-      after:function() {},
-      afterResize:function() {},
-      afterRender:function() {}
-    };
-  function getportHeight() {
-    return ($window.height() + settings.offset);
-  }
-  function animateScroll(index,instant,callbacks,toTop) {
-    if(currentIndex===index) {
-      callbacks = false;
-    }
-    if(disabled===true) {
-      return true;
-    }
-    if(names[index]) {
-      scrollable = false;
-      if(firstLoad===true) {
-        settings.afterRender();
-        firstLoad = false;
-      }
-      if(callbacks) {
-        if( typeof settings.before == 'function' && settings.before(index,elements) === false ){
-          return true;
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {},
+
+    data: function data() {
+        return {
+            time: new Date(2018, 12, 21).getTime() - new Date().getTime()
+
+        };
+    },
+    methods: {
+        pad: function pad(num, size) {
+            var s = num + "";
+            while (s.length < size) {
+                s = "0" + s;
+            }return s;
         }
-      }
-      interstitialIndex = 1;
-      destination = heights[index];
-      if(firstLoad===false && currentIndex>index && toTop===false) {
-        //We're going backwards
-        if(overflow[index]) {
-          portHeight = getportHeight();
+    }
+});
 
-          interstitialIndex = parseInt(elements[index].outerHeight()/portHeight);
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
 
-          destination = parseInt(heights[index])+(elements[index].outerHeight()-portHeight);
-        }
-      }
-
-
-      if(settings.updateHash && settings.sectionName && !(firstLoad===true && index===0)) {
-        if(history.pushState) {
-            try {
-              history.replaceState(null, null, names[index]);
-            } catch (e) {
-              if(window.console) {
-                console.warn("Scrollify warning: Page must be hosted to manipulate the hash value.");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "homepage-countdown" }, [
+    _c("div", { staticClass: "d-flex w-100 flex-row align-self-center" }, [
+      _c("img", {
+        staticClass: "homepage-countdown__deco align-self-start",
+        attrs: { src: "/images/countdown-deco-2.png", alt: "" }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "d-flex flex-column justify-content-center text-center"
+        },
+        [
+          _c("countdown", {
+            staticClass: "d-flex",
+            attrs: { time: _vm.time },
+            scopedSlots: _vm._u([
+              {
+                key: "default",
+                fn: function(props) {
+                  return [
+                    _c("p", { staticClass: "homepage-countdown__time" }, [
+                      _vm._v(_vm._s(_vm.pad(props.days, 2)) + " "),
+                      _c("span", [_vm._v("H")]),
+                      _vm._v(" " + _vm._s(_vm.pad(props.hours, 2)) + " "),
+                      _c("span", [_vm._v("J")]),
+                      _vm._v(" " + _vm._s(_vm.pad(props.minutes, 2)) + " "),
+                      _c("span", [_vm._v("M")]),
+                      _vm._v(" " + _vm._s(_vm.pad(props.seconds, 2)) + " "),
+                      _c("span", [_vm._v("D")])
+                    ])
+                  ]
+                }
               }
-            }
+            ])
+          }),
+          _vm._v(" "),
+          _vm._m(0)
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("img", {
+        staticClass: "homepage-countdown__deco align-self-start",
+        attrs: { src: "/images/countdown-deco-1.png", alt: "" }
+      })
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("21—23 Desember 2018 "),
+      _c("br"),
+      _vm._v(" Citraland World Mall")
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3e7654f0", module.exports)
+  }
+}
 
-        } else {
-          window.location.hash = names[index];
+/***/ }),
+/* 57 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(66)
+/* template */
+var __vue_template__ = __webpack_require__(67)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/SliderAcara.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-daf36a1c", Component.options)
+  } else {
+    hotAPI.reload("data-v-daf36a1c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 66 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            windowHeight: window.innerHeight
+        };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        console.log('mounted');
+        this.$nextTick(function () {
+            window.addEventListener('resize', function () {
+                _this.windowHeight = window.innerHeight;
+            });
+        });
+
+        console.log(this.$refs.fullPageWrapper);
+    },
+
+
+    methods: {
+        moveNext: function moveNext() {
+            alert('clicked');
         }
+    }
+});
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "row" },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "col-md-4 d-flex flex-column justify-content-center",
+          staticStyle: { height: "100vh" }
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "navigation_content__wrapper align-self-center w-100"
+            },
+            [
+              _c(
+                "h1",
+                {
+                  staticClass: "w-100 heading-1 mb-4",
+                  attrs: { name: "Ragam Acara" }
+                },
+                [_vm._v("Ragam Acara")]
+              ),
+              _vm._v(" "),
+              _vm._m(0),
+              _vm._v(" "),
+              _c("h4", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "navigation_content__items",
+                    attrs: { href: "" },
+                    on: { click: _vm.moveNext }
+                  },
+                  [_vm._v("Talkshow")]
+                )
+              ]),
+              _vm._v(" "),
+              _vm._m(1),
+              _vm._v(" "),
+              _vm._m(2)
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("fullpage-wrapper", {
+        staticClass: "col-md-8",
+        staticStyle: { height: "100vh", overflow: "hidden" }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", [
+      _c(
+        "a",
+        {
+          staticClass: "navigation_content__items active",
+          attrs: { href: "#" }
+        },
+        [_vm._v("Exhibition")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", [
+      _c(
+        "a",
+        { staticClass: "navigation_content__items", attrs: { href: "#" } },
+        [_vm._v("Workshop")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", [
+      _c(
+        "a",
+        { staticClass: "navigation_content__items", attrs: { href: "#" } },
+        [_vm._v("Lomba-lomba")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-daf36a1c", module.exports)
+  }
+}
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = null
+/* template */
+var __vue_template__ = __webpack_require__(69)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/FullPageWrapper.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2cffbada", Component.options)
+  } else {
+    hotAPI.reload("data-v-2cffbada", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c(
+        "div",
+        {
+          staticClass: "d-flex",
+          staticStyle: { height: "100vh", background: "blue" }
+        },
+        [_vm._v("aa")]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "d-flex",
+          staticStyle: { height: "100vh", background: "blue" }
+        },
+        [_vm._v("aa")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2cffbada", module.exports)
+  }
+}
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (global, factory) {
+	 true ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.VueStickyDirective = factory());
+}(this, (function () { 'use strict';
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+var namespace = '@@vue-sticky-directive';
+var events = ['resize', 'scroll', 'touchstart', 'touchmove', 'touchend', 'pageshow', 'load'];
+
+var batchStyle = function batchStyle(el) {
+  var style = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var className = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  for (var k in style) {
+    el.style[k] = style[k];
+  }
+  for (var _k in className) {
+    if (className[_k] && !el.classList.contains(_k)) {
+      el.classList.add(_k);
+    } else if (!className[_k] && el.classList.contains(_k)) {
+      el.classList.remove(_k);
+    }
+  }
+};
+
+var Sticky$1 = function () {
+  function Sticky(el, vm) {
+    classCallCheck(this, Sticky);
+
+    this.el = el;
+    this.vm = vm;
+    this.unsubscribers = [];
+    this.isPending = false;
+    this.state = {
+      isTopSticky: null,
+      height: null,
+      width: null,
+      xOffset: null
+    };
+
+    var offset = this.getAttribute('sticky-offset') || {};
+    var side = this.getAttribute('sticky-side') || 'top';
+
+    this.options = {
+      topOffset: Number(offset.top) || 0,
+      bottomOffset: Number(offset.bottom) || 0,
+      shouldTopSticky: side === 'top' || side === 'both',
+      shouldBottomSticky: side === 'bottom' || side === 'both'
+    };
+  }
+
+  createClass(Sticky, [{
+    key: 'doBind',
+    value: function doBind() {
+      var _this = this;
+
+      if (this.unsubscribers.length > 0) {
+        return;
       }
+      var el = this.el,
+          vm = this.vm;
 
-      currentIndex = index;
-      if(instant) {
-        $(settings.target).stop().scrollTop(destination);
-        if(callbacks) {
-          settings.after(index,elements);
-        }
-      } else {
-        locked = true;
-        if( $().velocity ) {
-          $(settings.target).stop().velocity('scroll', {
-            duration: settings.scrollSpeed,
-            easing: settings.easing,
-            offset: destination,
-            mobileHA: false
+      vm.$nextTick(function () {
+        _this.placeholderEl = document.createElement('div');
+        _this.containerEl = _this.getContainerEl();
+        el.parentNode.insertBefore(_this.placeholderEl, el);
+        events.forEach(function (event) {
+          var fn = _this.update.bind(_this);
+          _this.unsubscribers.push(function () {
+            return window.removeEventListener(event, fn);
           });
-        } else {
-          $(settings.target).stop().animate({
-            scrollTop: destination
-          }, settings.scrollSpeed,settings.easing);
-        }
-
-        if(window.location.hash.length && settings.sectionName && window.console) {
-          try {
-            if($(window.location.hash).length) {
-              console.warn("Scrollify warning: ID matches hash value - this will cause the page to anchor.");
-            }
-          } catch (e) {}
-        }
-        $(settings.target).promise().done(function(){
-          locked = false;
-          firstLoad = false;
-          if(callbacks) {
-            settings.after(index,elements);
-          }
+          _this.unsubscribers.push(function () {
+            return _this.containerEl.removeEventListener(event, fn);
+          });
+          window.addEventListener(event, fn, { passive: true });
+          _this.containerEl.addEventListener(event, fn, { passive: true });
         });
-      }
-
+      });
     }
-  }
-
-  function isAccelerating(samples) {
-    function average(num) {
-      var sum = 0;
-
-      var lastElements = samples.slice(Math.max(samples.length - num, 1));
-
-      for(var i = 0; i < lastElements.length; i++){
-          sum += lastElements[i];
-      }
-
-      return Math.ceil(sum/num);
+  }, {
+    key: 'doUnbind',
+    value: function doUnbind() {
+      this.unsubscribers.forEach(function (fn) {
+        return fn();
+      });
+      this.unsubscribers = [];
+      this.resetElement();
     }
+  }, {
+    key: 'update',
+    value: function update() {
+      var _this2 = this;
 
-    var avEnd = average(10);
-    var avMiddle = average(70);
-
-    if(avEnd >= avMiddle) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  var scrollify = function(options) {
-    initialised = true;
-    $.easing['easeOutExpo'] = function(x, t, b, c, d) {
-      return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
-    };
-
-    manualScroll = {
-      handleMousedown:function() {
-        if(disabled===true) {
-          return true;
-        }
-        scrollable = false;
-        scrolled = false;
-      },
-      handleMouseup:function() {
-        if(disabled===true) {
-          return true;
-        }
-        scrollable = true;
-        if(scrolled) {
-          //instant,callbacks
-          manualScroll.calculateNearest(false,true);
-        }
-      },
-      handleScroll:function() {
-        if(disabled===true) {
-          return true;
-        }
-        if(timeoutId){
-          clearTimeout(timeoutId);
-        }
-
-        timeoutId = setTimeout(function(){
-          scrolled = true;
-          if(scrollable===false) {
-            return false;
-          }
-          scrollable = false;
-          //instant,callbacks
-          manualScroll.calculateNearest(false,true);
-        }, 200);
-      },
-      calculateNearest:function(instant,callbacks) {
-        top = $window.scrollTop();
-        var i =1,
-          max = heights.length,
-          closest = 0,
-          prev = Math.abs(heights[0] - top),
-          diff;
-        for(;i<max;i++) {
-          diff = Math.abs(heights[i] - top);
-
-          if(diff < prev) {
-            prev = diff;
-            closest = i;
-          }
-        }
-        if((atBottom() && closest>index) || atTop()) {
-          index = closest;
-          //index, instant, callbacks, toTop
-          animateScroll(closest,instant,callbacks,false);
-        }
-      },
-      wheelHandler:function(e) {
-        if(disabled===true) {
-          return true;
-        } else if(settings.standardScrollElements) {
-          if($(e.target).is(settings.standardScrollElements) || $(e.target).closest(settings.standardScrollElements).length) {
-            return true;
-          }
-        }
-        if(!overflow[index]) {
-          e.preventDefault();
-        }
-        var currentScrollTime = new Date().getTime();
-
-
-        e = e || window.event;
-        var value = e.originalEvent.wheelDelta || -e.originalEvent.deltaY || -e.originalEvent.detail;
-        var delta = Math.max(-1, Math.min(1, value));
-
-        //delta = delta || -e.originalEvent.detail / 3 || e.originalEvent.wheelDelta / 120;
-
-        if(scrollSamples.length > 149){
-          scrollSamples.shift();
-        }
-        //scrollSamples.push(Math.abs(delta*10));
-        scrollSamples.push(Math.abs(value));
-
-        if((currentScrollTime-scrollTime) > 200){
-          scrollSamples = [];
-        }
-        scrollTime = currentScrollTime;
-
-
-        if(locked) {
-          return false;
-        }
-        if(delta<0) {
-          if(index<heights.length-1) {
-            if(atBottom()) {
-              if(isAccelerating(scrollSamples)) {
-                e.preventDefault();
-                index++;
-                locked = true;
-                //index, instant, callbacks, toTop
-                animateScroll(index,false,true, false);
-              } else {
-                return false;
-              }
-            }
-          }
-        } else if(delta>0) {
-          if(index>0) {
-            if(atTop()) {
-              if(isAccelerating(scrollSamples)) {
-                e.preventDefault();
-                index--;
-                locked = true;
-                //index, instant, callbacks, toTop
-                animateScroll(index,false,true, false);
-              } else {
-                return false
-              }
-            }
-          }
-        }
-
-      },
-      keyHandler:function(e) {
-        if(disabled===true || document.activeElement.readOnly===false) {
-          return true;
-        }
-        if(locked===true) {
-          return false;
-        }
-        if(e.keyCode==38 || e.keyCode==33) {
-          if(index>0) {
-            if(atTop()) {
-              e.preventDefault();
-              index--;
-              //index, instant, callbacks, toTop
-              animateScroll(index,false,true,false);
-            }
-          }
-        } else if(e.keyCode==40 || e.keyCode==34) {
-          if(index<heights.length-1) {
-            if(atBottom()) {
-              e.preventDefault();
-              index++;
-              //index, instant, callbacks, toTop
-              animateScroll(index,false,true,false);
-            }
-          }
-        }
-      },
-      init:function() {
-        if(settings.scrollbars) {
-          $window.on('mousedown', manualScroll.handleMousedown);
-          $window.on('mouseup', manualScroll.handleMouseup);
-          $window.on('scroll', manualScroll.handleScroll);
-        } else {
-          $("body").css({"overflow":"hidden"});
-        }
-        $window.on(wheelEvent,manualScroll.wheelHandler);
-        //$(document).bind(wheelEvent,manualScroll.wheelHandler);
-        $window.on('keydown', manualScroll.keyHandler);
-      }
-    };
-
-    swipeScroll = {
-      touches : {
-        "touchstart": {"y":-1,"x":-1},
-        "touchmove" : {"y":-1,"x":-1},
-        "touchend"  : false,
-        "direction" : "undetermined"
-      },
-      options:{
-        "distance" : 30,
-        "timeGap" : 800,
-        "timeStamp" : new Date().getTime()
-      },
-      touchHandler: function(event) {
-        if(disabled===true) {
-          return true;
-        } else if(settings.standardScrollElements) {
-          if($(event.target).is(settings.standardScrollElements) || $(event.target).closest(settings.standardScrollElements).length) {
-            return true;
-          }
-        }
-        var touch;
-        if (typeof event !== 'undefined'){
-          if (typeof event.touches !== 'undefined') {
-            touch = event.touches[0];
-            switch (event.type) {
-              case 'touchstart':
-                swipeScroll.touches.touchstart.y = touch.pageY;
-                swipeScroll.touches.touchmove.y = -1;
-
-                swipeScroll.touches.touchstart.x = touch.pageX;
-                swipeScroll.touches.touchmove.x = -1;
-
-                swipeScroll.options.timeStamp = new Date().getTime();
-                swipeScroll.touches.touchend = false;
-              case 'touchmove':
-                swipeScroll.touches.touchmove.y = touch.pageY;
-                swipeScroll.touches.touchmove.x = touch.pageX;
-                if(swipeScroll.touches.touchstart.y!==swipeScroll.touches.touchmove.y && (Math.abs(swipeScroll.touches.touchstart.y-swipeScroll.touches.touchmove.y)>Math.abs(swipeScroll.touches.touchstart.x-swipeScroll.touches.touchmove.x))) {
-                  //if(!overflow[index]) {
-                    event.preventDefault();
-                  //}
-                  swipeScroll.touches.direction = "y";
-                  if((swipeScroll.options.timeStamp+swipeScroll.options.timeGap)<(new Date().getTime()) && swipeScroll.touches.touchend == false) {
-
-                    swipeScroll.touches.touchend = true;
-                    if (swipeScroll.touches.touchstart.y > -1) {
-
-                      if(Math.abs(swipeScroll.touches.touchmove.y-swipeScroll.touches.touchstart.y)>swipeScroll.options.distance) {
-                        if(swipeScroll.touches.touchstart.y < swipeScroll.touches.touchmove.y) {
-
-                          swipeScroll.up();
-
-                        } else {
-                          swipeScroll.down();
-
-                        }
-                      }
-                    }
-                  }
-                }
-                break;
-              case 'touchend':
-                if(swipeScroll.touches[event.type]===false) {
-                  swipeScroll.touches[event.type] = true;
-                  if (swipeScroll.touches.touchstart.y > -1 && swipeScroll.touches.touchmove.y > -1 && swipeScroll.touches.direction==="y") {
-
-                    if(Math.abs(swipeScroll.touches.touchmove.y-swipeScroll.touches.touchstart.y)>swipeScroll.options.distance) {
-                      if(swipeScroll.touches.touchstart.y < swipeScroll.touches.touchmove.y) {
-                        swipeScroll.up();
-
-                      } else {
-                        swipeScroll.down();
-
-                      }
-                    }
-                    swipeScroll.touches.touchstart.y = -1;
-                    swipeScroll.touches.touchstart.x = -1;
-                    swipeScroll.touches.direction = "undetermined";
-                  }
-                }
-              default:
-                break;
-            }
-          }
-        }
-      },
-      down: function() {
-
-        if(index<heights.length) {
-
-          if(atBottom() && index<heights.length-1) {
-
-            index++;
-            //index, instant, callbacks, toTop
-            animateScroll(index,false,true,false);
-          } else {
-            portHeight = getportHeight();
-            if(Math.floor(elements[index].height()/portHeight)>interstitialIndex) {
-
-              interstitialScroll(parseInt(heights[index])+(portHeight*interstitialIndex));
-              interstitialIndex += 1;
-
-            } else {
-              interstitialScroll(parseInt(heights[index])+(elements[index].outerHeight()-portHeight));
-            }
-
-          }
-        }
-      },
-      up: function() {
-        if(index>=0) {
-          if(atTop() && index>0) {
-
-            index--;
-            //index, instant, callbacks, toTop
-            animateScroll(index,false,true,false);
-          } else {
-
-            if(interstitialIndex>2) {
-              portHeight = getportHeight();
-
-              interstitialIndex -= 1;
-              interstitialScroll(parseInt(heights[index])+(portHeight*interstitialIndex));
-
-            } else {
-
-              interstitialIndex = 1;
-              interstitialScroll(parseInt(heights[index]));
-            }
-          }
-
-        }
-      },
-      init: function() {
-        if (document.addEventListener && settings.touchScroll) {
-          var eventListenerOptions = {
-            passive: false
-          };
-          document.addEventListener('touchstart', swipeScroll.touchHandler, eventListenerOptions);
-          document.addEventListener('touchmove', swipeScroll.touchHandler, eventListenerOptions);
-          document.addEventListener('touchend', swipeScroll.touchHandler, eventListenerOptions);
-        }
-      }
-    };
-
-
-    util = {
-      refresh:function(withCallback,scroll) {
-        clearTimeout(timeoutId2);
-        timeoutId2 = setTimeout(function() {
-          //retain position
-          sizePanels(true);
-          //scroll, firstLoad
-          calculatePositions(scroll,false);
-          if(withCallback) {
-              settings.afterResize();
-          }
-        },400);
-      },
-      handleUpdate:function() {
-        //callbacks, scroll
-        //changed from false,true to false,false
-        util.refresh(false,false);
-      },
-      handleResize:function() {
-        //callbacks, scroll
-        util.refresh(true,false);
-      },
-      handleOrientation:function() {
-        //callbacks, scroll
-        util.refresh(true,true);
-      }
-    };
-    settings = $.extend(settings, options);
-
-    //retain position
-    sizePanels(false);
-
-    calculatePositions(false,true);
-
-    if(true===hasLocation) {
-      //index, instant, callbacks, toTop
-      animateScroll(index,false,true,true);
-    } else {
-      setTimeout(function() {
-        //instant,callbacks
-        manualScroll.calculateNearest(true,false);
-      },200);
-    }
-    if(heights.length) {
-      manualScroll.init();
-      swipeScroll.init();
-
-      $window.on("resize",util.handleResize);
-      if (document.addEventListener) {
-        window.addEventListener("orientationchange", util.handleOrientation, false);
-      }
-    }
-    function interstitialScroll(pos) {
-      if( $().velocity ) {
-        $(settings.target).stop().velocity('scroll', {
-          duration: settings.scrollSpeed,
-          easing: settings.easing,
-          offset: pos,
-          mobileHA: false
+      if (!this.isPending) {
+        requestAnimationFrame(function () {
+          _this2.isPending = false;
+          _this2.recomputeState();
+          _this2.updateElements();
         });
-      } else {
-        $(settings.target).stop().animate({
-          scrollTop: pos
-        }, settings.scrollSpeed,settings.easing);
+        this.isPending = true;
       }
     }
+  }, {
+    key: 'isTopSticky',
+    value: function isTopSticky() {
+      if (!this.options.shouldTopSticky) return false;
+      var fromTop = this.state.placeholderElRect.top;
+      var fromBottom = this.state.containerElRect.bottom;
 
-    function sizePanels(keepPosition) {
-      if(keepPosition) {
-        top = $window.scrollTop();
-      }
+      var topBreakpoint = this.options.topOffset;
+      var bottomBreakpoint = this.options.bottomOffset;
 
-      var selector = settings.section;
-      overflow = [];
-      if(settings.interstitialSection.length) {
-        selector += "," + settings.interstitialSection;
-      }
-      if(settings.scrollbars===false) {
-        settings.overflowScroll = false;
-      }
-      portHeight = getportHeight();
-      $(selector).each(function(i) {
-        var $this = $(this);
+      return fromTop <= topBreakpoint && fromBottom >= bottomBreakpoint;
+    }
+  }, {
+    key: 'isBottomSticky',
+    value: function isBottomSticky() {
+      if (!this.options.shouldBottomSticky) return false;
+      var fromBottom = window.innerHeight - this.state.placeholderElRect.top - this.state.height;
+      var fromTop = window.innerHeight - this.state.containerElRect.top;
 
-        if(settings.setHeights) {
-          if($this.is(settings.interstitialSection)) {
-            overflow[i] = false;
-          } else {
-            if(($this.css("height","auto").outerHeight()<portHeight) || $this.css("overflow")==="hidden") {
-              $this.css({"height":portHeight});
+      var topBreakpoint = this.options.topOffset;
+      var bottomBreakpoint = this.options.bottomOffset;
 
-              overflow[i] = false;
-            } else {
+      return fromBottom <= bottomBreakpoint && fromTop >= topBreakpoint;
+    }
+  }, {
+    key: 'recomputeState',
+    value: function recomputeState() {
+      this.state = Object.assign({}, this.state, {
+        height: this.getHeight(),
+        width: this.getWidth(),
+        xOffset: this.getXOffset(),
+        placeholderElRect: this.getPlaceholderElRect(),
+        containerElRect: this.getContainerElRect()
+      });
+      this.state.isTopSticky = this.isTopSticky();
+      this.state.isBottomSticky = this.isBottomSticky();
+    }
+  }, {
+    key: 'updateElements',
+    value: function updateElements() {
+      var placeholderStyle = { paddingTop: 0 };
+      var elStyle = {
+        position: 'static',
+        top: 'auto',
+        bottom: 'auto',
+        left: 'auto',
+        width: 'auto',
+        zIndex: '10'
+      };
+      var placeholderClassName = { 'vue-sticky-placeholder': true };
+      var elClassName = {
+        'vue-sticky-el': true,
+        'top-sticky': false,
+        'bottom-sticky': false
+      };
 
-              $this.css({"height":$this.height()});
-
-              if(settings.overflowScroll) {
-                overflow[i] = true;
-              } else {
-                overflow[i] = false;
-              }
-            }
-
-          }
-
-        } else {
-
-          if(($this.outerHeight()<portHeight) || (settings.overflowScroll===false)) {
-            overflow[i] = false;
-          } else {
-            overflow[i] = true;
-          }
+      if (this.state.isTopSticky) {
+        elStyle.position = 'fixed';
+        elStyle.top = this.options.topOffset + 'px';
+        elStyle.left = this.state.xOffset + 'px';
+        elStyle.width = this.state.width + 'px';
+        var bottomLimit = this.state.containerElRect.bottom - this.state.height - this.options.bottomOffset - this.options.topOffset;
+        if (bottomLimit < 0) {
+          elStyle.top = bottomLimit + this.options.topOffset + 'px';
         }
-      });
-      if(keepPosition) {
-        $window.scrollTop(top);
-      }
-    }
-    function calculatePositions(scroll,firstLoad) {
-      var selector = settings.section;
-      if(settings.interstitialSection.length) {
-        selector += "," + settings.interstitialSection;
-      }
-      heights = [];
-      names = [];
-      elements = [];
-      $(selector).each(function(i){
-          var $this = $(this);
-          if(i>0) {
-            heights[i] = parseInt($this.offset().top) + settings.offset;
-          } else {
-            heights[i] = parseInt($this.offset().top);
-          }
-          if(settings.sectionName && $this.data(settings.sectionName)) {
-            names[i] = "#" + $this.data(settings.sectionName).toString().replace(/ /g,"-");
-          } else {
-            if($this.is(settings.interstitialSection)===false) {
-              names[i] = "#" + (i + 1);
-            } else {
-              names[i] = "#";
-              if(i===$(selector).length-1 && i>1) {
-                heights[i] = heights[i-1] + (parseInt($($(selector)[i-1]).outerHeight()) - parseInt($(window).height())) + parseInt($this.outerHeight());
-              }
-            }
-          }
-          elements[i] = $this;
-          try {
-            if($(names[i]).length && window.console) {
-              console.warn("Scrollify warning: Section names can't match IDs - this will cause the browser to anchor.");
-            }
-          } catch (e) {}
-
-          if(window.location.hash===names[i]) {
-            index = i;
-            hasLocation = true;
-          }
-
-      });
-
-      if(true===scroll) {
-        //index, instant, callbacks, toTop
-        animateScroll(index,false,false,false);
-      }
-    }
-
-    function atTop() {
-      if(!overflow[index]) {
-        return true;
-      }
-      top = $window.scrollTop();
-      if(top>parseInt(heights[index])) {
-        return false;
+        placeholderStyle.paddingTop = this.state.height + 'px';
+        elClassName['top-sticky'] = true;
+      } else if (this.state.isBottomSticky) {
+        elStyle.position = 'fixed';
+        elStyle.bottom = this.options.bottomOffset + 'px';
+        elStyle.left = this.state.xOffset + 'px';
+        elStyle.width = this.state.width + 'px';
+        var topLimit = this.state.containerElRect = window.innerHeight - this.state.containerElRect.top - this.state.height - this.options.bottomOffset - this.options.topOffset;
+        if (topLimit < 0) {
+          elStyle.bottom = topLimit + this.options.bottomOffset + 'px';
+        }
+        placeholderStyle.paddingTop = this.state.height + 'px';
+        elClassName['bottom-sticky'] = true;
       } else {
-        return true;
+        placeholderStyle.paddingTop = 0;
+      }
+
+      batchStyle(this.el, elStyle, elClassName);
+      batchStyle(this.placeholderEl, placeholderStyle, placeholderClassName);
+    }
+  }, {
+    key: 'resetElement',
+    value: function resetElement() {
+      var _this3 = this;
+
+      ['position', 'top', 'bottom', 'left', 'width', 'zIndex'].forEach(function (attr) {
+        _this3.el.style.removeProperty(attr);
+      });
+      this.placeholderEl.parentNode.removeChild(this.placeholderEl);
+    }
+  }, {
+    key: 'getContainerEl',
+    value: function getContainerEl() {
+      var node = this.el.parentNode;
+      while (node && node.tagName !== 'HTML' && node.tagName !== 'BODY' && node.nodeType === 1) {
+        if (node.hasAttribute('sticky-container')) {
+          return node;
+        }
+        node = node.parentNode;
+      }
+      return this.el.parentNode;
+    }
+  }, {
+    key: 'getXOffset',
+    value: function getXOffset() {
+      return this.placeholderEl.getBoundingClientRect().left;
+    }
+  }, {
+    key: 'getWidth',
+    value: function getWidth() {
+      return this.placeholderEl.getBoundingClientRect().width;
+    }
+  }, {
+    key: 'getHeight',
+    value: function getHeight() {
+      return this.el.getBoundingClientRect().height;
+    }
+  }, {
+    key: 'getPlaceholderElRect',
+    value: function getPlaceholderElRect() {
+      return this.placeholderEl.getBoundingClientRect();
+    }
+  }, {
+    key: 'getContainerElRect',
+    value: function getContainerElRect() {
+      return this.containerEl.getBoundingClientRect();
+    }
+  }, {
+    key: 'getAttribute',
+    value: function getAttribute(name) {
+      var expr = this.el.getAttribute(name);
+      if (expr) {
+        return this.vm[expr] || expr;
+      } else {
+        return undefined;
       }
     }
-    function atBottom() {
-      if(!overflow[index]) {
-        return true;
+  }]);
+  return Sticky;
+}();
+
+var Sticky$2 = {
+  inserted: function inserted(el, bind, vnode) {
+    if (typeof bind.value === 'undefined' || bind.value) {
+      el[namespace] = new Sticky$1(el, vnode.context);
+      el[namespace].doBind();
+    }
+  },
+  unbind: function unbind(el, bind, vnode) {
+    if (el[namespace]) {
+      el[namespace].doUnbind();
+      el[namespace] = undefined;
+    }
+  },
+  componentUpdated: function componentUpdated(el, bind, vnode) {
+    if (typeof bind.value === 'undefined' || bind.value) {
+      if (!el[namespace]) {
+        el[namespace] = new Sticky$1(el, vnode.context);
       }
-      top = $window.scrollTop();
-      portHeight = getportHeight();
-
-      if(top<parseInt(heights[index])+(elements[index].outerHeight()-portHeight)-28) {
-
-        return false;
-
-      } else {
-        return true;
+      el[namespace].doBind();
+    } else {
+      if (el[namespace]) {
+        el[namespace].doUnbind();
       }
     }
   }
+};
 
-  function move(panel,instant) {
-    var z = names.length;
-    for(;z>=0;z--) {
-      if(typeof panel === 'string') {
-        if (names[z]===panel) {
-          index = z;
-          //index, instant, callbacks, toTop
-          animateScroll(z,instant,true,true);
-        }
-      } else {
-        if(z===panel) {
-          index = z;
-          //index, instant, callbacks, toTop
-          animateScroll(z,instant,true,true);
-        }
-      }
-    }
-  }
-  scrollify.move = function(panel) {
-    if(panel===undefined) {
-      return false;
-    }
-    if(panel.originalEvent) {
-      panel = $(this).attr("href");
-    }
-    move(panel,false);
-  };
-  scrollify.instantMove = function(panel) {
-    if(panel===undefined) {
-      return false;
-    }
-    move(panel,true);
-  };
-  scrollify.next = function() {
-    if(index<names.length) {
-      index += 1;
-      //index, instant, callbacks, toTop
-      animateScroll(index,false,true,true);
-    }
-  };
-  scrollify.previous = function() {
-    if(index>0) {
-      index -= 1;
-      //index, instant, callbacks, toTop
-      animateScroll(index,false,true,true);
-    }
-  };
-  scrollify.instantNext = function() {
-    if(index<names.length) {
-      index += 1;
-      //index, instant, callbacks, toTop
-      animateScroll(index,true,true,true);
-    }
-  };
-  scrollify.instantPrevious = function() {
-    if(index>0) {
-      index -= 1;
-      //index, instant, callbacks, toTop
-      animateScroll(index,true,true,true);
-    }
-  };
-  scrollify.destroy = function() {
-    if(!initialised) {
-      return false;
-    }
-    if(settings.setHeights) {
-      $(settings.section).each(function() {
-        $(this).css("height","auto");
-      });
-    }
-    $window.off("resize",util.handleResize);
-    if(settings.scrollbars) {
-      $window.off('mousedown', manualScroll.handleMousedown);
-      $window.off('mouseup', manualScroll.handleMouseup);
-      $window.off('scroll', manualScroll.handleScroll);
-    }
-    $window.off(wheelEvent,manualScroll.wheelHandler);
-    $window.off('keydown', manualScroll.keyHandler);
+var install = function install(Vue) {
+  Vue.directive('Sticky', Sticky$2);
+};
 
-    if (document.addEventListener && settings.touchScroll) {
-      document.removeEventListener('touchstart', swipeScroll.touchHandler, false);
-      document.removeEventListener('touchmove', swipeScroll.touchHandler, false);
-      document.removeEventListener('touchend', swipeScroll.touchHandler, false);
-    }
-    heights = [];
-    names = [];
-    elements = [];
-    overflow = [];
-  };
-  scrollify.update = function() {
-    if(!initialised) {
-      return false;
-    }
-    util.handleUpdate();
-  };
-  scrollify.current = function() {
-    return elements[index];
-  };
-  scrollify.currentIndex = function() {
-    return index;
-  };
-  scrollify.disable = function() {
-    disabled = true;
-  };
-  scrollify.enable = function() {
-    disabled = false;
-    if (initialised) {
-      //instant,callbacks
-      manualScroll.calculateNearest(false,false);
-    }
-  };
-  scrollify.isDisabled = function() {
-    return disabled;
-  };
-  scrollify.setOptions = function(updatedOptions) {
-    if(!initialised) {
-      return false;
-    }
-    if(typeof updatedOptions === "object") {
-      settings = $.extend(settings, updatedOptions);
-      util.handleUpdate();
-    } else if(window.console) {
-      console.warn("Scrollify warning: setOptions expects an object.");
-    }
-  };
-  $.scrollify = scrollify;
-  return scrollify;
-}));
+if (window.Vue) {
+  Vue.use(install);
+}
+
+Sticky$2.install = install;
+
+return Sticky$2;
+
+})));
 
 
 /***/ })

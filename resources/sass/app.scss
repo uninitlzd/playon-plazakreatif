@@ -1,9 +1,12 @@
 @import "variables";
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+html {
+    font-size: 1rem;
+    background: white;
+    height: 100%;
 }
+
+
 
 .text-orange-primary {
     color: $orange-primary;
@@ -13,6 +16,10 @@ a.text-orange-primary {
     &:hover {
         color: $orange-primary-hover;
     }
+}
+
+.text-gray {
+    color: $gray;
 }
 
 .vertical-text__scroll-down {
@@ -48,6 +55,7 @@ h1,h2,h3,h4,h5,h6,p,span,i {
 
 h1,h2,h3,h4,h5,h6 {
     font-weight: 600;
+    z-index: 2;
 }
 
 h1,h2,h3,h4,h5,h6,a {
@@ -65,10 +73,7 @@ p {
     overflow: visible;
 }
 
-html {
-    background: white;
-    height: 100%;
-}
+
 
 body {
     z-index: -2;
@@ -83,6 +88,8 @@ body {
     width: 50px;
     border-right: 2px solid $orange-primary;
     position: relative;
+    background: white !important;
+    z-index: 9999;
 
     &__button {
         width: inherit;
@@ -98,6 +105,7 @@ body {
     background-size: calc(100% - 51px) 100%;
     background-position-x: 52px;
     position: relative;
+
 }
 
 .page-container {
@@ -106,6 +114,10 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
+}
+
+.heading-1 {
+    font-size: $font-big;
 }
 
 .hero__greet {
@@ -123,11 +135,14 @@ body {
         font-size: $font-big;
     }
 
+    &__month {
+        margin-top: 0.75em;
+    }
+
     &__month, &__place {
         font-size: 12pt;
         line-height: 10pt;
         vertical-align: bottom;
-        margin-top: 6pt;
     }
 
     &__maps-link {
@@ -135,14 +150,13 @@ body {
         font-weight: 600;
         color: $orange-primary !important;
 
-        & i {
-            font-size: 8pt;
-        }
     }
 }
 
 .homepage-button__left-button-wrapper {
-    width: calc(100% + 31px) !important;
+    width: calc(100% + 2em) !important;
+    position: relative;
+    z-index: 1;
 }
 
 .homepage-button__left-button {
@@ -177,20 +191,101 @@ h1.shadowed-text::before {
     top: -20vh;
     left: -10vh;
     position: absolute;
-    font-size: 100pt;
-    color: rgba(11, 46, 19, 0.05);
-    z-index: -1;
+    font-size: 2em;
+    color: rgb(243, 243, 243);
+    z-index: -999999999;
 }
 
 .playon-section {
     height: 100vh;
 }
 
-#playon-circle {
-    animation: spin 800s infinite;
-    transform-origin: center center;
-}
+
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+/* Small devices (landscape phones, 544px and up) */
+@media (min-width: 544px) {
+    .class-name {font-size: 16px;}
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+    .playon-section {
+        height: 200vh;
+    }
+
+    [class*=col-].h-100 {
+        height: 50% !important;
+    }
+
+    .homepage-button__left-button-wrapper {
+        width: calc(100%) !important;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .class-name {
+        font-size: 40px;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .class-name {font-size: 48px;}
+}
+
+
+a.navigation_content__items {
+    color: $gray;
+
+    &.active {
+        color: $black;
+
+        &::after {
+            content: '—'
+        }
+    }
+}
+
+.homepage-countdown {
+
+    &__time {
+        font-family: "Lato", sans-serif;
+        font-weight: 500;
+        font-size: $font-bigger;
+        font-style: italic;
+        text-align: center;
+        color: $orange-primary;
+
+        & span {
+            font-size: 0.3em;
+            margin-right: 0.2em;
+            color: $orange-primary;
+        }
+    }
+
+    &__deco {
+        width: 5em;
+        height: auto;
+
+        &:first-child {
+            margin-top: -2em;
+            margin-right: 2em;
+        }
+
+        &:last-child {
+            margin-left: 2em;
+        }
+    }
+
+}
+
+.clearfix::before,
+.clearfix::after {
+    flex-basis: 0;
+    order: 1;
+}

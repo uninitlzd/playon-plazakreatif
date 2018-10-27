@@ -22,9 +22,11 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "@chenfengyuan/vue-countdown": "^1.0.0",
         "animate.css": "^3.7.0",
         "feather-icons": "^4.7.3",
         "fullpage-vue": "^1.8.0",
-        "jquery-scrollify": "^1.0.19"
+        "sw-precache-webpack-plugin": "^0.11.5",
+        "vue-sticky-directive": "^0.0.6"
     }
 }

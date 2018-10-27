@@ -12,7 +12,6 @@ feather.replace();
 
 try {
     window.$ = window.jQuery = require('jquery');
-    window.$.scrollify = require('jquery-scrollify');
 
     require('bootstrap');
 } catch (e) {}
