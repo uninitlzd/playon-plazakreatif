@@ -7,7 +7,12 @@ html {
 
 }
 
-
+.aspectRatioSizer {
+    display: grid;
+}
+.aspectRatioSizer > * {
+    grid-area: 1 / 1 / 2 / 2;
+}
 
 .text-orange-primary {
     color: $orange-primary;
@@ -242,13 +247,24 @@ h1.shadowed-text::before {
 
 a.navigation_content__items {
     color: $gray;
+    transform: scale(1);
+    transition: 400ms;
 
     &.active {
         color: $black;
+        transition: 1000ms;
 
         &::after {
-            content: '—'
+            content: '—';
+            color: $black;
+            transition: color 1000ms;
         }
+    }
+
+    &::after {
+        content: '—';
+        color: transparent;
+        transition: 400ms;
     }
 }
 
@@ -289,4 +305,106 @@ a.navigation_content__items {
 .clearfix::after {
     flex-basis: 0;
     order: 1;
+}
+
+.glide__slides {
+    overflow: visible !important;
+    padding: 20px !important;
+}
+
+.glide__slide {
+    width: 20vw !important;
+
+    &.glide__slide--active {
+        transition: 400ms;
+        transform: scale(1) !important;
+
+        & .card {
+            opacity: 1;
+            box-shadow: 5px 8px 20px rgba(0,0,0,0.2);
+            transition: 400ms;
+        }
+    }
+}
+
+@keyframes fadein-opacity {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+        display: none;
+        visibility: hidden;
+    }
+}
+
+.glide {
+    overflow: visible;
+}
+
+.glide__slide {
+    transform: scale(0.95);
+    transition: 400ms;
+}
+
+
+.card {
+    position: relative;
+    background: white;
+    border-radius: 0.5em !important;
+    overflow: hidden;
+    border: none;
+    opacity: 0.5;
+    transition: 400ms;
+
+    &__image {
+        display: block;
+        height: 60%;
+        overflow: hidden;
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+
+    &__info {
+        padding: 1.5em 1.2em;
+
+        & h1 {
+            font-size: 1.2em;
+        }
+
+        & p {
+            margin-top: 0.3em;
+            line-height: 1.2em;
+            font-size: 0.9em;
+            font-weight: 400;
+        }
+
+        & a {
+            font-size: 0.9em;
+        }
+    }
+}
+
+.card-slider__button-group {
+
+    margin-left: 35px;
+
+    & a{
+        font-family: "Roboto", sans-serif;
+        text-transform: uppercase;
+        font-weight: bolder !important;
+        font-size: 0.8em;
+        letter-spacing: 2px;
+        color: rgba(26, 26, 26, 0.8) !important;
+
+        &:first-child {
+            margin-right: 5px;
+        }
+
+        &:hover {
+            cursor: pointer;
+            color: $black !important;
+        }
+    }
 }

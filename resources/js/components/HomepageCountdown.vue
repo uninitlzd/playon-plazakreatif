@@ -12,7 +12,6 @@
             </div>
             <img src="/images/countdown-deco-1.png" class="homepage-countdown__deco align-self-start" alt="">
         </div>
-
     </div>
 </template>
 

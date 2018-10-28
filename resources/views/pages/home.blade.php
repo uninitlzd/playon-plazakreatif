@@ -68,6 +68,9 @@
     <div class="main-container" sticky-container data-section-name="about" style="padding-left: 52px">
         <ragam-acara></ragam-acara>
     </div>
+    <div class="main-container">
+
+    </div>
 @stop
 
 @section('scripts')

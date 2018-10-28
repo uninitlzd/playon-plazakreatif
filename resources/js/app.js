@@ -29,13 +29,19 @@ Vue.component('homepage-component', require('./components/HomepageComponent.vue'
 Vue.component('homepage-countdown', require('./components/HomepageCountdown.vue'));
 Vue.component('ragam-acara', require('./components/RagamAcaraSection.vue'));
 Vue.component('fullpage-wrapper', require('./components/FullPageWrapper.vue'));
+Vue.component('card-slider', require('./components/CardSlider.vue'));
+Vue.component('workshop-slider', require('./components/WorkshopSlider.vue'));
+Vue.component('lomba-slider', require('./components/LombaSlider.vue'));
+Vue.component('card', require('./components/Card'));
 
 // or for a single instance
 import Sticky from 'vue-sticky-directive'
 import vueSmoothScroll from 'vue-smooth-scroll'
+import VueGlide from 'vue-glide-js'
 
 Vue.use(Sticky);
 Vue.use(vueSmoothScroll)
+Vue.use(VueGlide)
 
 const app = new Vue({
     el: '#app',
