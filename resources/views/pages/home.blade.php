@@ -66,31 +66,7 @@
         </div>
     </div>
     <div class="main-container" sticky-container data-section-name="about" style="padding-left: 52px">
-        <div class="" data-section-name="acara">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="d-flex flex-column justify-content-center" style="height: 100vh" v-sticky sticky-offset="offset" sticky-side="top">
-                        <div class="navigation_content__wrapper w-100">
-                            <div class="align-self-center">
-                                <h1 class="w-75 heading-1 mb-4" name="Ragam Acara">Ragam Acara</h1>
-                                <h4><a href="#" class="navigation_content__items active">Exhibition</a></h4>
-                                <h4><a href="#" class="navigation_content__items">Talkshow</a></h4>
-                                <h4><a href="#" class="navigation_content__items">Workshop</a></h4>
-                                <h4><a href="#" class="navigation_content__items">Lomba-lomba</a></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <homepage-countdown class="d-flex align-self-center" style="height: 100vh;"></homepage-countdown>
-                    <div class="homepage-talkshow" style="height: 100vh">
-                        <div class="d-flex w-100 flex-row align-self-center">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ragam-acara></ragam-acara>
     </div>
 @stop
 

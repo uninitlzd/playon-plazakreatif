@@ -27,13 +27,16 @@ Vue.component(VueCountdown.name, VueCountdown);
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('homepage-component', require('./components/HomepageComponent.vue'));
 Vue.component('homepage-countdown', require('./components/HomepageCountdown.vue'));
-Vue.component('slider-acara', require('./components/SliderAcara.vue'));
+Vue.component('ragam-acara', require('./components/RagamAcaraSection.vue'));
 Vue.component('fullpage-wrapper', require('./components/FullPageWrapper.vue'));
 
 // or for a single instance
 import Sticky from 'vue-sticky-directive'
+import vueSmoothScroll from 'vue-smooth-scroll'
+
+Vue.use(Sticky);
+Vue.use(vueSmoothScroll)
 
 const app = new Vue({
     el: '#app',
-    directives: {Sticky}
 });
