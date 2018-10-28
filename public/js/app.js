@@ -39263,7 +39263,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     data: function data() {
         return {
-            time: new Date(2018, 12, 21).getTime() - new Date().getTime()
+            time: new Date(2018, 11, 21).getTime() - new Date().getTime()
 
         };
     },
