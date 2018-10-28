@@ -12,6 +12,21 @@ const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
  |
  */
 
+let urlPatternForImageCaching;
+let mixEnv = process.env.MIX_ENV;
+
+switch (mixEnv) {
+    case 'staging':
+        urlPatternForImageCaching = /^https:\/\/www\.playon\.parafrasa\.com\/images\/(\w+)\.jpg/;
+        break;
+    case 'production':
+        urlPatternForImageCaching = /^https:\/\/www\.plazakreatif\.com\/images\/(\w+)\.jpg/;
+        break;
+    default:
+        urlPatternForImageCaching = /^https:\/\/www\.plazakreatif\.test\/images\/(\w+)\.jpg/;
+        break
+}
+
 mix.webpackConfig({
     plugins: [
         new SWPrecacheWebpackPlugin({
@@ -34,7 +49,7 @@ mix.webpackConfig({
                     handler: 'cacheFirst'
                 },
                 {
-                    urlPattern: /^https:\/\/www\.plazakreatif\.test\/images\/(\w+)\.jpg/,
+                    urlPattern: urlPatternForImageCaching,
                     handler: 'cacheFirst'
                 }
             ],
