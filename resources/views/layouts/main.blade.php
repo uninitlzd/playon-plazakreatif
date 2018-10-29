@@ -15,6 +15,7 @@
     @include('layouts.partials.navbar')
     @yield('content')
 </div>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="/js/manifest.js"></script>
 <script src="/js/vendor.js"></script>
 <script src="/js/app.js"></script>

@@ -24,7 +24,7 @@
     export default {
         data() {
             return {
-                classes: 'talskhow-slider',
+                classes: {},
                 slide: {}
             }
         },

@@ -68,8 +68,145 @@
     <div class="main-container" sticky-container data-section-name="about" style="padding-left: 52px">
         <ragam-acara></ragam-acara>
     </div>
-    <div class="main-container">
+    <div class="main-container" style="padding-left: 52px">
+        <div class="playon-section" data-section-name="tentang">
+            <div class="row h-100">
+                <div class="col-md-6 h-100 d-flex flex-column">
+                    <div class="timeline__content">
+                        <h1 class="timeline__content__title shadowed-text" name="Timeline">Timeline</h1>
+                        <ul class="list-inline mt-5 ml-1">
+                            <li class="list-inline-item">21 DES</li>
+                            <li class="list-inline-item">23 DES</li>
+                            <li class="list-inline-item">24 DES</li>
+                        </ul>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul class="timeline">
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--red"></div>
+                                        </div>
+                                        <div class="timeline__time">
+                                            10.00
+                                        </div>
+                                        <div class="timeline__content">
+                                            <div class="timeline__title">
+                                                Opening
+                                            </div>
+                                            <ul class="timeline__points">
+                                                <li>Mr. Alan Bach</li>
+                                            </ul>
+                                        </div>
+                                    </li>
 
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                        </div>
+                                        <div class="timeline__time">
+                                            11.00
+                                        </div>
+                                        <div class="timeline__content">
+                                            <div class="timeline__title">
+                                                Design Stand Up
+                                            </div>
+                                            <ul class="timeline__points">
+                                                <li>Hangouts</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time">
+                                            12.00
+                                        </div>
+                                        <div class="timeline__content">
+                                            <div class="timeline__title-break">
+                                                Break
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                        </div>
+                                        <div class="timeline__time">
+                                            13.00
+                                        </div>
+                                        <div class="timeline__content">
+                                            <div class="timeline__title">
+                                                Talkshow
+                                            </div>
+                                            <ul class="timeline__points">
+                                                <li>How to train your dragon</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container" style="padding-left: 52px">
+        <div class="playon-section" data-section-name="tentang">
+            <div class="row h-100">
+                <div class="col-md-12 h-100 d-flex flex-column">
+                    <div class="sponsors__content mb-5">
+                        <h1 class="sponsors__content__title shadowed-text" name="Sponsors">Sponsors</h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="aspectRatioSizer mx-2" style="border: 2px solid orange;">
+                                <svg viewBox="0 0 1 1"></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @stop
 
