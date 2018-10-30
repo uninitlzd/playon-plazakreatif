@@ -1,5 +1,10 @@
 @import "variables";
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
 html {
     font-size: 1rem;
     background: white;
@@ -16,6 +21,10 @@ html {
 
 .text-orange-primary {
     color: $orange-primary;
+}
+
+p {
+    margin-bottom: 0 !important;
 }
 
 a.text-orange-primary {
@@ -87,15 +96,30 @@ body {
 }
 
 .main-nav {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 50px;
-    border-right: 2px solid $orange-primary;
-    position: relative;
-    background: white !important;
-    z-index: 9999;
+
+    &.navbar__desktop {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 50px;
+        border-right: 2px solid $orange-primary;
+        position: relative;
+        background: white !important;
+        z-index: 9999;
+    }
+
+    &.navbar__mobile {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 50px;
+        width: 100%;
+        border-right: 2px solid $orange-primary;
+        position: relative;
+        background: white !important;
+        z-index: 9999;
+    }
 
     &__button {
         width: inherit;
@@ -103,6 +127,81 @@ body {
         background: $orange-primary;
     }
 }
+
+.nav__overlay {
+    background: $orange-primary;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0px;
+    overflow: hidden;
+    z-index: 999999;
+
+    &.active {
+        width: 100%;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: url('/images/menu-overlay-bg.png');
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat;
+        z-index: -99;
+    }
+
+    & * {
+        z-index: 9999999;
+    }
+
+    &__button {
+        height: 50px;
+        width: 50px;
+    }
+
+    &__items {
+        padding-left: 52px;
+
+        & ul {
+            list-style: none;
+        }
+
+        & li {
+            text-decoration: none;
+            margin-bottom: -1.2em;
+        }
+
+        &__divider {
+            width: 25%;
+            height: 2px;
+            background: rgba(255,255,255, 0.5);
+            margin: 1.5em 0;
+        }
+
+        & a {
+            font-weight: 600;
+            font-size: 3em;
+            color: rgba(255,255,255, 0.5);
+        }
+
+        & a.active {
+            color: white;
+        }
+
+        &__end {
+            & a {
+                font-size: 1.3em;
+            }
+        }
+    }
+}
+
 
 .main-container {
     width: calc(100% - 50px);
@@ -382,6 +481,12 @@ a.navigation_content__items {
 
         & a {
             font-size: 0.9em;
+
+            & svg {
+                height: 1.6em;
+                width: 1.6em;
+                font-size: 8pt;
+            }
         }
     }
 }
@@ -397,10 +502,6 @@ a.navigation_content__items {
         font-size: 0.8em;
         letter-spacing: 2px;
         color: rgba(26, 26, 26, 0.8) !important;
-
-        &:first-child {
-            margin-right: 5px;
-        }
 
         &:hover {
             cursor: pointer;
@@ -428,6 +529,22 @@ a.navigation_content__items {
     padding-right: 11px;
     border-right: 2px solid #F2F2F2;
     content: "";
+}
+
+.timeline__date {
+    font-weight: 500;
+    font-family: "Roboto", sans-serif;
+    color: $gray;
+    transition: 400ms;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.timeline__date.active {
+    color: $black;
+    transition: 400ms;
 }
 
 .timeline__item {
@@ -529,4 +646,118 @@ a.navigation_content__items {
     .timeline__points > * {
         padding-bottom: 6.85714px;
     }
+}
+
+
+//Event-detail
+.event-detail {
+    &__title {
+        font-size: 3em;
+    }
+
+    &__speaker {
+        font-weight: 500;
+        line-height: 1.2em;
+
+        & span {
+            font-weight: 400;
+            font-size: 0.8em;
+        }
+    }
+
+    &__time {
+        margin-top: 0.1em;
+        font-weight: 500;
+        line-height: 1.2em;
+    }
+
+    &__price {
+        font-size: 1.8em;
+        font-weight: 300;
+        font-style: italic;
+        letter-spacing: 2px;
+    }
+
+    &__competition-requirement {
+        & p {
+            line-height: 1.2em;
+            font-weight: 500;
+            margin-right: 20px;
+            & span {
+                font-weight: 400;
+                font-size: 0.9em;
+            }
+        }
+
+        &__list {
+            list-style-position: inside;
+        }
+    }
+}
+
+.btn {
+    border-radius: 0;
+    border: 0;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 2px;
+
+    &.btn-green {
+        background: linear-gradient(45deg,rgba(159, 200, 71, 1) 0%,rgba(164, 202, 72, 1) 30.55%,rgba(179, 208, 77, 1) 67.37%,rgba(198, 216, 82, 1) 100%);
+        color: white;
+        transition: 400ms;
+        box-shadow: 1px 3px 15px rgba(164, 202, 72, 0.5);
+
+        &:hover {
+            transition: 400ms;
+            box-shadow: 1px 3px 15px rgba(164, 202, 72, 1);
+        }
+    }
+}
+
+
+.vb > .vb-dragger {
+    z-index: 5;
+    width: 12px;
+    right: 0;
+}
+
+.vb > .vb-dragger > .vb-dragger-styler {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: rotate3d(0,0,0,0);
+    transform: rotate3d(0,0,0,0);
+    -webkit-transition:
+        background-color 100ms ease-out,
+        margin 100ms ease-out,
+        height 100ms ease-out;
+    transition:
+        background-color 100ms ease-out,
+        margin 100ms ease-out,
+        height 100ms ease-out;
+    background-color: rgba(48, 121, 244,.1);
+    margin: 5px 5px 5px 0;
+    border-radius: 20px;
+    height: calc(100% - 10px);
+    display: block;
+}
+
+.vb.vb-scrolling-phantom > .vb-dragger > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.3);
+}
+
+.vb > .vb-dragger:hover > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.5);
+    margin: 0px;
+    height: 100%;
+}
+
+.vb.vb-dragging > .vb-dragger > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.5);
+    margin: 0px;
+    height: 100%;
+}
+
+.vb.vb-dragging-phantom > .vb-dragger > .vb-dragger-styler {
+    background-color: rgba(48, 121, 244,.5);
 }

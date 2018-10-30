@@ -11,8 +11,8 @@
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-<div id="app">
-    @include('layouts.partials.navbar')
+<div id="app" >
+    <navbar></navbar>
     @yield('content')
 </div>
 <script src="https://www.gstatic.com/charts/loader.js"></script>

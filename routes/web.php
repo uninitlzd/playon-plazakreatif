@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('pages.home');
 });
+
+Route::get('workshop', 'WorkshopController@show');
+Route::get('talkshow', 'TalkshowController@show');
+Route::get('competition', 'CompetitionController@show');

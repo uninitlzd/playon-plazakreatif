@@ -25,6 +25,7 @@ Vue.use(VueFullpage);
 
 Vue.component(VueCountdown.name, VueCountdown);
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('navbar', require('./components/Navbar.vue'));
 Vue.component('homepage-component', require('./components/HomepageComponent.vue'));
 Vue.component('homepage-countdown', require('./components/HomepageCountdown.vue'));
 Vue.component('ragam-acara', require('./components/RagamAcaraSection.vue'));

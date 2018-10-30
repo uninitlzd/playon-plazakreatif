@@ -4,13 +4,28 @@
             <vue-glide>
                 <vue-glide-slide v-for="i in 10" :key="i">
                     <card @click.native="focusTo(i - 1)">
+                        <div class="card__image" style="background: url('/images/four.jpg')">
 
+                        </div>
+                        <div class="card__info d-flex flex-column">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h1 class="text-white">lorem ipsum dolor sit amet</h1>
+                                    <p class="text-white">by Speaker Name</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="text-white pl-2">21 Des &mdash;<br>10.00</p>
+                                </div>
+                            </div>
+                            <a href="/competition" class="text-white mt-3">Details <i data-feather="arrow-right"></i></a>
+                        </div>
                     </card>
                 </vue-glide-slide>
             </vue-glide>
 
             <div class="card-slider__button-group">
                 <a @click="previous">Prev</a>
+                <a>/</a>
                 <a @click="next">Next</a>
             </div>
         </div>
@@ -19,7 +34,6 @@
 
 <script>
     const feather = require('feather-icons');
-    feather.replace();
 
     export default {
         data() {
@@ -28,6 +42,7 @@
             }
         },
         mounted() {
+            feather.replace();
             this.slide = this.$children[0];
         },
         methods: {
