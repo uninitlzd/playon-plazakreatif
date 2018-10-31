@@ -23,12 +23,12 @@
                                     21 Des &mdash;<br>10.00
                                 </li>
                             </ul>
-                            <p>
+                            <p class="mb-5">
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab atque autem commodi
                                 cupiditate, delectus excepturi illo nemo nihil nobis pariatur provident quam quia rem
                                 sapiente, suscipit tempore velit veniam voluptas.
                             </p>
-                            <a href="{{ url('/') }}" class="text-orange-primary mt-5"><i data-feather="arrow-left"></i> Back</a>
+                            <a href="{{ url('/') }}" class="text-orange-primary"><i data-feather="arrow-left"></i> Back</a>
                         </div>
                     </div>
                 </div>

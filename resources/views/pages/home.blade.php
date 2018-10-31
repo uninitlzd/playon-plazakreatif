@@ -34,17 +34,14 @@
                 <div class="col-md-7 h-100 d-flex flex-column right-side-background"
                      style="background: url('{{ asset('images/homepage-bg.png') }}')">
                     <div class="d-flex h-100 align-items-end" style="margin-left:31px">
-                        <div style="width: 50px; height: 50px; background: #96c43e" class="d-flex justify-content-center">
-                            <i data-feather="arrow-right" class="text-white align-self-center"
-                               style="width: 20px; height: 20px"></i>
-                        </div>
+                        <enter-button></enter-button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="main-container playon-section" data-section-name="about" style="padding-left: 52px">
-        <div class="playon-section" data-section-name="tentang">
+    <div class="main-container playon-section" data-section-name="about" id="tentang" style="padding-left: 52px">
+        <div class="playon-section">
             <div class="row h-100">
                 <div class="col-md-6 h-100 d-flex flex-column align-self-center justify-content-center">
                     <img src="{{ asset('images/playon-mozaik.png') }}" class="img-fluid align-self-center" alt="">
@@ -68,7 +65,7 @@
     <div class="main-container" sticky-container data-section-name="about" style="padding-left: 52px">
         <ragam-acara></ragam-acara>
     </div>
-    <div class="main-container" style="padding-left: 52px">
+    <div class="main-container" style="padding-left: 52px" id="timeline">
         <div class="playon-section" data-section-name="tentang">
             <div class="row h-100">
                 <div class="col-md-6 h-100 d-flex flex-column">
@@ -77,7 +74,7 @@
             </div>
         </div>
     </div>
-    <div class="main-container" style="padding-left: 52px">
+    <div class="main-container" style="padding-left: 52px" id="sponsors">
         <div class="playon-section" data-section-name="tentang">
             <div class="row h-100">
                 <div class="col-md-12 h-100 d-flex flex-column">

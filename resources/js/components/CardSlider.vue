@@ -49,7 +49,7 @@
         },
         methods: {
             focusTo: function (i) {
-                this.slide.go('='+i)
+                this.slide.go('=' + i)
             },
             next: function () {
                 this.slide.go('>')

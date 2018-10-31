@@ -35,6 +35,8 @@ Vue.component('workshop-slider', require('./components/WorkshopSlider.vue'));
 Vue.component('lomba-slider', require('./components/LombaSlider.vue'));
 Vue.component('timeline-acara', require('./components/TimelineAcara.vue'));
 Vue.component('card', require('./components/Card'));
+Vue.component('enter-button', require('./components/EnterButton'));
+Vue.component('shadowed-text', require('./components/ShadowedText'));
 
 // or for a single instance
 import Sticky from 'vue-sticky-directive'
