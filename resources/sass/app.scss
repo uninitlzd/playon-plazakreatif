@@ -5,11 +5,16 @@
     padding: 0;
 }
 
+body {
+    background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03) 0.75px, transparent 0, transparent 8.33333333%);
+    background-size: 100% 100%;
+    background-position-x: 50px;
+}
+
 html {
     font-size: 1rem;
     background: white;
     height: 100%;
-
 }
 
 .overflow-hidden {
@@ -49,7 +54,7 @@ a.text-orange-primary {
     font-size: 8pt;
     font-weight: 600;
     position: absolute;
-    right: 0;
+    right: 1em;
     bottom: 0;
     color: $orange-primary;
 
@@ -149,12 +154,12 @@ body {
     top: 0;
     left: 0;
     height: 100%;
-    width: 0px;
+    width: 100%;
     overflow: hidden;
     z-index: 999999;
 
     &.overlayActive {
-        width: 100%;
+        display: block;
     }
 
     &::after {
@@ -225,16 +230,17 @@ body {
 .main-container {
     width: calc(100% - 50px);
     margin-left: 50px;
-    background: repeating-linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.05  ) 1px,transparent 0,transparent 8.33333333333%);
-    background-size: calc(100% - 51px) 100%;
-    background-position-x: 52px;
     position: relative;
-
 }
 
 
 #tentang {
     position: relative;
+
+    & .playon-section {
+        padding: 5em 0;
+        margin: 10em 0 5em 0;
+    }
 }
 
 .container-bg {

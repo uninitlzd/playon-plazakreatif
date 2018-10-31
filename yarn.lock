@@ -93,6 +93,10 @@ animate.css@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-3.7.0.tgz#5de25d1ee5fba11ba6a1e2c4fa568f512eb7d4da"
 
+animejs@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/animejs/-/animejs-2.2.0.tgz#35eefdfc535b81949c9cb06f0b3e60c02e6fdc80"
+
 ansi-align@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-2.0.0.tgz#c36aeccba563b89ceb556f3690f0b1d9e3547f7f"
@@ -1286,10 +1290,6 @@ charenc@~0.0.1:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
 
-chartkick@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/chartkick/-/chartkick-3.0.1.tgz#f325041bfc15f5d18074d4803549efc3751ccd81"
-
 chokidar@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.7.0.tgz#798e689778151c8076b4b360e5edd28cda2bb468"
@@ -1884,10 +1884,6 @@ deep-equal@^1.0.1:
 deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
-
-deepmerge@^2.1.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
 
 define-properties@^1.1.2:
   version "1.1.3"
@@ -6431,14 +6427,6 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-chartkick@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/vue-chartkick/-/vue-chartkick-0.5.0.tgz#3ede6a3042e5436f82228b89886f867a0d1dbc14"
-  dependencies:
-    chartkick "^3.0.0"
-    deep-equal "^1.0.1"
-    deepmerge "^2.1.1"
-
 vue-glide-js@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/vue-glide-js/-/vue-glide-js-0.1.3.tgz#8e842250edb4a7b4988cc56a3c52c651aa753ede"
@@ -6497,10 +6485,6 @@ vue-template-es2015-compiler@^1.6.0:
 vue@^2.3.4, vue@^2.5.16, vue@^2.5.7:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
-
-vuebar@^0.0.20:
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/vuebar/-/vuebar-0.0.20.tgz#fd6313c2d3a2202c49e42419fe1d9ef126134200"
 
 watchpack@^1.4.0:
   version "1.6.0"

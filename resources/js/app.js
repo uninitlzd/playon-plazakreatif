@@ -42,12 +42,10 @@ Vue.component('shadowed-text', require('./components/ShadowedText'));
 import Sticky from 'vue-sticky-directive'
 import vueSmoothScroll from 'vue-smooth-scroll'
 import VueGlide from 'vue-glide-js'
-import VueChartkick from 'vue-chartkick'
 
 Vue.use(Sticky);
 Vue.use(vueSmoothScroll)
 Vue.use(VueGlide)
-Vue.use(VueChartkick)
 
 const app = new Vue({
     el: '#app',

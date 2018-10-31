@@ -70,8 +70,8 @@
                     //console.log()
                     //console.log("plus: " + (section.offsetTop + section.offsetHeight))
                     if (
-                        section.offsetTop + section.offsetHeight <= this.fromTop - (section.offsetHeight / 4) &&
-                        $(section).offset().top > this.fromTop - (section.offsetHeight / 4)
+                        section.offsetTop + section.offsetHeight <= this.fromTop - (section.offsetHeight / 2) &&
+                        $(section).offset().top > this.fromTop - (section.offsetHeight / 2)
                     ) {
                         // console.log('add');
                         // console.log(link.classList)

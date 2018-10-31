@@ -1,6 +1,10 @@
 
 window._ = require('lodash');
 window.Popper = require('popper.js').default;
+
+import anime from 'animejs';
+window.anime = anime;
+
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -10,6 +14,7 @@ window.Popper = require('popper.js').default;
 try {
     window.$ = window.jQuery = require('jquery');
     window.feather = require('feather-icons');
+
 
     require('bootstrap');
 } catch (e) {}

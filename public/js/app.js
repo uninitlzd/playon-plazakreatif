@@ -1,12 +1,121 @@
 webpackJsonp([0],[
 /* 0 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var bind = __webpack_require__(9);
-var isBuffer = __webpack_require__(31);
+var isBuffer = __webpack_require__(33);
 
 /*global toString:true*/
 
@@ -309,117 +418,90 @@ module.exports = {
 
 
 /***/ }),
-/* 1 */
+/* 2 */,
+/* 3 */
 /***/ (function(module, exports) {
 
-/* globals __VUE_SSR_CONTEXT__ */
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
 
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
 
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
 
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
 
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
 
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
 
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
+	return [content].join('\n');
+}
 
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
 
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
+	return '/*# ' + data + ' */';
 }
 
 
 /***/ }),
-/* 2 */,
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -2164,88 +2246,6 @@ module.exports = __webpack_require__(/*! /home/travis/build/feathericons/feather
 //# sourceMappingURL=feather.js.map
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2292,7 +2292,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(20);
+var	fixUrls = __webpack_require__(21);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -2611,8 +2611,8 @@ function updateLink (link, options, obj) {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(33);
+var utils = __webpack_require__(1);
+var normalizeHeaderName = __webpack_require__(35);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -15646,13 +15646,13 @@ module.exports = function bind(fn, thisArg) {
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var settle = __webpack_require__(34);
-var buildURL = __webpack_require__(36);
-var parseHeaders = __webpack_require__(37);
-var isURLSameOrigin = __webpack_require__(38);
+var utils = __webpack_require__(1);
+var settle = __webpack_require__(36);
+var buildURL = __webpack_require__(38);
+var parseHeaders = __webpack_require__(39);
+var isURLSameOrigin = __webpack_require__(40);
 var createError = __webpack_require__(12);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(39);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(41);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -15749,7 +15749,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(40);
+      var cookies = __webpack_require__(42);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -15833,7 +15833,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(35);
+var enhanceError = __webpack_require__(37);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -15894,30 +15894,257 @@ module.exports = Cancel;
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(17);
-__webpack_require__(96);
-module.exports = __webpack_require__(97);
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(62)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
 
 
 /***/ }),
 /* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(18);
+__webpack_require__(104);
+module.exports = __webpack_require__(105);
+
+
+/***/ }),
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_animate_css__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_animate_css__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_animate_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_animate_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_fullpage_vue_src_fullpage_css__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_fullpage_vue_src_fullpage_css__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_fullpage_vue_src_fullpage_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_fullpage_vue_src_fullpage_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fullpage_vue__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fullpage_vue__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fullpage_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_fullpage_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__chenfengyuan_vue_countdown__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__chenfengyuan_vue_countdown__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_smooth_scroll__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_smooth_scroll__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_smooth_scroll___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vue_smooth_scroll__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_glide_js__ = __webpack_require__(79);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_chartkick__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_glide_js__ = __webpack_require__(93);
 
 
 
@@ -15929,7 +16156,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(25);
+__webpack_require__(26);
 
 window.Vue = __webpack_require__(15);
 
@@ -15942,22 +16169,21 @@ window.Vue = __webpack_require__(15);
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_fullpage_vue___default.a);
 
 Vue.component(__WEBPACK_IMPORTED_MODULE_3__chenfengyuan_vue_countdown__["a" /* default */].name, __WEBPACK_IMPORTED_MODULE_3__chenfengyuan_vue_countdown__["a" /* default */]);
-Vue.component('example-component', __webpack_require__(50));
-Vue.component('navbar', __webpack_require__(105));
-Vue.component('homepage-component', __webpack_require__(53));
-Vue.component('homepage-countdown', __webpack_require__(54));
-Vue.component('ragam-acara', __webpack_require__(57));
-Vue.component('fullpage-wrapper', __webpack_require__(60));
-Vue.component('card-slider', __webpack_require__(62));
-Vue.component('workshop-slider', __webpack_require__(65));
-Vue.component('lomba-slider', __webpack_require__(68));
-Vue.component('timeline-acara', __webpack_require__(71));
-Vue.component('card', __webpack_require__(74));
-Vue.component('enter-button', __webpack_require__(111));
-Vue.component('shadowed-text', __webpack_require__(114));
+Vue.component('example-component', __webpack_require__(52));
+Vue.component('navbar', __webpack_require__(55));
+Vue.component('homepage-component', __webpack_require__(58));
+Vue.component('homepage-countdown', __webpack_require__(59));
+Vue.component('ragam-acara', __webpack_require__(65));
+Vue.component('fullpage-wrapper', __webpack_require__(68));
+Vue.component('card-slider', __webpack_require__(70));
+Vue.component('workshop-slider', __webpack_require__(73));
+Vue.component('lomba-slider', __webpack_require__(76));
+Vue.component('timeline-acara', __webpack_require__(79));
+Vue.component('card', __webpack_require__(84));
+Vue.component('enter-button', __webpack_require__(87));
+Vue.component('shadowed-text', __webpack_require__(90));
 
 // or for a single instance
-
 
 
 
@@ -15965,20 +16191,19 @@ Vue.component('shadowed-text', __webpack_require__(114));
 Vue.use(__WEBPACK_IMPORTED_MODULE_4_vue_sticky_directive___default.a);
 Vue.use(__WEBPACK_IMPORTED_MODULE_5_vue_smooth_scroll___default.a);
 Vue.use(__WEBPACK_IMPORTED_MODULE_6_vue_glide_js__["a" /* default */]);
-Vue.use(__WEBPACK_IMPORTED_MODULE_7_vue_chartkick__["a" /* default */]);
 
 var app = new Vue({
   el: '#app'
 });
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(19);
+var content = __webpack_require__(20);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -16003,10 +16228,10 @@ if(false) {
 }
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(3)(false);
 // imports
 
 
@@ -16017,7 +16242,7 @@ exports.push([module.i, "@charset \"UTF-8\";\n\n/*!\n * animate.css -http://dane
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 
@@ -16112,13 +16337,13 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(22);
+var content = __webpack_require__(23);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -16143,10 +16368,10 @@ if(false) {
 }
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(3)(false);
 // imports
 
 
@@ -16157,7 +16382,7 @@ exports.push([module.i, "* {\n    -webkit-overflow-scrolling: touch;\n}\n.fullpa
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -16674,7 +16899,7 @@ return fullpage;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17006,12 +17231,20 @@ var index = {
 
 
 /***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 26 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_animejs__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_animejs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_animejs__);
 
-window._ = __webpack_require__(26);
+window._ = __webpack_require__(27);
 window.Popper = __webpack_require__(7).default;
+
+
+window.anime = __WEBPACK_IMPORTED_MODULE_0_animejs___default.a;
+
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -17020,9 +17253,9 @@ window.Popper = __webpack_require__(7).default;
 
 try {
   window.$ = window.jQuery = __webpack_require__(8);
-  window.feather = __webpack_require__(3);
+  window.feather = __webpack_require__(4);
 
-  __webpack_require__(28);
+  __webpack_require__(30);
 } catch (e) {}
 
 /**
@@ -17031,7 +17264,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(29);
+window.axios = __webpack_require__(31);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -17067,7 +17300,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -34179,10 +34412,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(27)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(28)(module)))
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -34210,7 +34443,49 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+ 2017 Julian Garnier
+ Released under the MIT license
+*/
+var $jscomp={scope:{}};$jscomp.defineProperty="function"==typeof Object.defineProperties?Object.defineProperty:function(e,r,p){if(p.get||p.set)throw new TypeError("ES3 does not support getters and setters.");e!=Array.prototype&&e!=Object.prototype&&(e[r]=p.value)};$jscomp.getGlobal=function(e){return"undefined"!=typeof window&&window===e?e:"undefined"!=typeof global&&null!=global?global:e};$jscomp.global=$jscomp.getGlobal(this);$jscomp.SYMBOL_PREFIX="jscomp_symbol_";
+$jscomp.initSymbol=function(){$jscomp.initSymbol=function(){};$jscomp.global.Symbol||($jscomp.global.Symbol=$jscomp.Symbol)};$jscomp.symbolCounter_=0;$jscomp.Symbol=function(e){return $jscomp.SYMBOL_PREFIX+(e||"")+$jscomp.symbolCounter_++};
+$jscomp.initSymbolIterator=function(){$jscomp.initSymbol();var e=$jscomp.global.Symbol.iterator;e||(e=$jscomp.global.Symbol.iterator=$jscomp.global.Symbol("iterator"));"function"!=typeof Array.prototype[e]&&$jscomp.defineProperty(Array.prototype,e,{configurable:!0,writable:!0,value:function(){return $jscomp.arrayIterator(this)}});$jscomp.initSymbolIterator=function(){}};$jscomp.arrayIterator=function(e){var r=0;return $jscomp.iteratorPrototype(function(){return r<e.length?{done:!1,value:e[r++]}:{done:!0}})};
+$jscomp.iteratorPrototype=function(e){$jscomp.initSymbolIterator();e={next:e};e[$jscomp.global.Symbol.iterator]=function(){return this};return e};$jscomp.array=$jscomp.array||{};$jscomp.iteratorFromArray=function(e,r){$jscomp.initSymbolIterator();e instanceof String&&(e+="");var p=0,m={next:function(){if(p<e.length){var u=p++;return{value:r(u,e[u]),done:!1}}m.next=function(){return{done:!0,value:void 0}};return m.next()}};m[Symbol.iterator]=function(){return m};return m};
+$jscomp.polyfill=function(e,r,p,m){if(r){p=$jscomp.global;e=e.split(".");for(m=0;m<e.length-1;m++){var u=e[m];u in p||(p[u]={});p=p[u]}e=e[e.length-1];m=p[e];r=r(m);r!=m&&null!=r&&$jscomp.defineProperty(p,e,{configurable:!0,writable:!0,value:r})}};$jscomp.polyfill("Array.prototype.keys",function(e){return e?e:function(){return $jscomp.iteratorFromArray(this,function(e){return e})}},"es6-impl","es3");var $jscomp$this=this;
+(function(e,r){ true?!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (r),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):"object"===typeof module&&module.exports?module.exports=r():e.anime=r()})(this,function(){function e(a){if(!h.col(a))try{return document.querySelectorAll(a)}catch(c){}}function r(a,c){for(var d=a.length,b=2<=arguments.length?arguments[1]:void 0,f=[],n=0;n<d;n++)if(n in a){var k=a[n];c.call(b,k,n,a)&&f.push(k)}return f}function p(a){return a.reduce(function(a,d){return a.concat(h.arr(d)?p(d):d)},[])}function m(a){if(h.arr(a))return a;
+h.str(a)&&(a=e(a)||a);return a instanceof NodeList||a instanceof HTMLCollection?[].slice.call(a):[a]}function u(a,c){return a.some(function(a){return a===c})}function C(a){var c={},d;for(d in a)c[d]=a[d];return c}function D(a,c){var d=C(a),b;for(b in a)d[b]=c.hasOwnProperty(b)?c[b]:a[b];return d}function z(a,c){var d=C(a),b;for(b in c)d[b]=h.und(a[b])?c[b]:a[b];return d}function T(a){a=a.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i,function(a,c,d,k){return c+c+d+d+k+k});var c=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(a);
+a=parseInt(c[1],16);var d=parseInt(c[2],16),c=parseInt(c[3],16);return"rgba("+a+","+d+","+c+",1)"}function U(a){function c(a,c,b){0>b&&(b+=1);1<b&&--b;return b<1/6?a+6*(c-a)*b:.5>b?c:b<2/3?a+(c-a)*(2/3-b)*6:a}var d=/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(a)||/hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*([\d.]+)\)/g.exec(a);a=parseInt(d[1])/360;var b=parseInt(d[2])/100,f=parseInt(d[3])/100,d=d[4]||1;if(0==b)f=b=a=f;else{var n=.5>f?f*(1+b):f+b-f*b,k=2*f-n,f=c(k,n,a+1/3),b=c(k,n,a);a=c(k,n,a-1/3)}return"rgba("+
+255*f+","+255*b+","+255*a+","+d+")"}function y(a){if(a=/([\+\-]?[0-9#\.]+)(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(a))return a[2]}function V(a){if(-1<a.indexOf("translate")||"perspective"===a)return"px";if(-1<a.indexOf("rotate")||-1<a.indexOf("skew"))return"deg"}function I(a,c){return h.fnc(a)?a(c.target,c.id,c.total):a}function E(a,c){if(c in a.style)return getComputedStyle(a).getPropertyValue(c.replace(/([a-z])([A-Z])/g,"$1-$2").toLowerCase())||"0"}function J(a,c){if(h.dom(a)&&
+u(W,c))return"transform";if(h.dom(a)&&(a.getAttribute(c)||h.svg(a)&&a[c]))return"attribute";if(h.dom(a)&&"transform"!==c&&E(a,c))return"css";if(null!=a[c])return"object"}function X(a,c){var d=V(c),d=-1<c.indexOf("scale")?1:0+d;a=a.style.transform;if(!a)return d;for(var b=[],f=[],n=[],k=/(\w+)\((.+?)\)/g;b=k.exec(a);)f.push(b[1]),n.push(b[2]);a=r(n,function(a,b){return f[b]===c});return a.length?a[0]:d}function K(a,c){switch(J(a,c)){case "transform":return X(a,c);case "css":return E(a,c);case "attribute":return a.getAttribute(c)}return a[c]||
+0}function L(a,c){var d=/^(\*=|\+=|-=)/.exec(a);if(!d)return a;var b=y(a)||0;c=parseFloat(c);a=parseFloat(a.replace(d[0],""));switch(d[0][0]){case "+":return c+a+b;case "-":return c-a+b;case "*":return c*a+b}}function F(a,c){return Math.sqrt(Math.pow(c.x-a.x,2)+Math.pow(c.y-a.y,2))}function M(a){a=a.points;for(var c=0,d,b=0;b<a.numberOfItems;b++){var f=a.getItem(b);0<b&&(c+=F(d,f));d=f}return c}function N(a){if(a.getTotalLength)return a.getTotalLength();switch(a.tagName.toLowerCase()){case "circle":return 2*
+Math.PI*a.getAttribute("r");case "rect":return 2*a.getAttribute("width")+2*a.getAttribute("height");case "line":return F({x:a.getAttribute("x1"),y:a.getAttribute("y1")},{x:a.getAttribute("x2"),y:a.getAttribute("y2")});case "polyline":return M(a);case "polygon":var c=a.points;return M(a)+F(c.getItem(c.numberOfItems-1),c.getItem(0))}}function Y(a,c){function d(b){b=void 0===b?0:b;return a.el.getPointAtLength(1<=c+b?c+b:0)}var b=d(),f=d(-1),n=d(1);switch(a.property){case "x":return b.x;case "y":return b.y;
+case "angle":return 180*Math.atan2(n.y-f.y,n.x-f.x)/Math.PI}}function O(a,c){var d=/-?\d*\.?\d+/g,b;b=h.pth(a)?a.totalLength:a;if(h.col(b))if(h.rgb(b)){var f=/rgb\((\d+,\s*[\d]+,\s*[\d]+)\)/g.exec(b);b=f?"rgba("+f[1]+",1)":b}else b=h.hex(b)?T(b):h.hsl(b)?U(b):void 0;else f=(f=y(b))?b.substr(0,b.length-f.length):b,b=c&&!/\s/g.test(b)?f+c:f;b+="";return{original:b,numbers:b.match(d)?b.match(d).map(Number):[0],strings:h.str(a)||c?b.split(d):[]}}function P(a){a=a?p(h.arr(a)?a.map(m):m(a)):[];return r(a,
+function(a,d,b){return b.indexOf(a)===d})}function Z(a){var c=P(a);return c.map(function(a,b){return{target:a,id:b,total:c.length}})}function aa(a,c){var d=C(c);if(h.arr(a)){var b=a.length;2!==b||h.obj(a[0])?h.fnc(c.duration)||(d.duration=c.duration/b):a={value:a}}return m(a).map(function(a,b){b=b?0:c.delay;a=h.obj(a)&&!h.pth(a)?a:{value:a};h.und(a.delay)&&(a.delay=b);return a}).map(function(a){return z(a,d)})}function ba(a,c){var d={},b;for(b in a){var f=I(a[b],c);h.arr(f)&&(f=f.map(function(a){return I(a,
+c)}),1===f.length&&(f=f[0]));d[b]=f}d.duration=parseFloat(d.duration);d.delay=parseFloat(d.delay);return d}function ca(a){return h.arr(a)?A.apply(this,a):Q[a]}function da(a,c){var d;return a.tweens.map(function(b){b=ba(b,c);var f=b.value,e=K(c.target,a.name),k=d?d.to.original:e,k=h.arr(f)?f[0]:k,w=L(h.arr(f)?f[1]:f,k),e=y(w)||y(k)||y(e);b.from=O(k,e);b.to=O(w,e);b.start=d?d.end:a.offset;b.end=b.start+b.delay+b.duration;b.easing=ca(b.easing);b.elasticity=(1E3-Math.min(Math.max(b.elasticity,1),999))/
+1E3;b.isPath=h.pth(f);b.isColor=h.col(b.from.original);b.isColor&&(b.round=1);return d=b})}function ea(a,c){return r(p(a.map(function(a){return c.map(function(b){var c=J(a.target,b.name);if(c){var d=da(b,a);b={type:c,property:b.name,animatable:a,tweens:d,duration:d[d.length-1].end,delay:d[0].delay}}else b=void 0;return b})})),function(a){return!h.und(a)})}function R(a,c,d,b){var f="delay"===a;return c.length?(f?Math.min:Math.max).apply(Math,c.map(function(b){return b[a]})):f?b.delay:d.offset+b.delay+
+b.duration}function fa(a){var c=D(ga,a),d=D(S,a),b=Z(a.targets),f=[],e=z(c,d),k;for(k in a)e.hasOwnProperty(k)||"targets"===k||f.push({name:k,offset:e.offset,tweens:aa(a[k],d)});a=ea(b,f);return z(c,{children:[],animatables:b,animations:a,duration:R("duration",a,c,d),delay:R("delay",a,c,d)})}function q(a){function c(){return window.Promise&&new Promise(function(a){return p=a})}function d(a){return g.reversed?g.duration-a:a}function b(a){for(var b=0,c={},d=g.animations,f=d.length;b<f;){var e=d[b],
+k=e.animatable,h=e.tweens,n=h.length-1,l=h[n];n&&(l=r(h,function(b){return a<b.end})[0]||l);for(var h=Math.min(Math.max(a-l.start-l.delay,0),l.duration)/l.duration,w=isNaN(h)?1:l.easing(h,l.elasticity),h=l.to.strings,p=l.round,n=[],m=void 0,m=l.to.numbers.length,t=0;t<m;t++){var x=void 0,x=l.to.numbers[t],q=l.from.numbers[t],x=l.isPath?Y(l.value,w*x):q+w*(x-q);p&&(l.isColor&&2<t||(x=Math.round(x*p)/p));n.push(x)}if(l=h.length)for(m=h[0],w=0;w<l;w++)p=h[w+1],t=n[w],isNaN(t)||(m=p?m+(t+p):m+(t+" "));
+else m=n[0];ha[e.type](k.target,e.property,m,c,k.id);e.currentValue=m;b++}if(b=Object.keys(c).length)for(d=0;d<b;d++)H||(H=E(document.body,"transform")?"transform":"-webkit-transform"),g.animatables[d].target.style[H]=c[d].join(" ");g.currentTime=a;g.progress=a/g.duration*100}function f(a){if(g[a])g[a](g)}function e(){g.remaining&&!0!==g.remaining&&g.remaining--}function k(a){var k=g.duration,n=g.offset,w=n+g.delay,r=g.currentTime,x=g.reversed,q=d(a);if(g.children.length){var u=g.children,v=u.length;
+if(q>=g.currentTime)for(var G=0;G<v;G++)u[G].seek(q);else for(;v--;)u[v].seek(q)}if(q>=w||!k)g.began||(g.began=!0,f("begin")),f("run");if(q>n&&q<k)b(q);else if(q<=n&&0!==r&&(b(0),x&&e()),q>=k&&r!==k||!k)b(k),x||e();f("update");a>=k&&(g.remaining?(t=h,"alternate"===g.direction&&(g.reversed=!g.reversed)):(g.pause(),g.completed||(g.completed=!0,f("complete"),"Promise"in window&&(p(),m=c()))),l=0)}a=void 0===a?{}:a;var h,t,l=0,p=null,m=c(),g=fa(a);g.reset=function(){var a=g.direction,c=g.loop;g.currentTime=
+0;g.progress=0;g.paused=!0;g.began=!1;g.completed=!1;g.reversed="reverse"===a;g.remaining="alternate"===a&&1===c?2:c;b(0);for(a=g.children.length;a--;)g.children[a].reset()};g.tick=function(a){h=a;t||(t=h);k((l+h-t)*q.speed)};g.seek=function(a){k(d(a))};g.pause=function(){var a=v.indexOf(g);-1<a&&v.splice(a,1);g.paused=!0};g.play=function(){g.paused&&(g.paused=!1,t=0,l=d(g.currentTime),v.push(g),B||ia())};g.reverse=function(){g.reversed=!g.reversed;t=0;l=d(g.currentTime)};g.restart=function(){g.pause();
+g.reset();g.play()};g.finished=m;g.reset();g.autoplay&&g.play();return g}var ga={update:void 0,begin:void 0,run:void 0,complete:void 0,loop:1,direction:"normal",autoplay:!0,offset:0},S={duration:1E3,delay:0,easing:"easeOutElastic",elasticity:500,round:0},W="translateX translateY translateZ rotate rotateX rotateY rotateZ scale scaleX scaleY scaleZ skewX skewY perspective".split(" "),H,h={arr:function(a){return Array.isArray(a)},obj:function(a){return-1<Object.prototype.toString.call(a).indexOf("Object")},
+pth:function(a){return h.obj(a)&&a.hasOwnProperty("totalLength")},svg:function(a){return a instanceof SVGElement},dom:function(a){return a.nodeType||h.svg(a)},str:function(a){return"string"===typeof a},fnc:function(a){return"function"===typeof a},und:function(a){return"undefined"===typeof a},hex:function(a){return/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(a)},rgb:function(a){return/^rgb/.test(a)},hsl:function(a){return/^hsl/.test(a)},col:function(a){return h.hex(a)||h.rgb(a)||h.hsl(a)}},A=function(){function a(a,
+d,b){return(((1-3*b+3*d)*a+(3*b-6*d))*a+3*d)*a}return function(c,d,b,f){if(0<=c&&1>=c&&0<=b&&1>=b){var e=new Float32Array(11);if(c!==d||b!==f)for(var k=0;11>k;++k)e[k]=a(.1*k,c,b);return function(k){if(c===d&&b===f)return k;if(0===k)return 0;if(1===k)return 1;for(var h=0,l=1;10!==l&&e[l]<=k;++l)h+=.1;--l;var l=h+(k-e[l])/(e[l+1]-e[l])*.1,n=3*(1-3*b+3*c)*l*l+2*(3*b-6*c)*l+3*c;if(.001<=n){for(h=0;4>h;++h){n=3*(1-3*b+3*c)*l*l+2*(3*b-6*c)*l+3*c;if(0===n)break;var m=a(l,c,b)-k,l=l-m/n}k=l}else if(0===
+n)k=l;else{var l=h,h=h+.1,g=0;do m=l+(h-l)/2,n=a(m,c,b)-k,0<n?h=m:l=m;while(1e-7<Math.abs(n)&&10>++g);k=m}return a(k,d,f)}}}}(),Q=function(){function a(a,b){return 0===a||1===a?a:-Math.pow(2,10*(a-1))*Math.sin(2*(a-1-b/(2*Math.PI)*Math.asin(1))*Math.PI/b)}var c="Quad Cubic Quart Quint Sine Expo Circ Back Elastic".split(" "),d={In:[[.55,.085,.68,.53],[.55,.055,.675,.19],[.895,.03,.685,.22],[.755,.05,.855,.06],[.47,0,.745,.715],[.95,.05,.795,.035],[.6,.04,.98,.335],[.6,-.28,.735,.045],a],Out:[[.25,
+.46,.45,.94],[.215,.61,.355,1],[.165,.84,.44,1],[.23,1,.32,1],[.39,.575,.565,1],[.19,1,.22,1],[.075,.82,.165,1],[.175,.885,.32,1.275],function(b,c){return 1-a(1-b,c)}],InOut:[[.455,.03,.515,.955],[.645,.045,.355,1],[.77,0,.175,1],[.86,0,.07,1],[.445,.05,.55,.95],[1,0,0,1],[.785,.135,.15,.86],[.68,-.55,.265,1.55],function(b,c){return.5>b?a(2*b,c)/2:1-a(-2*b+2,c)/2}]},b={linear:A(.25,.25,.75,.75)},f={},e;for(e in d)f.type=e,d[f.type].forEach(function(a){return function(d,f){b["ease"+a.type+c[f]]=h.fnc(d)?
+d:A.apply($jscomp$this,d)}}(f)),f={type:f.type};return b}(),ha={css:function(a,c,d){return a.style[c]=d},attribute:function(a,c,d){return a.setAttribute(c,d)},object:function(a,c,d){return a[c]=d},transform:function(a,c,d,b,f){b[f]||(b[f]=[]);b[f].push(c+"("+d+")")}},v=[],B=0,ia=function(){function a(){B=requestAnimationFrame(c)}function c(c){var b=v.length;if(b){for(var d=0;d<b;)v[d]&&v[d].tick(c),d++;a()}else cancelAnimationFrame(B),B=0}return a}();q.version="2.2.0";q.speed=1;q.running=v;q.remove=
+function(a){a=P(a);for(var c=v.length;c--;)for(var d=v[c],b=d.animations,f=b.length;f--;)u(a,b[f].animatable.target)&&(b.splice(f,1),b.length||d.pause())};q.getValue=K;q.path=function(a,c){var d=h.str(a)?e(a)[0]:a,b=c||100;return function(a){return{el:d,property:a,totalLength:N(d)*(b/100)}}};q.setDashoffset=function(a){var c=N(a);a.setAttribute("stroke-dasharray",c);return c};q.bezier=A;q.easings=Q;q.timeline=function(a){var c=q(a);c.pause();c.duration=0;c.add=function(d){c.children.forEach(function(a){a.began=
+!0;a.completed=!0});m(d).forEach(function(b){var d=z(b,D(S,a||{}));d.targets=d.targets||a.targets;b=c.duration;var e=d.offset;d.autoplay=!1;d.direction=c.direction;d.offset=h.und(e)?b:L(e,b);c.began=!0;c.completed=!0;c.seek(d.offset);d=q(d);d.began=!0;d.completed=!0;d.duration>b&&(c.duration=d.duration);c.children.push(d)});c.seek(0);c.reset();c.autoplay&&c.restart();return c};return c};q.random=function(a,c){return Math.floor(Math.random()*(c-a+1))+a};return q});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -38160,21 +38435,21 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(30);
+module.exports = __webpack_require__(32);
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 var bind = __webpack_require__(9);
-var Axios = __webpack_require__(32);
+var Axios = __webpack_require__(34);
 var defaults = __webpack_require__(6);
 
 /**
@@ -38209,14 +38484,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(14);
-axios.CancelToken = __webpack_require__(46);
+axios.CancelToken = __webpack_require__(48);
 axios.isCancel = __webpack_require__(13);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(47);
+axios.spread = __webpack_require__(49);
 
 module.exports = axios;
 
@@ -38225,7 +38500,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports) {
 
 /*!
@@ -38252,16 +38527,16 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var defaults = __webpack_require__(6);
-var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(41);
-var dispatchRequest = __webpack_require__(42);
+var utils = __webpack_require__(1);
+var InterceptorManager = __webpack_require__(43);
+var dispatchRequest = __webpack_require__(44);
 
 /**
  * Create a new instance of Axios
@@ -38338,13 +38613,13 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -38357,7 +38632,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38390,7 +38665,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38418,13 +38693,13 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -38491,13 +38766,13 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 // Headers whose duplicates are ignored by node
 // c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -38551,13 +38826,13 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -38626,7 +38901,7 @@ module.exports = (
 
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38669,13 +38944,13 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -38729,13 +39004,13 @@ module.exports = (
 
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -38788,18 +39063,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var transformData = __webpack_require__(43);
+var utils = __webpack_require__(1);
+var transformData = __webpack_require__(45);
 var isCancel = __webpack_require__(13);
 var defaults = __webpack_require__(6);
-var isAbsoluteURL = __webpack_require__(44);
-var combineURLs = __webpack_require__(45);
+var isAbsoluteURL = __webpack_require__(46);
+var combineURLs = __webpack_require__(47);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -38881,13 +39156,13 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(1);
 
 /**
  * Transform the data for a request or a response
@@ -38908,7 +39183,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38929,7 +39204,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -38950,7 +39225,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39014,7 +39289,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39048,17 +39323,17 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 48 */,
-/* 49 */,
-/* 50 */
+/* 50 */,
+/* 51 */,
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(51)
+var __vue_script__ = __webpack_require__(53)
 /* template */
-var __vue_template__ = __webpack_require__(52)
+var __vue_template__ = __webpack_require__(54)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -39097,7 +39372,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39126,7 +39401,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -39169,10 +39444,491 @@ if (false) {
 }
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var normalizeComponent = __webpack_require__(1)
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(56)
+/* template */
+var __vue_template__ = __webpack_require__(57)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Navbar.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6dde423b", Component.options)
+  } else {
+    hotAPI.reload("data-v-6dde423b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var options = {
+    delay: function delay(el, i) {
+        return i * 100;
+    },
+    duration: 400,
+    easing: "easeOutCubic"
+};
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            nav__overlay: true,
+            overlayActive: false,
+            navActive: 'home'
+        };
+    },
+
+    methods: {
+        to: function to(element) {
+            this.overlayActive = false;
+            this.navActive = element;
+            var el = window.querySelector("#" + element);
+            window.scrollTo(0, el.offsetTop);
+        },
+        handleEnter: function handleEnter(el, done) {
+            var sections = Array.from(el.querySelectorAll("li"));
+            var timeline = anime.timeline();
+            timeline.add(_extends({
+                targets: el,
+                translateX: [-2000, 0]
+            }, options)).add(_extends({
+                targets: sections,
+                translateX: [-20, 0],
+                opacity: [0, 1]
+            }, options, {
+                complete: done
+            }));
+
+            feather.replace();
+        },
+        handleLeave: function handleLeave(el, done) {
+            var sections = Array.from(el.querySelectorAll("li"));
+            var timeline = anime.timeline();
+            timeline.add(_extends({
+                targets: sections.reverse(),
+                translateX: -20,
+                opacity: 0
+            }, options)).add({
+                targets: el,
+                translateX: -2000,
+                options: {
+                    duration: 200000000,
+                    easing: "easeInCubic"
+                },
+                complete: done
+            });
+        }
+    },
+    mounted: function mounted() {
+        feather.replace();
+    }
+});
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("nav", { staticClass: "position-fixed main-nav navbar__desktop" }, [
+        _c(
+          "div",
+          {
+            staticClass: "main-nav__button d-flex justify-content-center",
+            on: {
+              click: function($event) {
+                _vm.overlayActive = !_vm.overlayActive
+              }
+            }
+          },
+          [
+            _c("i", {
+              staticClass: "text-white align-self-center",
+              attrs: { "data-feather": "menu" }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._m(1)
+      ]),
+      _vm._v(" "),
+      _c(
+        "transition",
+        {
+          attrs: { css: false },
+          on: { enter: _vm.handleEnter, leave: _vm.handleLeave }
+        },
+        [
+          _vm.overlayActive
+            ? _c(
+                "div",
+                { staticClass: "nav__overlay", attrs: { id: "main-overlay" } },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "nav__overlay__button d-flex justify-content-center",
+                      on: {
+                        click: function($event) {
+                          _vm.overlayActive = !_vm.overlayActive
+                        }
+                      }
+                    },
+                    [
+                      _c("i", {
+                        staticClass: "text-white align-self-center",
+                        attrs: { "data-feather": "x" }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex flex-column h-100 nav__overlay__items"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "d-flex flex-column justify-content-center h-100"
+                        },
+                        [
+                          _c("ul", {}, [
+                            _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  class: { navActive: _vm.navActive == "home" },
+                                  attrs: { href: "/" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.to("home")
+                                    }
+                                  }
+                                },
+                                [_vm._v("Home")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  class: {
+                                    navActive: _vm.navActive == "exhibition"
+                                  },
+                                  attrs: { href: "/#exhibition" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.to("exhibition")
+                                    }
+                                  }
+                                },
+                                [_vm._v("Exhibition")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  class: {
+                                    navActive: _vm.navActive == "talkshow"
+                                  },
+                                  attrs: { href: "/#talkshow" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.to("talkshow")
+                                    }
+                                  }
+                                },
+                                [_vm._v("Talkshow")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  class: {
+                                    navActive: _vm.navActive == "workshop"
+                                  },
+                                  attrs: { href: "/#workshop" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.to("workshop")
+                                    }
+                                  }
+                                },
+                                [_vm._v("Workshop")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  class: {
+                                    navActive: _vm.navActive == "contest"
+                                  },
+                                  attrs: { href: "/#contest" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.to("contest")
+                                    }
+                                  }
+                                },
+                                [_vm._v("Contest")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c("div", {
+                                staticClass: "nav__overlay__items__divider"
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  class: {
+                                    navActive: _vm.navActive == "timeline"
+                                  },
+                                  attrs: { href: "/#timeline" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.to("timeline")
+                                    }
+                                  }
+                                },
+                                [_vm._v("Timeline")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c(
+                                "a",
+                                {
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.overlayActive = !_vm.overlayActive
+                                    }
+                                  }
+                                },
+                                [_vm._v("Registration")]
+                              )
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "d-flex h-25 pb-5" }, [
+                        _c(
+                          "ul",
+                          {
+                            staticClass:
+                              "list-inline align-self-center nav__overlay__items__end"
+                          },
+                          [
+                            _c("li", { staticClass: "list-inline-item" }, [
+                              _c("a", { attrs: { href: "" } }, [
+                                _c("i", {
+                                  attrs: { "data-feather": "instagram" }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-inline-item" }, [
+                              _c("a", { attrs: { href: "" } }, [
+                                _c("i", {
+                                  attrs: { "data-feather": "facebook" }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-inline-item" }, [
+                              _c(
+                                "a",
+                                { staticClass: "mt-3", attrs: { href: "" } },
+                                [_vm._v("Contacts")]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-inline-item" }, [
+                              _c(
+                                "a",
+                                { staticClass: "mt-3", attrs: { href: "" } },
+                                [_vm._v("Sponsor")]
+                              )
+                            ])
+                          ]
+                        )
+                      ])
+                    ]
+                  )
+                ]
+              )
+            : _vm._e()
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "main-nav__social-media-icon-wrapper d-flex h-50 pb-3" },
+      [
+        _c(
+          "a",
+          {
+            staticClass: "align-self-end mx-auto text-orange-primary",
+            attrs: { href: "#" }
+          },
+          [_c("i", { attrs: { "data-feather": "home" } })]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "main-nav__social-media-icon-wrapper d-flex h-50 pb-3" },
+      [
+        _c(
+          "a",
+          {
+            staticClass: "align-self-end mx-auto mb-5 text-orange-primary",
+            attrs: { href: "#" }
+          },
+          [_c("i", { attrs: { "data-feather": "instagram" } })]
+        )
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6dde423b", module.exports)
+  }
+}
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = null
 /* template */
@@ -39199,19 +39955,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 54 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(119)
+  __webpack_require__(60)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(55)
+var __vue_script__ = __webpack_require__(63)
 /* template */
-var __vue_template__ = __webpack_require__(56)
+var __vue_template__ = __webpack_require__(64)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -39250,7 +40006,80 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 55 */
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(61);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(16)("ad97163e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3e7654f0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./HomepageCountdown.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3e7654f0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./HomepageCountdown.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.container-bg {\n    right: -10em;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
+/***/ }),
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39295,7 +40124,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 56 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -39378,15 +40207,15 @@ if (false) {
 }
 
 /***/ }),
-/* 57 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(58)
+var __vue_script__ = __webpack_require__(66)
 /* template */
-var __vue_template__ = __webpack_require__(59)
+var __vue_template__ = __webpack_require__(67)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -39425,7 +40254,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 58 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39505,7 +40334,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var section = _this2.sections[index];
                 //console.log()
                 //console.log("plus: " + (section.offsetTop + section.offsetHeight))
-                if (section.offsetTop + section.offsetHeight <= _this2.fromTop - section.offsetHeight / 4 && $(section).offset().top > _this2.fromTop - section.offsetHeight / 4) {
+                if (section.offsetTop + section.offsetHeight <= _this2.fromTop - section.offsetHeight / 2 && $(section).offset().top > _this2.fromTop - section.offsetHeight / 2) {
                     // console.log('add');
                     // console.log(link.classList)
                     link.classList.add("active");
@@ -39527,7 +40356,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 59 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -39721,15 +40550,15 @@ if (false) {
 }
 
 /***/ }),
-/* 60 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
 var __vue_script__ = null
 /* template */
-var __vue_template__ = __webpack_require__(61)
+var __vue_template__ = __webpack_require__(69)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -39768,7 +40597,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 61 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -39813,15 +40642,15 @@ if (false) {
 }
 
 /***/ }),
-/* 62 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(63)
+var __vue_script__ = __webpack_require__(71)
 /* template */
-var __vue_template__ = __webpack_require__(64)
+var __vue_template__ = __webpack_require__(72)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -39860,7 +40689,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 63 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39900,7 +40729,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var feather = __webpack_require__(3);
+var feather = __webpack_require__(4);
 feather.replace();
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -39928,7 +40757,7 @@ feather.replace();
 });
 
 /***/ }),
-/* 64 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -40033,15 +40862,15 @@ if (false) {
 }
 
 /***/ }),
-/* 65 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(66)
+var __vue_script__ = __webpack_require__(74)
 /* template */
-var __vue_template__ = __webpack_require__(67)
+var __vue_template__ = __webpack_require__(75)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -40080,7 +40909,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 66 */
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40120,7 +40949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var feather = __webpack_require__(3);
+var feather = __webpack_require__(4);
 feather.replace();
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -40147,7 +40976,7 @@ feather.replace();
 });
 
 /***/ }),
-/* 67 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -40251,15 +41080,15 @@ if (false) {
 }
 
 /***/ }),
-/* 68 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(69)
+var __vue_script__ = __webpack_require__(77)
 /* template */
-var __vue_template__ = __webpack_require__(70)
+var __vue_template__ = __webpack_require__(78)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -40298,7 +41127,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 69 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40338,7 +41167,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var feather = __webpack_require__(3);
+var feather = __webpack_require__(4);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -40365,7 +41194,7 @@ var feather = __webpack_require__(3);
 });
 
 /***/ }),
-/* 70 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -40469,19 +41298,19 @@ if (false) {
 }
 
 /***/ }),
-/* 71 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(101)
+  __webpack_require__(80)
 }
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(72)
+var __vue_script__ = __webpack_require__(82)
 /* template */
-var __vue_template__ = __webpack_require__(73)
+var __vue_template__ = __webpack_require__(83)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -40520,7 +41349,47 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 72 */
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(81);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(16)("9760efec", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-287ddc52\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TimelineAcara.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-287ddc52\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TimelineAcara.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 82 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40764,7 +41633,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 73 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -41179,15 +42048,15 @@ if (false) {
 }
 
 /***/ }),
-/* 74 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(75)
+var __vue_script__ = __webpack_require__(85)
 /* template */
-var __vue_template__ = __webpack_require__(76)
+var __vue_template__ = __webpack_require__(86)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -41226,7 +42095,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 75 */
+/* 85 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -41246,7 +42115,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 76 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -41270,7 +42139,131 @@ if (false) {
 }
 
 /***/ }),
-/* 77 */
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(88)
+/* template */
+var __vue_template__ = __webpack_require__(89)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/EnterButton.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-61f66e0f", Component.options)
+  } else {
+    hotAPI.reload("data-v-61f66e0f", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports) {
+
+//
+//
+//
+//
+//
+//
+//
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "a",
+    {
+      directives: [{ name: "smooth-scroll", rawName: "v-smooth-scroll" }],
+      staticClass: "d-flex justify-content-center",
+      staticStyle: { width: "50px", height: "50px", background: "#96c43e" },
+      attrs: { href: "#tentang" }
+    },
+    [
+      _c("i", {
+        staticClass: "text-white align-self-center",
+        staticStyle: { width: "20px", height: "20px" },
+        attrs: { "data-feather": "arrow-right" }
+      })
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-61f66e0f", module.exports)
+  }
+}
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = null
+/* template */
+var __vue_template__ = null
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/ShadowedText.vue"
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (global, factory) {
@@ -41588,19 +42581,19 @@ return Sticky$2;
 
 
 /***/ }),
-/* 78 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(e,t){ true?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.VueSmoothScroll=t():e.VueSmoothScroll=t()}(this,function(){return function(e){function t(n){if(o[n])return o[n].exports;var i=o[n]={exports:{},id:n,loaded:!1};return e[n].call(i.exports,i,i.exports,t),i.loaded=!0,i.exports}var o={};return t.m=e,t.c=o,t.p="",t(0)}([function(e,t){"use strict";function o(e){return e<.5?4*e*e*e:(e-1)*(2*e-2)*(2*e-2)+1}var n="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};e.exports={install:function(e){e.directive("smooth-scroll",{inserted:function(e,t){"object"===("undefined"==typeof window?"undefined":n(window))&&void 0!==window.pageYOffset&&e.addEventListener("click",function(e){var n=document.getElementById(this.hash.substring(1));if(n){e.preventDefault(),window.history.pushState&&location.hash!==this.hash&&window.history.pushState("","",this.hash);var i=t.value&&t.value.duration?t.value.duration:500,r=t.value&&t.value.offset?t.value.offset:0,u=Date.now(),f="HTML"===n.nodeName?-window.pageYOffset:n.getBoundingClientRect().top+window.pageYOffset;f+=r;var a=window.requestAnimationFrame||window.mozRequestAnimationFrame||window.webkitRequestAnimationFrame||function(e){window.setTimeout(e,15)},s=function e(){var t=Date.now()-u,r=f;t<i?(r=window.pageYOffset+(f-window.pageYOffset)*o(t/i),a(e)):location.replace("#"+n.id),window.scroll(0,r)};s()}})}})}}}])});
 
 /***/ }),
-/* 79 */
+/* 93 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Glide_vue__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Glide_vue__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Glide_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Glide_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_GlideSlide_vue__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_GlideSlide_vue__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_GlideSlide_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_GlideSlide_vue__);
 
 
@@ -41614,15 +42607,15 @@ return Sticky$2;
 
 
 /***/ }),
-/* 80 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(81)
+var __vue_script__ = __webpack_require__(95)
 /* template */
-var __vue_template__ = __webpack_require__(86)
+var __vue_template__ = __webpack_require__(100)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -41661,15 +42654,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 81 */
+/* 95 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__glidejs_glide__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__glidejs_glide_dist_css_glide_core_min_css__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__glidejs_glide__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__glidejs_glide_dist_css_glide_core_min_css__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__glidejs_glide_dist_css_glide_core_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__glidejs_glide_dist_css_glide_core_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__events__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__events__ = __webpack_require__(99);
 //
 //
 //
@@ -41965,7 +42958,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 82 */
+/* 96 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45598,13 +46591,13 @@ var Glide$1 = function (_Core) {
 
 
 /***/ }),
-/* 83 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(84);
+var content = __webpack_require__(98);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -45629,10 +46622,10 @@ if(false) {
 }
 
 /***/ }),
-/* 84 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(4)(false);
+exports = module.exports = __webpack_require__(3)(false);
 // imports
 
 
@@ -45643,7 +46636,7 @@ exports.push([module.i, ".glide{position:relative;width:100%;box-sizing:border-b
 
 
 /***/ }),
-/* 85 */
+/* 99 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45672,7 +46665,7 @@ exports.push([module.i, ".glide{position:relative;width:100%;box-sizing:border-b
 
 
 /***/ }),
-/* 86 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -45724,15 +46717,15 @@ if (false) {
 }
 
 /***/ }),
-/* 87 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(1)
+var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(88)
+var __vue_script__ = __webpack_require__(102)
 /* template */
-var __vue_template__ = __webpack_require__(89)
+var __vue_template__ = __webpack_require__(103)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45771,7 +46764,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 88 */
+/* 102 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45803,7 +46796,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 89 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -45828,3505 +46821,16 @@ if (false) {
 }
 
 /***/ }),
-/* 90 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chartkick__ = __webpack_require__(91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_deep_equal__ = __webpack_require__(92);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_deep_equal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_deep_equal__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_deepmerge__ = __webpack_require__(95);
-/*
- * Vue Chartkick
- * Create beautiful JavaScript charts with one line of Vue
- * https://github.com/ankane/vue-chartkick
- * v0.5.0
- * MIT License
- */
-
-
-
-
-
-var chartId = 1;
-
-var createComponent = function(Vue, tagName, chartType) {
-  var chartProps = [
-    "colors", "curve", "dataset", "decimal", "discrete", "donut", "download", "label",
-    "legend", "library", "max", "messages", "min", "points", "prefix", "refresh",
-    "stacked", "suffix", "thousands", "title", "xtitle", "ytitle"
-  ];
-  Vue.component(tagName, {
-    props: ["data", "id", "width", "height"].concat(chartProps),
-    render: function(createElement) {
-      return createElement(
-        "div",
-        {
-          attrs: {
-            id: this.chartId
-          },
-          style: this.chartStyle
-        },
-        ["Loading..."]
-      )
-    },
-    data: function() {
-      return {
-        chartId: null
-      }
-    },
-    computed: {
-      chartStyle: function() {
-        // hack to watch data and options
-        this.data;
-        this.chartOptions;
-
-        return {
-          height: this.height || "300px",
-          lineHeight: this.height || "300px",
-          width: this.width || "100%",
-          textAlign: "center",
-          color: "#999",
-          fontSize: "14px",
-          fontFamily: "'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif"
-        }
-      },
-      chartOptions: function() {
-        var this$1 = this;
-
-        var options = {};
-        var props = chartProps;
-        for (var i = 0; i < props.length; i++) {
-          var prop = props[i];
-          if (this$1[prop] !== undefined) {
-            options[prop] = this$1[prop];
-          }
-        }
-        return options
-      }
-    },
-    created: function() {
-      this.chartId = this.chartId || this.id || ("chart-" + chartId++);
-    },
-    mounted: function() {
-      this.updateChart();
-      this.savedState = this.currentState();
-    },
-    updated: function() {
-      // avoid updates when literal objects are used as props
-      // see https://github.com/ankane/vue-chartkick/pull/52
-      // and https://github.com/vuejs/vue/issues/4060
-      var currentState = this.currentState();
-      if (!__WEBPACK_IMPORTED_MODULE_1_deep_equal___default()(currentState, this.savedState)) {
-        this.updateChart();
-        this.savedState = currentState;
-      }
-    },
-    beforeDestroy: function() {
-      if (this.chart) {
-        this.chart.destroy();
-      }
-    },
-    methods: {
-      updateChart: function() {
-        if (this.data !== null) {
-          if (this.chart) {
-            this.chart.updateData(this.data, this.chartOptions);
-          } else {
-            this.chart = new chartType(this.chartId, this.data, this.chartOptions);
-          }
-        } else if (this.chart) {
-          this.chart.destroy();
-          this.chart = null;
-          this.$el.innerText = "Loading...";
-        }
-      },
-      currentState: function() {
-        return Object(__WEBPACK_IMPORTED_MODULE_2_deepmerge__["a" /* default */])({}, {
-          data: this.data,
-          chartOptions: this.chartOptions
-        })
-      }
-    }
-  });
-};
-
-var VueChartkick = {
-  version: "0.5.0",
-  install: function(Vue, options) {
-    if (options && options.adapter) {
-      __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].addAdapter(options.adapter);
-    }
-    createComponent(Vue, "line-chart", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].LineChart);
-    createComponent(Vue, "pie-chart", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].PieChart);
-    createComponent(Vue, "column-chart", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].ColumnChart);
-    createComponent(Vue, "bar-chart", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].BarChart);
-    createComponent(Vue, "area-chart", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].AreaChart);
-    createComponent(Vue, "scatter-chart", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].ScatterChart);
-    createComponent(Vue, "geo-chart", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].GeoChart);
-    createComponent(Vue, "timeline", __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].Timeline);
-  },
-  addAdapter: function(library) {
-    __WEBPACK_IMPORTED_MODULE_0_chartkick__["a" /* default */].addAdapter(library);
-  }
-};
-
-// in browser
-if (typeof window !== "undefined" && window.Vue) {
-  window.Vue.use(VueChartkick);
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (VueChartkick);
-
-
-/***/ }),
-/* 91 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/*
- * Chartkick.js
- * Create beautiful charts with one line of JavaScript
- * https://github.com/ankane/chartkick.js
- * v3.0.1
- * MIT License
- */
-
-function isArray(variable) {
-  return Object.prototype.toString.call(variable) === "[object Array]";
-}
-
-function isFunction(variable) {
-  return variable instanceof Function;
-}
-
-function isPlainObject(variable) {
-  return !isFunction(variable) && variable instanceof Object;
-}
-
-// https://github.com/madrobby/zepto/blob/master/src/zepto.js
-function extend(target, source) {
-  var key;
-  for (key in source) {
-    if (isPlainObject(source[key]) || isArray(source[key])) {
-      if (isPlainObject(source[key]) && !isPlainObject(target[key])) {
-        target[key] = {};
-      }
-      if (isArray(source[key]) && !isArray(target[key])) {
-        target[key] = [];
-      }
-      extend(target[key], source[key]);
-    } else if (source[key] !== undefined) {
-      target[key] = source[key];
-    }
-  }
-}
-
-function merge(obj1, obj2) {
-  var target = {};
-  extend(target, obj1);
-  extend(target, obj2);
-  return target;
-}
-
-var DATE_PATTERN = /^(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)$/i;
-
-// https://github.com/Do/iso8601.js
-var ISO8601_PATTERN = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)?(:)?(\d\d)?([.,]\d+)?($|Z|([+-])(\d\d)(:)?(\d\d)?)/i;
-var DECIMAL_SEPARATOR = String(1.5).charAt(1);
-
-function parseISO8601(input) {
-  var day, hour, matches, milliseconds, minutes, month, offset, result, seconds, type, year;
-  type = Object.prototype.toString.call(input);
-  if (type === "[object Date]") {
-    return input;
-  }
-  if (type !== "[object String]") {
-    return;
-  }
-  matches = input.match(ISO8601_PATTERN);
-  if (matches) {
-    year = parseInt(matches[1], 10);
-    month = parseInt(matches[3], 10) - 1;
-    day = parseInt(matches[5], 10);
-    hour = parseInt(matches[7], 10);
-    minutes = matches[9] ? parseInt(matches[9], 10) : 0;
-    seconds = matches[11] ? parseInt(matches[11], 10) : 0;
-    milliseconds = matches[12] ? parseFloat(DECIMAL_SEPARATOR + matches[12].slice(1)) * 1000 : 0;
-    result = Date.UTC(year, month, day, hour, minutes, seconds, milliseconds);
-    if (matches[13] && matches[14]) {
-      offset = matches[15] * 60;
-      if (matches[17]) {
-        offset += parseInt(matches[17], 10);
-      }
-      offset *= matches[14] === "-" ? -1 : 1;
-      result -= offset * 60 * 1000;
-    }
-    return new Date(result);
-  }
-}
-// end iso8601.js
-
-function negativeValues(series) {
-  var i, j, data;
-  for (i = 0; i < series.length; i++) {
-    data = series[i].data;
-    for (j = 0; j < data.length; j++) {
-      if (data[j][1] < 0) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-function toStr(n) {
-  return "" + n;
-}
-
-function toFloat(n) {
-  return parseFloat(n);
-}
-
-function toDate(n) {
-  var matches, year, month, day;
-  if (typeof n !== "object") {
-    if (typeof n === "number") {
-      n = new Date(n * 1000); // ms
-    } else {
-      n = toStr(n);
-      if ((matches = n.match(DATE_PATTERN))) {
-      year = parseInt(matches[1], 10);
-      month = parseInt(matches[3], 10) - 1;
-      day = parseInt(matches[5], 10);
-      return new Date(year, month, day);
-      } else { // str
-        // try our best to get the str into iso8601
-        // TODO be smarter about this
-        var str = n.replace(/ /, "T").replace(" ", "").replace("UTC", "Z");
-        n = parseISO8601(str) || new Date(n);
-      }
-    }
-  }
-  return n;
-}
-
-function toArr(n) {
-  if (!isArray(n)) {
-    var arr = [], i;
-    for (i in n) {
-      if (n.hasOwnProperty(i)) {
-        arr.push([i, n[i]]);
-      }
-    }
-    n = arr;
-  }
-  return n;
-}
-
-function jsOptionsFunc(defaultOptions, hideLegend, setTitle, setMin, setMax, setStacked, setXtitle, setYtitle) {
-  return function (chart, opts, chartOptions) {
-    var series = chart.data;
-    var options = merge({}, defaultOptions);
-    options = merge(options, chartOptions || {});
-
-    if (chart.hideLegend || "legend" in opts) {
-      hideLegend(options, opts.legend, chart.hideLegend);
-    }
-
-    if (opts.title) {
-      setTitle(options, opts.title);
-    }
-
-    // min
-    if ("min" in opts) {
-      setMin(options, opts.min);
-    } else if (!negativeValues(series)) {
-      setMin(options, 0);
-    }
-
-    // max
-    if (opts.max) {
-      setMax(options, opts.max);
-    }
-
-    if ("stacked" in opts) {
-      setStacked(options, opts.stacked);
-    }
-
-    if (opts.colors) {
-      options.colors = opts.colors;
-    }
-
-    if (opts.xtitle) {
-      setXtitle(options, opts.xtitle);
-    }
-
-    if (opts.ytitle) {
-      setYtitle(options, opts.ytitle);
-    }
-
-    // merge library last
-    options = merge(options, opts.library || {});
-
-    return options;
-  };
-}
-
-function sortByTime(a, b) {
-  return a[0].getTime() - b[0].getTime();
-}
-
-function sortByNumberSeries(a, b) {
-  return a[0] - b[0];
-}
-
-function sortByNumber(a, b) {
-  return a - b;
-}
-
-function isMinute(d) {
-  return d.getMilliseconds() === 0 && d.getSeconds() === 0;
-}
-
-function isHour(d) {
-  return isMinute(d) && d.getMinutes() === 0;
-}
-
-function isDay(d) {
-  return isHour(d) && d.getHours() === 0;
-}
-
-function isWeek(d, dayOfWeek) {
-  return isDay(d) && d.getDay() === dayOfWeek;
-}
-
-function isMonth(d) {
-  return isDay(d) && d.getDate() === 1;
-}
-
-function isYear(d) {
-  return isMonth(d) && d.getMonth() === 0;
-}
-
-function isDate(obj) {
-  return !isNaN(toDate(obj)) && toStr(obj).length >= 6;
-}
-
-function isNumber(obj) {
-  return typeof obj === "number";
-}
-
-function formatValue(pre, value, options) {
-  pre = pre || "";
-  if (options.prefix) {
-    if (value < 0) {
-      value = value * -1;
-      pre += "-";
-    }
-    pre += options.prefix;
-  }
-
-  if (options.thousands || options.decimal) {
-    value = toStr(value);
-    var parts = value.split(".");
-    value = parts[0];
-    if (options.thousands) {
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, options.thousands);
-    }
-    if (parts.length > 1) {
-      value += (options.decimal || ".") + parts[1];
-    }
-  }
-
-  return pre + value + (options.suffix || "");
-}
-
-function allZeros(data) {
-  var i, j, d;
-  for (i = 0; i < data.length; i++) {
-    d = data[i].data;
-    for (j = 0; j < d.length; j++) {
-      if (d[j][1] != 0) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-var baseOptions = {
-  maintainAspectRatio: false,
-  animation: false,
-  tooltips: {
-    displayColors: false,
-    callbacks: {}
-  },
-  legend: {},
-  title: {fontSize: 20, fontColor: "#333"}
-};
-
-var defaultOptions = {
-  scales: {
-    yAxes: [
-      {
-        ticks: {
-          maxTicksLimit: 4
-        },
-        scaleLabel: {
-          fontSize: 16,
-          // fontStyle: "bold",
-          fontColor: "#333"
-        }
-      }
-    ],
-    xAxes: [
-      {
-        gridLines: {
-          drawOnChartArea: false
-        },
-        scaleLabel: {
-          fontSize: 16,
-          // fontStyle: "bold",
-          fontColor: "#333"
-        },
-        time: {},
-        ticks: {}
-      }
-    ]
-  }
-};
-
-// http://there4.io/2012/05/02/google-chart-color-list/
-var defaultColors = [
-  "#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6",
-  "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11",
-  "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#651067"
-];
-
-var hideLegend = function (options, legend, hideLegend) {
-  if (legend !== undefined) {
-    options.legend.display = !!legend;
-    if (legend && legend !== true) {
-      options.legend.position = legend;
-    }
-  } else if (hideLegend) {
-    options.legend.display = false;
-  }
-};
-
-var setTitle = function (options, title) {
-  options.title.display = true;
-  options.title.text = title;
-};
-
-var setMin = function (options, min) {
-  if (min !== null) {
-    options.scales.yAxes[0].ticks.min = toFloat(min);
-  }
-};
-
-var setMax = function (options, max) {
-  options.scales.yAxes[0].ticks.max = toFloat(max);
-};
-
-var setBarMin = function (options, min) {
-  if (min !== null) {
-    options.scales.xAxes[0].ticks.min = toFloat(min);
-  }
-};
-
-var setBarMax = function (options, max) {
-  options.scales.xAxes[0].ticks.max = toFloat(max);
-};
-
-var setStacked = function (options, stacked) {
-  options.scales.xAxes[0].stacked = !!stacked;
-  options.scales.yAxes[0].stacked = !!stacked;
-};
-
-var setXtitle = function (options, title) {
-  options.scales.xAxes[0].scaleLabel.display = true;
-  options.scales.xAxes[0].scaleLabel.labelString = title;
-};
-
-var setYtitle = function (options, title) {
-  options.scales.yAxes[0].scaleLabel.display = true;
-  options.scales.yAxes[0].scaleLabel.labelString = title;
-};
-
-// https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-var addOpacity = function(hex, opacity) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? "rgba(" + parseInt(result[1], 16) + ", " + parseInt(result[2], 16) + ", " + parseInt(result[3], 16) + ", " + opacity + ")" : hex;
-};
-
-var setLabelSize = function (chart, data, options) {
-  var maxLabelSize = Math.ceil(chart.element.offsetWidth / 4.0 / data.labels.length);
-  if (maxLabelSize > 25) {
-    maxLabelSize = 25;
-  } else if (maxLabelSize < 10) {
-    maxLabelSize = 10;
-  }
-  if (!options.scales.xAxes[0].ticks.callback) {
-    options.scales.xAxes[0].ticks.callback = function (value) {
-      value = toStr(value);
-      if (value.length > maxLabelSize) {
-        return value.substring(0, maxLabelSize - 2) + "...";
-      } else {
-        return value;
-      }
-    };
-  }
-};
-
-var setFormatOptions = function(chart, options, chartType) {
-  var formatOptions = {
-    prefix: chart.options.prefix,
-    suffix: chart.options.suffix,
-    thousands: chart.options.thousands,
-    decimal: chart.options.decimal
-  };
-
-  if (chartType !== "pie") {
-    var myAxes = options.scales.yAxes;
-    if (chartType === "bar") {
-      myAxes = options.scales.xAxes;
-    }
-
-    if (!myAxes[0].ticks.callback) {
-      myAxes[0].ticks.callback = function (value) {
-        return formatValue("", value, formatOptions);
-      };
-    }
-  }
-
-  if (!options.tooltips.callbacks.label) {
-    if (chartType === "scatter") {
-      options.tooltips.callbacks.label = function (item, data) {
-        var label = data.datasets[item.datasetIndex].label || '';
-        if (label) {
-          label += ': ';
-        }
-        return label + '(' + item.xLabel + ', ' + item.yLabel + ')';
-      };
-    } else if (chartType === "bubble") {
-      options.tooltips.callbacks.label = function (item, data) {
-        var label = data.datasets[item.datasetIndex].label || '';
-        if (label) {
-          label += ': ';
-        }
-        var dataPoint = data.datasets[item.datasetIndex].data[item.index];
-        return label + '(' + item.xLabel + ', ' + item.yLabel + ', ' + dataPoint.v + ')';
-      };
-    } else if (chartType === "pie") {
-      // need to use separate label for pie charts
-      options.tooltips.callbacks.label = function (tooltipItem, data) {
-        var dataLabel = data.labels[tooltipItem.index];
-        var value = ': ';
-
-        if (isArray(dataLabel)) {
-          // show value on first line of multiline label
-          // need to clone because we are changing the value
-          dataLabel = dataLabel.slice();
-          dataLabel[0] += value;
-        } else {
-          dataLabel += value;
-        }
-
-        return formatValue(dataLabel, data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index], formatOptions);
-      };
-    } else {
-      var valueLabel = chartType === "bar" ? "xLabel" : "yLabel";
-      options.tooltips.callbacks.label = function (tooltipItem, data) {
-        var label = data.datasets[tooltipItem.datasetIndex].label || '';
-        if (label) {
-          label += ': ';
-        }
-        return formatValue(label, tooltipItem[valueLabel], formatOptions);
-      };
-    }
-  }
-};
-
-var jsOptions = jsOptionsFunc(merge(baseOptions, defaultOptions), hideLegend, setTitle, setMin, setMax, setStacked, setXtitle, setYtitle);
-
-var createDataTable = function (chart, options, chartType) {
-  var datasets = [];
-  var labels = [];
-
-  var colors = chart.options.colors || defaultColors;
-
-  var day = true;
-  var week = true;
-  var dayOfWeek;
-  var month = true;
-  var year = true;
-  var hour = true;
-  var minute = true;
-
-  var series = chart.data;
-
-  var max = 0;
-  if (chartType === "bubble") {
-    for (var i$1 = 0; i$1 < series.length; i$1++) {
-      var s$1 = series[i$1];
-      for (var j$1 = 0; j$1 < s$1.data.length; j$1++) {
-        if (s$1.data[j$1][2] > max) {
-          max = s$1.data[j$1][2];
-        }
-      }
-    }
-  }
-
-  var i, j, s, d, key, rows = [], rows2 = [];
-
-  if (chartType === "bar" || chartType === "column" || (chart.xtype !== "number" && chart.xtype !== "bubble")) {
-    var sortedLabels = [];
-
-    for (i = 0; i < series.length; i++) {
-      s = series[i];
-
-      for (j = 0; j < s.data.length; j++) {
-        d = s.data[j];
-        key = chart.xtype == "datetime" ? d[0].getTime() : d[0];
-        if (!rows[key]) {
-          rows[key] = new Array(series.length);
-        }
-        rows[key][i] = toFloat(d[1]);
-        if (sortedLabels.indexOf(key) === -1) {
-          sortedLabels.push(key);
-        }
-      }
-    }
-
-    if (chart.xtype === "datetime" || chart.xtype === "number") {
-      sortedLabels.sort(sortByNumber);
-    }
-
-    for (j = 0; j < series.length; j++) {
-      rows2.push([]);
-    }
-
-    var value;
-    var k;
-    for (k = 0; k < sortedLabels.length; k++) {
-      i = sortedLabels[k];
-      if (chart.xtype === "datetime") {
-        value = new Date(toFloat(i));
-        // TODO make this efficient
-        day = day && isDay(value);
-        if (!dayOfWeek) {
-          dayOfWeek = value.getDay();
-        }
-        week = week && isWeek(value, dayOfWeek);
-        month = month && isMonth(value);
-        year = year && isYear(value);
-        hour = hour && isHour(value);
-        minute = minute && isMinute(value);
-      } else {
-        value = i;
-      }
-      labels.push(value);
-      for (j = 0; j < series.length; j++) {
-        // Chart.js doesn't like undefined
-        rows2[j].push(rows[i][j] === undefined ? null : rows[i][j]);
-      }
-    }
-  } else {
-    for (var i$2 = 0; i$2 < series.length; i$2++) {
-      var s$2 = series[i$2];
-      var d$1 = [];
-      for (var j$2 = 0; j$2 < s$2.data.length; j$2++) {
-        var point = {
-          x: toFloat(s$2.data[j$2][0]),
-          y: toFloat(s$2.data[j$2][1])
-        };
-        if (chartType === "bubble") {
-          point.r = toFloat(s$2.data[j$2][2]) * 20 / max;
-          // custom attribute, for tooltip
-          point.v = s$2.data[j$2][2];
-        }
-        d$1.push(point);
-      }
-      rows2.push(d$1);
-    }
-  }
-
-  for (i = 0; i < series.length; i++) {
-    s = series[i];
-
-    var color = s.color || colors[i];
-    var backgroundColor = chartType !== "line" ? addOpacity(color, 0.5) : color;
-
-    var dataset = {
-      label: s.name || "",
-      data: rows2[i],
-      fill: chartType === "area",
-      borderColor: color,
-      backgroundColor: backgroundColor,
-      pointBackgroundColor: color,
-      borderWidth: 2,
-      pointHoverBackgroundColor: color
-    };
-
-    if (s.stack) {
-      dataset.stack = s.stack;
-    }
-
-    if (chart.options.curve === false) {
-      dataset.lineTension = 0;
-    }
-
-    if (chart.options.points === false) {
-      dataset.pointRadius = 0;
-      dataset.pointHitRadius = 5;
-    }
-
-    dataset = merge(dataset, chart.options.dataset || {});
-    dataset = merge(dataset, s.library || {});
-    dataset = merge(dataset, s.dataset || {});
-
-    datasets.push(dataset);
-  }
-
-  if (chart.xtype === "datetime" && labels.length > 0) {
-    var minTime = labels[0].getTime();
-    var maxTime = labels[0].getTime();
-    for (i = 1; i < labels.length; i++) {
-      var value$1 = labels[i].getTime();
-      if (value$1 < minTime) {
-        minTime = value$1;
-      }
-      if (value$1 > maxTime) {
-        maxTime = value$1;
-      }
-    }
-
-    var timeDiff = (maxTime - minTime) / (86400 * 1000.0);
-
-    if (!options.scales.xAxes[0].time.unit) {
-      var step;
-      if (year || timeDiff > 365 * 10) {
-        options.scales.xAxes[0].time.unit = "year";
-        step = 365;
-      } else if (month || timeDiff > 30 * 10) {
-        options.scales.xAxes[0].time.unit = "month";
-        step = 30;
-      } else if (day || timeDiff > 10) {
-        options.scales.xAxes[0].time.unit = "day";
-        step = 1;
-      } else if (hour || timeDiff > 0.5) {
-        options.scales.xAxes[0].time.displayFormats = {hour: "MMM D, h a"};
-        options.scales.xAxes[0].time.unit = "hour";
-        step = 1 / 24.0;
-      } else if (minute) {
-        options.scales.xAxes[0].time.displayFormats = {minute: "h:mm a"};
-        options.scales.xAxes[0].time.unit = "minute";
-        step = 1 / 24.0 / 60.0;
-      }
-
-      if (step && timeDiff > 0) {
-        var unitStepSize = Math.ceil(timeDiff / step / (chart.element.offsetWidth / 100.0));
-        if (week && step === 1) {
-          unitStepSize = Math.ceil(unitStepSize / 7.0) * 7;
-        }
-        options.scales.xAxes[0].time.unitStepSize = unitStepSize;
-      }
-    }
-
-    if (!options.scales.xAxes[0].time.tooltipFormat) {
-      if (day) {
-        options.scales.xAxes[0].time.tooltipFormat = "ll";
-      } else if (hour) {
-        options.scales.xAxes[0].time.tooltipFormat = "MMM D, h a";
-      } else if (minute) {
-        options.scales.xAxes[0].time.tooltipFormat = "h:mm a";
-      }
-    }
-  }
-
-  var data = {
-    labels: labels,
-    datasets: datasets
-  };
-
-  return data;
-};
-
-var defaultExport = function defaultExport(library) {
-  this.name = "chartjs";
-  this.library = library;
-};
-
-defaultExport.prototype.renderLineChart = function renderLineChart (chart, chartType) {
-  var chartOptions = {};
-  // fix for https://github.com/chartjs/Chart.js/issues/2441
-  if (!chart.options.max && allZeros(chart.data)) {
-    chartOptions.max = 1;
-  }
-
-  var options = jsOptions(chart, merge(chartOptions, chart.options));
-  setFormatOptions(chart, options, chartType);
-
-  var data = createDataTable(chart, options, chartType || "line");
-
-  if (chart.xtype === "number") {
-    options.scales.xAxes[0].type = "linear";
-    options.scales.xAxes[0].position = "bottom";
-  } else {
-    options.scales.xAxes[0].type = chart.xtype === "string" ? "category" : "time";
-  }
-
-  this.drawChart(chart, "line", data, options);
-};
-
-defaultExport.prototype.renderPieChart = function renderPieChart (chart) {
-  var options = merge({}, baseOptions);
-  if (chart.options.donut) {
-    options.cutoutPercentage = 50;
-  }
-
-  if ("legend" in chart.options) {
-    hideLegend(options, chart.options.legend);
-  }
-
-  if (chart.options.title) {
-    setTitle(options, chart.options.title);
-  }
-
-  options = merge(options, chart.options.library || {});
-  setFormatOptions(chart, options, "pie");
-
-  var labels = [];
-  var values = [];
-  for (var i = 0; i < chart.data.length; i++) {
-    var point = chart.data[i];
-    labels.push(point[0]);
-    values.push(point[1]);
-  }
-
-  var dataset = {
-    data: values,
-    backgroundColor: chart.options.colors || defaultColors
-  };
-  dataset = merge(dataset, chart.options.dataset || {});
-
-  var data = {
-    labels: labels,
-    datasets: [dataset]
-  };
-
-  this.drawChart(chart, "pie", data, options);
-};
-
-defaultExport.prototype.renderColumnChart = function renderColumnChart (chart, chartType) {
-  var options;
-  if (chartType === "bar") {
-    options = jsOptionsFunc(merge(baseOptions, defaultOptions), hideLegend, setTitle, setBarMin, setBarMax, setStacked, setXtitle, setYtitle)(chart, chart.options);
-  } else {
-    options = jsOptions(chart, chart.options);
-  }
-  setFormatOptions(chart, options, chartType);
-  var data = createDataTable(chart, options, "column");
-  if (chartType !== "bar") {
-    setLabelSize(chart, data, options);
-  }
-  this.drawChart(chart, (chartType === "bar" ? "horizontalBar" : "bar"), data, options);
-};
-
-defaultExport.prototype.renderAreaChart = function renderAreaChart (chart) {
-  this.renderLineChart(chart, "area");
-};
-
-defaultExport.prototype.renderBarChart = function renderBarChart (chart) {
-  this.renderColumnChart(chart, "bar");
-};
-
-defaultExport.prototype.renderScatterChart = function renderScatterChart (chart, chartType) {
-  chartType = chartType || "scatter";
-
-  var options = jsOptions(chart, chart.options);
-  setFormatOptions(chart, options, chartType);
-
-  if (!("showLines" in options)) {
-    options.showLines = false;
-  }
-
-  var data = createDataTable(chart, options, chartType);
-
-  options.scales.xAxes[0].type = "linear";
-  options.scales.xAxes[0].position = "bottom";
-
-  this.drawChart(chart, chartType, data, options);
-};
-
-defaultExport.prototype.renderBubbleChart = function renderBubbleChart (chart) {
-  this.renderScatterChart(chart, "bubble");
-};
-
-defaultExport.prototype.destroy = function destroy (chart) {
-  if (chart.chart) {
-    chart.chart.destroy();
-  }
-};
-
-defaultExport.prototype.drawChart = function drawChart (chart, type, data, options) {
-  this.destroy(chart);
-
-  var chartOptions = {
-    type: type,
-    data: data,
-    options: options
-  };
-
-  if (chart.options.code) {
-    window.console.log("new Chart(ctx, " + JSON.stringify(chartOptions) + ");");
-  }
-
-  chart.element.innerHTML = "<canvas></canvas>";
-  var ctx = chart.element.getElementsByTagName("CANVAS")[0];
-  chart.chart = new this.library(ctx, chartOptions);
-};
-
-var defaultOptions$1 = {
-  chart: {},
-  xAxis: {
-    title: {
-      text: null
-    },
-    labels: {
-      style: {
-        fontSize: "12px"
-      }
-    }
-  },
-  yAxis: {
-    title: {
-      text: null
-    },
-    labels: {
-      style: {
-        fontSize: "12px"
-      }
-    }
-  },
-  title: {
-    text: null
-  },
-  credits: {
-    enabled: false
-  },
-  legend: {
-    borderWidth: 0
-  },
-  tooltip: {
-    style: {
-      fontSize: "12px"
-    }
-  },
-  plotOptions: {
-    areaspline: {},
-    series: {
-      marker: {}
-    }
-  }
-};
-
-var hideLegend$1 = function (options, legend, hideLegend) {
-  if (legend !== undefined) {
-    options.legend.enabled = !!legend;
-    if (legend && legend !== true) {
-      if (legend === "top" || legend === "bottom") {
-        options.legend.verticalAlign = legend;
-      } else {
-        options.legend.layout = "vertical";
-        options.legend.verticalAlign = "middle";
-        options.legend.align = legend;
-      }
-    }
-  } else if (hideLegend) {
-    options.legend.enabled = false;
-  }
-};
-
-var setTitle$1 = function (options, title) {
-  options.title.text = title;
-};
-
-var setMin$1 = function (options, min) {
-  options.yAxis.min = min;
-};
-
-var setMax$1 = function (options, max) {
-  options.yAxis.max = max;
-};
-
-var setStacked$1 = function (options, stacked) {
-  options.plotOptions.series.stacking = stacked ? (stacked === true ? "normal" : stacked) : null;
-};
-
-var setXtitle$1 = function (options, title) {
-  options.xAxis.title.text = title;
-};
-
-var setYtitle$1 = function (options, title) {
-  options.yAxis.title.text = title;
-};
-
-var jsOptions$1 = jsOptionsFunc(defaultOptions$1, hideLegend$1, setTitle$1, setMin$1, setMax$1, setStacked$1, setXtitle$1, setYtitle$1);
-
-var setFormatOptions$1 = function(chart, options, chartType) {
-  var formatOptions = {
-    prefix: chart.options.prefix,
-    suffix: chart.options.suffix,
-    thousands: chart.options.thousands,
-    decimal: chart.options.decimal
-  };
-
-  if (chartType !== "pie" && !options.yAxis.labels.formatter) {
-    options.yAxis.labels.formatter = function () {
-      return formatValue("", this.value, formatOptions);
-    };
-  }
-
-  if (!options.tooltip.pointFormatter) {
-    options.tooltip.pointFormatter = function () {
-      return '<span style="color:' + this.color + '>\u25CF</span> ' + formatValue(this.series.name + ': <b>', this.y, formatOptions) + '</b><br/>';
-    };
-  }
-};
-
-var defaultExport$1 = function defaultExport(library) {
-  this.name = "highcharts";
-  this.library = library;
-};
-
-defaultExport$1.prototype.renderLineChart = function renderLineChart (chart, chartType) {
-  chartType = chartType || "spline";
-  var chartOptions = {};
-  if (chartType === "areaspline") {
-    chartOptions = {
-      plotOptions: {
-        areaspline: {
-          stacking: "normal"
-        },
-        area: {
-          stacking: "normal"
-        },
-        series: {
-          marker: {
-            enabled: false
-          }
-        }
-      }
-    };
-  }
-
-  if (chart.options.curve === false) {
-    if (chartType === "areaspline") {
-      chartType = "area";
-    } else if (chartType === "spline") {
-      chartType = "line";
-    }
-  }
-
-  var options = jsOptions$1(chart, chart.options, chartOptions), data, i, j;
-  options.xAxis.type = chart.xtype === "string" ? "category" : (chart.xtype === "number" ? "linear" : "datetime");
-  if (!options.chart.type) {
-    options.chart.type = chartType;
-  }
-  setFormatOptions$1(chart, options, chartType);
-
-  var series = chart.data;
-  for (i = 0; i < series.length; i++) {
-    series[i].name = series[i].name || "Value";
-    data = series[i].data;
-    if (chart.xtype === "datetime") {
-      for (j = 0; j < data.length; j++) {
-        data[j][0] = data[j][0].getTime();
-      }
-    }
-    series[i].marker = {symbol: "circle"};
-    if (chart.options.points === false) {
-      series[i].marker.enabled = false;
-    }
-  }
-
-  this.drawChart(chart, series, options);
-};
-
-defaultExport$1.prototype.renderScatterChart = function renderScatterChart (chart) {
-  var options = jsOptions$1(chart, chart.options, {});
-  options.chart.type = "scatter";
-  this.drawChart(chart, chart.data, options);
-};
-
-defaultExport$1.prototype.renderPieChart = function renderPieChart (chart) {
-  var chartOptions = merge(defaultOptions$1, {});
-
-  if (chart.options.colors) {
-    chartOptions.colors = chart.options.colors;
-  }
-  if (chart.options.donut) {
-    chartOptions.plotOptions = {pie: {innerSize: "50%"}};
-  }
-
-  if ("legend" in chart.options) {
-    hideLegend$1(chartOptions, chart.options.legend);
-  }
-
-  if (chart.options.title) {
-    setTitle$1(chartOptions, chart.options.title);
-  }
-
-  var options = merge(chartOptions, chart.options.library || {});
-  setFormatOptions$1(chart, options, "pie");
-  var series = [{
-    type: "pie",
-    name: chart.options.label || "Value",
-    data: chart.data
-  }];
-
-  this.drawChart(chart, series, options);
-};
-
-defaultExport$1.prototype.renderColumnChart = function renderColumnChart (chart, chartType) {
-  chartType = chartType || "column";
-  var series = chart.data;
-  var options = jsOptions$1(chart, chart.options), i, j, s, d, rows = [], categories = [];
-  options.chart.type = chartType;
-  setFormatOptions$1(chart, options, chartType);
-
-  for (i = 0; i < series.length; i++) {
-    s = series[i];
-
-    for (j = 0; j < s.data.length; j++) {
-      d = s.data[j];
-      if (!rows[d[0]]) {
-        rows[d[0]] = new Array(series.length);
-        categories.push(d[0]);
-      }
-      rows[d[0]][i] = d[1];
-    }
-  }
-
-  if (chart.xtype === "number") {
-    categories.sort(sortByNumber);
-  }
-
-  options.xAxis.categories = categories;
-
-  var newSeries = [], d2;
-  for (i = 0; i < series.length; i++) {
-    d = [];
-    for (j = 0; j < categories.length; j++) {
-      d.push(rows[categories[j]][i] || 0);
-    }
-
-    d2 = {
-      name: series[i].name || "Value",
-      data: d
-    };
-    if (series[i].stack) {
-      d2.stack = series[i].stack;
-    }
-
-    newSeries.push(d2);
-  }
-
-  this.drawChart(chart, newSeries, options);
-};
-
-defaultExport$1.prototype.renderBarChart = function renderBarChart (chart) {
-  this.renderColumnChart(chart, "bar");
-};
-
-defaultExport$1.prototype.renderAreaChart = function renderAreaChart (chart) {
-  this.renderLineChart(chart, "areaspline");
-};
-
-defaultExport$1.prototype.destroy = function destroy (chart) {
-  if (chart.chart) {
-    chart.chart.destroy();
-  }
-};
-
-defaultExport$1.prototype.drawChart = function drawChart (chart, data, options) {
-  this.destroy(chart);
-
-  options.chart.renderTo = chart.element.id;
-  options.series = data;
-
-  if (chart.options.code) {
-    window.console.log("new Highcharts.Chart(" + JSON.stringify(options) + ");");
-  }
-
-  chart.chart = new this.library.Chart(options);
-};
-
-var loaded = {};
-var callbacks = [];
-
-// Set chart options
-var defaultOptions$2 = {
-  chartArea: {},
-  fontName: "'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif",
-  pointSize: 6,
-  legend: {
-    textStyle: {
-      fontSize: 12,
-      color: "#444"
-    },
-    alignment: "center",
-    position: "right"
-  },
-  curveType: "function",
-  hAxis: {
-    textStyle: {
-      color: "#666",
-      fontSize: 12
-    },
-    titleTextStyle: {},
-    gridlines: {
-      color: "transparent"
-    },
-    baselineColor: "#ccc",
-    viewWindow: {}
-  },
-  vAxis: {
-    textStyle: {
-      color: "#666",
-      fontSize: 12
-    },
-    titleTextStyle: {},
-    baselineColor: "#ccc",
-    viewWindow: {}
-  },
-  tooltip: {
-    textStyle: {
-      color: "#666",
-      fontSize: 12
-    }
-  }
-};
-
-var hideLegend$2 = function (options, legend, hideLegend) {
-  if (legend !== undefined) {
-    var position;
-    if (!legend) {
-      position = "none";
-    } else if (legend === true) {
-      position = "right";
-    } else {
-      position = legend;
-    }
-    options.legend.position = position;
-  } else if (hideLegend) {
-    options.legend.position = "none";
-  }
-};
-
-var setTitle$2 = function (options, title) {
-  options.title = title;
-  options.titleTextStyle = {color: "#333", fontSize: "20px"};
-};
-
-var setMin$2 = function (options, min) {
-  options.vAxis.viewWindow.min = min;
-};
-
-var setMax$2 = function (options, max) {
-  options.vAxis.viewWindow.max = max;
-};
-
-var setBarMin$1 = function (options, min) {
-  options.hAxis.viewWindow.min = min;
-};
-
-var setBarMax$1 = function (options, max) {
-  options.hAxis.viewWindow.max = max;
-};
-
-var setStacked$2 = function (options, stacked) {
-  options.isStacked = stacked ? stacked : false;
-};
-
-var setXtitle$2 = function (options, title) {
-  options.hAxis.title = title;
-  options.hAxis.titleTextStyle.italic = false;
-};
-
-var setYtitle$2 = function (options, title) {
-  options.vAxis.title = title;
-  options.vAxis.titleTextStyle.italic = false;
-};
-
-var jsOptions$2 = jsOptionsFunc(defaultOptions$2, hideLegend$2, setTitle$2, setMin$2, setMax$2, setStacked$2, setXtitle$2, setYtitle$2);
-
-var resize = function (callback) {
-  if (window.attachEvent) {
-    window.attachEvent("onresize", callback);
-  } else if (window.addEventListener) {
-    window.addEventListener("resize", callback, true);
-  }
-  callback();
-};
-
-var defaultExport$2 = function defaultExport(library) {
-  this.name = "google";
-  this.library = library;
-};
-
-defaultExport$2.prototype.renderLineChart = function renderLineChart (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, function () {
-    var chartOptions = {};
-
-    if (chart.options.curve === false) {
-      chartOptions.curveType = "none";
-    }
-
-    if (chart.options.points === false) {
-      chartOptions.pointSize = 0;
-    }
-
-    var options = jsOptions$2(chart, chart.options, chartOptions);
-    var data = this$1.createDataTable(chart.data, chart.xtype);
-
-    this$1.drawChart(chart, "LineChart", data, options);
-  });
-};
-
-defaultExport$2.prototype.renderPieChart = function renderPieChart (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, function () {
-    var chartOptions = {
-      chartArea: {
-        top: "10%",
-        height: "80%"
-      },
-      legend: {}
-    };
-    if (chart.options.colors) {
-      chartOptions.colors = chart.options.colors;
-    }
-    if (chart.options.donut) {
-      chartOptions.pieHole = 0.5;
-    }
-    if ("legend" in chart.options) {
-      hideLegend$2(chartOptions, chart.options.legend);
-    }
-    if (chart.options.title) {
-      setTitle$2(chartOptions, chart.options.title);
-    }
-    var options = merge(merge(defaultOptions$2, chartOptions), chart.options.library || {});
-
-    var data = new this$1.library.visualization.DataTable();
-    data.addColumn("string", "");
-    data.addColumn("number", "Value");
-    data.addRows(chart.data);
-
-    this$1.drawChart(chart, "PieChart", data, options);
-  });
-};
-
-defaultExport$2.prototype.renderColumnChart = function renderColumnChart (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, function () {
-    var options = jsOptions$2(chart, chart.options);
-    var data = this$1.createDataTable(chart.data, chart.xtype);
-
-    this$1.drawChart(chart, "ColumnChart", data, options);
-  });
-};
-
-defaultExport$2.prototype.renderBarChart = function renderBarChart (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, function () {
-    var chartOptions = {
-      hAxis: {
-        gridlines: {
-          color: "#ccc"
-        }
-      }
-    };
-    var options = jsOptionsFunc(defaultOptions$2, hideLegend$2, setTitle$2, setBarMin$1, setBarMax$1, setStacked$2, setXtitle$2, setYtitle$2)(chart, chart.options, chartOptions);
-    var data = this$1.createDataTable(chart.data, chart.xtype);
-
-    this$1.drawChart(chart, "BarChart", data, options);
-  });
-};
-
-defaultExport$2.prototype.renderAreaChart = function renderAreaChart (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, function () {
-    var chartOptions = {
-      isStacked: true,
-      pointSize: 0,
-      areaOpacity: 0.5
-    };
-
-    var options = jsOptions$2(chart, chart.options, chartOptions);
-    var data = this$1.createDataTable(chart.data, chart.xtype);
-
-    this$1.drawChart(chart, "AreaChart", data, options);
-  });
-};
-
-defaultExport$2.prototype.renderGeoChart = function renderGeoChart (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, function () {
-    var chartOptions = {
-      legend: "none",
-      colorAxis: {
-        colors: chart.options.colors || ["#f6c7b6", "#ce502d"]
-      }
-    };
-    var options = merge(merge(defaultOptions$2, chartOptions), chart.options.library || {});
-
-    var data = new this$1.library.visualization.DataTable();
-    data.addColumn("string", "");
-    data.addColumn("number", chart.options.label || "Value");
-    data.addRows(chart.data);
-
-    this$1.drawChart(chart, "GeoChart", data, options);
-  });
-};
-
-defaultExport$2.prototype.renderScatterChart = function renderScatterChart (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, function () {
-    var chartOptions = {};
-    var options = jsOptions$2(chart, chart.options, chartOptions);
-
-    var series = chart.data, rows2 = [], i, j, data, d;
-    for (i = 0; i < series.length; i++) {
-      series[i].name = series[i].name || "Value";
-      d = series[i].data;
-      for (j = 0; j < d.length; j++) {
-        var row = new Array(series.length + 1);
-        row[0] = d[j][0];
-        row[i + 1] = d[j][1];
-        rows2.push(row);
-      }
-    }
-
-    data = new this$1.library.visualization.DataTable();
-    data.addColumn("number", "");
-    for (i = 0; i < series.length; i++) {
-      data.addColumn("number", series[i].name);
-    }
-    data.addRows(rows2);
-
-    this$1.drawChart(chart, "ScatterChart", data, options);
-  });
-};
-
-defaultExport$2.prototype.renderTimeline = function renderTimeline (chart) {
-    var this$1 = this;
-
-  this.waitForLoaded(chart, "timeline", function () {
-    var chartOptions = {
-      legend: "none"
-    };
-
-    if (chart.options.colors) {
-      chartOptions.colors = chart.options.colors;
-    }
-    var options = merge(merge(defaultOptions$2, chartOptions), chart.options.library || {});
-
-    var data = new this$1.library.visualization.DataTable();
-    data.addColumn({type: "string", id: "Name"});
-    data.addColumn({type: "date", id: "Start"});
-    data.addColumn({type: "date", id: "End"});
-    data.addRows(chart.data);
-
-    chart.element.style.lineHeight = "normal";
-
-    this$1.drawChart(chart, "Timeline", data, options);
-  });
-};
-
-defaultExport$2.prototype.destroy = function destroy (chart) {
-  if (chart.chart) {
-    chart.chart.clearChart();
-  }
-};
-
-defaultExport$2.prototype.drawChart = function drawChart (chart, type, data, options) {
-  this.destroy(chart);
-
-  if (chart.options.code) {
-    window.console.log("var data = new google.visualization.DataTable(" + data.toJSON() + ");\nvar chart = new google.visualization." + type + "(element);\nchart.draw(data, " + JSON.stringify(options) + ");");
-  }
-
-  chart.chart = new this.library.visualization[type](chart.element);
-  resize(function () {
-    chart.chart.draw(data, options);
-  });
-};
-
-defaultExport$2.prototype.waitForLoaded = function waitForLoaded (chart, pack, callback) {
-    var this$1 = this;
-
-  if (!callback) {
-    callback = pack;
-    pack = "corechart";
-  }
-
-  callbacks.push({pack: pack, callback: callback});
-
-  if (loaded[pack]) {
-    this.runCallbacks();
-  } else {
-    loaded[pack] = true;
-
-    // https://groups.google.com/forum/#!topic/google-visualization-api/fMKJcyA2yyI
-    var loadOptions = {
-      packages: [pack],
-      callback: function () { this$1.runCallbacks(); }
-    };
-    var config = chart.__config();
-    if (config.language) {
-      loadOptions.language = config.language;
-    }
-    if (pack === "corechart" && config.mapsApiKey) {
-      loadOptions.mapsApiKey = config.mapsApiKey;
-    }
-
-    this.library.charts.load("current", loadOptions);
-  }
-};
-
-defaultExport$2.prototype.runCallbacks = function runCallbacks () {
-    var this$1 = this;
-
-  var cb, call;
-  for (var i = 0; i < callbacks.length; i++) {
-    cb = callbacks[i];
-    call = this$1.library.visualization && ((cb.pack === "corechart" && this$1.library.visualization.LineChart) || (cb.pack === "timeline" && this$1.library.visualization.Timeline));
-    if (call) {
-      cb.callback();
-      callbacks.splice(i, 1);
-      i--;
-    }
-  }
-};
-
-// cant use object as key
-defaultExport$2.prototype.createDataTable = function createDataTable (series, columnType) {
-  var i, j, s, d, key, rows = [], sortedLabels = [];
-  for (i = 0; i < series.length; i++) {
-    s = series[i];
-    series[i].name = series[i].name || "Value";
-
-    for (j = 0; j < s.data.length; j++) {
-      d = s.data[j];
-      key = (columnType === "datetime") ? d[0].getTime() : d[0];
-      if (!rows[key]) {
-        rows[key] = new Array(series.length);
-        sortedLabels.push(key);
-      }
-      rows[key][i] = toFloat(d[1]);
-    }
-  }
-
-  var rows2 = [];
-  var day = true;
-  var value;
-  for (j = 0; j < sortedLabels.length; j++) {
-    i = sortedLabels[j];
-    if (columnType === "datetime") {
-      value = new Date(toFloat(i));
-      day = day && isDay(value);
-    } else if (columnType === "number") {
-      value = toFloat(i);
-    } else {
-      value = i;
-    }
-    rows2.push([value].concat(rows[i]));
-  }
-  if (columnType === "datetime") {
-    rows2.sort(sortByTime);
-  } else if (columnType === "number") {
-    rows2.sort(sortByNumberSeries);
-
-    for (i = 0; i < rows2.length; i++) {
-      rows2[i][0] = toStr(rows2[i][0]);
-    }
-
-    columnType = "string";
-  }
-
-  // create datatable
-  var data = new this.library.visualization.DataTable();
-  columnType = columnType === "datetime" && day ? "date" : columnType;
-  data.addColumn(columnType, "");
-  for (i = 0; i < series.length; i++) {
-    data.addColumn("number", series[i].name);
-  }
-  data.addRows(rows2);
-
-  return data;
-};
-
-var pendingRequests = [], runningRequests = 0, maxRequests = 4;
-
-function pushRequest(url, success, error) {
-  pendingRequests.push([url, success, error]);
-  runNext();
-}
-
-function runNext() {
-  if (runningRequests < maxRequests) {
-    var request = pendingRequests.shift();
-    if (request) {
-      runningRequests++;
-      getJSON(request[0], request[1], request[2]);
-      runNext();
-    }
-  }
-}
-
-function requestComplete() {
-  runningRequests--;
-  runNext();
-}
-
-function getJSON(url, success, error) {
-  ajaxCall(url, success, function (jqXHR, textStatus, errorThrown) {
-    var message = (typeof errorThrown === "string") ? errorThrown : errorThrown.message;
-    error(message);
-  });
-}
-
-function ajaxCall(url, success, error) {
-  var $ = window.jQuery || window.Zepto || window.$;
-
-  if ($) {
-    $.ajax({
-      dataType: "json",
-      url: url,
-      success: success,
-      error: error,
-      complete: requestComplete
-    });
-  } else {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onload = function () {
-      requestComplete();
-      if (xhr.status === 200) {
-        success(JSON.parse(xhr.responseText), xhr.statusText, xhr);
-      } else {
-        error(xhr, "error", xhr.statusText);
-      }
-    };
-    xhr.send();
-  }
-}
-
-var config = {};
-var adapters = [];
-
-// helpers
-
-function setText(element, text) {
-  if (document.body.innerText) {
-    element.innerText = text;
-  } else {
-    element.textContent = text;
-  }
-}
-
-function chartError(element, message) {
-  setText(element, "Error Loading Chart: " + message);
-  element.style.color = "#ff0000";
-}
-
-function errorCatcher(chart) {
-  try {
-    chart.__render();
-  } catch (err) {
-    chartError(chart.element, err.message);
-    throw err;
-  }
-}
-
-function fetchDataSource(chart, dataSource) {
-  if (typeof dataSource === "string") {
-    pushRequest(dataSource, function (data) {
-      chart.rawData = data;
-      errorCatcher(chart);
-    }, function (message) {
-      chartError(chart.element, message);
-    });
-  } else {
-    chart.rawData = dataSource;
-    errorCatcher(chart);
-  }
-}
-
-function addDownloadButton(chart) {
-  var element = chart.element;
-  var link = document.createElement("a");
-  link.download = chart.options.download === true ? "chart.png" : chart.options.download; // https://caniuse.com/download
-  link.style.position = "absolute";
-  link.style.top = "20px";
-  link.style.right = "20px";
-  link.style.zIndex = 1000;
-  link.style.lineHeight = "20px";
-  link.target = "_blank"; // for safari
-  var image = document.createElement("img");
-  image.alt = "Download";
-  image.style.border = "none";
-  // icon from font-awesome
-  // http://fa2png.io/
-  image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAABCFBMVEUAAADMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMywEsqxAAAAV3RSTlMAAQIDBggJCgsMDQ4PERQaHB0eISIjJCouLzE0OTo/QUJHSUpLTU5PUllhYmltcHh5foWLjI+SlaCio6atr7S1t7m6vsHHyM7R2tze5Obo7fHz9ff5+/1hlxK2AAAA30lEQVQYGUXBhVYCQQBA0TdYWAt2d3d3YWAHyur7/z9xgD16Lw0DW+XKx+1GgX+FRzM3HWQWrHl5N/oapW5RPe0PkBu+UYeICvozTWZVK23Ao04B79oJrOsJDOoxkZoQPWgX29pHpCZEk7rEvQYiNSFq1UMqvlCjJkRBS1R8hb00Vb/TajtBL7nTHE1X1vyMQF732dQhyF2o6SAwrzP06iUQzvwsArlnzcOdrgBhJyHa1QOgO9U1GsKuvjUTjavliZYQ8nNPapG6sap/3nrIdJ6bOWzmX/fy0XVpfzZP3S8OJT3g9EEiJwAAAABJRU5ErkJggg==";
-  link.appendChild(image);
-  element.style.position = "relative";
-
-  chart.__downloadAttached = true;
-
-  // mouseenter
-  chart.__enterEvent = addEvent(element, "mouseover", function(e) {
-    var related = e.relatedTarget;
-    // check download option again to ensure it wasn't changed
-    if ((!related || (related !== this && !childOf(this, related))) && chart.options.download) {
-      link.href = chart.toImage();
-      element.appendChild(link);
-    }
-  });
-
-  // mouseleave
-  chart.__leaveEvent = addEvent(element, "mouseout", function(e) {
-    var related = e.relatedTarget;
-    if (!related || (related !== this && !childOf(this, related))) {
-      if (link.parentNode) {
-        link.parentNode.removeChild(link);
-      }
-    }
-  });
-}
-
-// https://stackoverflow.com/questions/10149963/adding-event-listener-cross-browser
-function addEvent(elem, event, fn) {
-  if (elem.addEventListener) {
-    elem.addEventListener(event, fn, false);
-    return fn;
-  } else {
-    var fn2 = function() {
-      // set the this pointer same as addEventListener when fn is called
-      return(fn.call(elem, window.event));
-    };
-    elem.attachEvent("on" + event, fn2);
-    return fn2;
-  }
-}
-
-function removeEvent(elem, event, fn) {
-  if (elem.removeEventListener) {
-    elem.removeEventListener(event, fn, false);
-  } else {
-    elem.detachEvent("on" + event, fn);
-  }
-}
-
-// https://gist.github.com/shawnbot/4166283
-function childOf(p, c) {
-  if (p === c) { return false; }
-  while (c && c !== p) { c = c.parentNode; }
-  return c === p;
-}
-
-function getAdapterType(library) {
-  if (library) {
-    if (library.product === "Highcharts") {
-      return defaultExport$1;
-    } else if (library.charts) {
-      return defaultExport$2;
-    } else if (isFunction(library)) {
-      return defaultExport;
-    }
-  }
-  throw new Error("Unknown adapter");
-}
-
-function addAdapter(library) {
-  var adapterType = getAdapterType(library);
-  var adapter = new adapterType(library);
-
-  if (adapters.indexOf(adapter) === -1) {
-    adapters.push(adapter);
-  }
-}
-
-function loadAdapters() {
-  if ("Chart" in window) {
-    addAdapter(window.Chart);
-  }
-
-  if ("Highcharts" in window) {
-    addAdapter(window.Highcharts);
-  }
-
-  if (window.google && window.google.charts) {
-    addAdapter(window.google);
-  }
-}
-
-function dataEmpty(data, chartType) {
-  if (chartType === "PieChart" || chartType === "GeoChart" || chartType === "Timeline") {
-    return data.length === 0;
-  } else {
-    for (var i = 0; i < data.length; i++) {
-      if (data[i].data.length > 0) {
-        return false;
-      }
-    }
-    return true;
-  }
-}
-
-function renderChart(chartType, chart) {
-  if (chart.options.messages && chart.options.messages.empty && dataEmpty(chart.data, chartType)) {
-    setText(chart.element, chart.options.messages.empty);
-  } else {
-    callAdapter(chartType, chart);
-    if (chart.options.download && !chart.__downloadAttached && chart.adapter === "chartjs") {
-      addDownloadButton(chart);
-    }
-  }
-}
-
-// TODO remove chartType if cross-browser way
-// to get the name of the chart class
-function callAdapter(chartType, chart) {
-  var i, adapter, fnName, adapterName;
-  fnName = "render" + chartType;
-  adapterName = chart.options.adapter;
-
-  loadAdapters();
-
-  for (i = 0; i < adapters.length; i++) {
-    adapter = adapters[i];
-    if ((!adapterName || adapterName === adapter.name) && isFunction(adapter[fnName])) {
-      chart.adapter = adapter.name;
-      chart.__adapterObject = adapter;
-      return adapter[fnName](chart);
-    }
-  }
-
-  if (adapters.length > 0) {
-    throw new Error("No charting library found for " + chartType);
-  } else {
-    throw new Error("No charting libraries found - be sure to include one before your charts");
-  }
-}
-
-// process data
-
-var toFormattedKey = function (key, keyType) {
-  if (keyType === "number") {
-    key = toFloat(key);
-  } else if (keyType === "datetime") {
-    key = toDate(key);
-  } else {
-    key = toStr(key);
-  }
-  return key;
-};
-
-var formatSeriesData = function (data, keyType) {
-  var r = [], key, j;
-  for (j = 0; j < data.length; j++) {
-    if (keyType === "bubble") {
-      r.push([toFloat(data[j][0]), toFloat(data[j][1]), toFloat(data[j][2])]);
-    } else {
-      key = toFormattedKey(data[j][0], keyType);
-      r.push([key, toFloat(data[j][1])]);
-    }
-  }
-  if (keyType === "datetime") {
-    r.sort(sortByTime);
-  } else if (keyType === "number") {
-    r.sort(sortByNumberSeries);
-  }
-  return r;
-};
-
-function detectXType(series, noDatetime) {
-  if (detectXTypeWithFunction(series, isNumber)) {
-    return "number";
-  } else if (!noDatetime && detectXTypeWithFunction(series, isDate)) {
-    return "datetime";
-  } else {
-    return "string";
-  }
-}
-
-function detectXTypeWithFunction(series, func) {
-  var i, j, data;
-  for (i = 0; i < series.length; i++) {
-    data = toArr(series[i].data);
-    for (j = 0; j < data.length; j++) {
-      if (!func(data[j][0])) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-// creates a shallow copy of each element of the array
-// elements are expected to be objects
-function copySeries(series) {
-  var newSeries = [], i, j;
-  for (i = 0; i < series.length; i++) {
-    var copy = {};
-    for (j in series[i]) {
-      if (series[i].hasOwnProperty(j)) {
-        copy[j] = series[i][j];
-      }
-    }
-    newSeries.push(copy);
-  }
-  return newSeries;
-}
-
-function processSeries(chart, keyType, noDatetime) {
-  var i;
-
-  var opts = chart.options;
-  var series = chart.rawData;
-
-  // see if one series or multiple
-  if (!isArray(series) || typeof series[0] !== "object" || isArray(series[0])) {
-    series = [{name: opts.label, data: series}];
-    chart.hideLegend = true;
-  } else {
-    chart.hideLegend = false;
-  }
-
-  chart.xtype = keyType ? keyType : (opts.discrete ? "string" : detectXType(series, noDatetime));
-
-  // right format
-  series = copySeries(series);
-  for (i = 0; i < series.length; i++) {
-    series[i].data = formatSeriesData(toArr(series[i].data), chart.xtype);
-  }
-
-  return series;
-}
-
-function processSimple(chart) {
-  var perfectData = toArr(chart.rawData), i;
-  for (i = 0; i < perfectData.length; i++) {
-    perfectData[i] = [toStr(perfectData[i][0]), toFloat(perfectData[i][1])];
-  }
-  return perfectData;
-}
-
-// define classes
-
-var Chart = function Chart(element, dataSource, options) {
-  var elementId;
-  if (typeof element === "string") {
-    elementId = element;
-    element = document.getElementById(element);
-    if (!element) {
-      throw new Error("No element with id " + elementId);
-    }
-  }
-  this.element = element;
-  this.options = merge(Chartkick.options, options || {});
-  this.dataSource = dataSource;
-
-  Chartkick.charts[element.id] = this;
-
-  fetchDataSource(this, dataSource);
-
-  if (this.options.refresh) {
-    this.startRefresh();
-  }
-};
-
-Chart.prototype.getElement = function getElement () {
-  return this.element;
-};
-
-Chart.prototype.getDataSource = function getDataSource () {
-  return this.dataSource;
-};
-
-Chart.prototype.getData = function getData () {
-  return this.data;
-};
-
-Chart.prototype.getOptions = function getOptions () {
-  return this.options;
-};
-
-Chart.prototype.getChartObject = function getChartObject () {
-  return this.chart;
-};
-
-Chart.prototype.getAdapter = function getAdapter () {
-  return this.adapter;
-};
-
-Chart.prototype.updateData = function updateData (dataSource, options) {
-  this.dataSource = dataSource;
-  if (options) {
-    this.__updateOptions(options);
-  }
-  fetchDataSource(this, dataSource);
-};
-
-Chart.prototype.setOptions = function setOptions (options) {
-  this.__updateOptions(options);
-  this.redraw();
-};
-
-Chart.prototype.redraw = function redraw () {
-  fetchDataSource(this, this.rawData);
-};
-
-Chart.prototype.refreshData = function refreshData () {
-  if (typeof this.dataSource === "string") {
-    // prevent browser from caching
-    var sep = this.dataSource.indexOf("?") === -1 ? "?" : "&";
-    var url = this.dataSource + sep + "_=" + (new Date()).getTime();
-    fetchDataSource(this, url);
-  }
-};
-
-Chart.prototype.startRefresh = function startRefresh () {
-    var this$1 = this;
-
-  var refresh = this.options.refresh;
-
-  if (!this.intervalId) {
-    if (refresh) {
-      this.intervalId = setInterval( function () {
-        this$1.refreshData();
-      }, refresh * 1000);
-    } else {
-      throw new Error("No refresh interval");
-    }
-  }
-};
-
-Chart.prototype.stopRefresh = function stopRefresh () {
-  if (this.intervalId) {
-    clearInterval(this.intervalId);
-    this.intervalId = null;
-  }
-};
-
-Chart.prototype.toImage = function toImage () {
-  if (this.adapter === "chartjs") {
-    return this.chart.toBase64Image();
-  } else {
-    return null;
-  }
-};
-
-Chart.prototype.destroy = function destroy () {
-  if (this.__adapterObject) {
-    this.__adapterObject.destroy(this);
-  }
-
-  if (this.__enterEvent) {
-    removeEvent(this.element, "mouseover", this.__enterEvent);
-  }
-
-  if (this.__leaveEvent) {
-    removeEvent(this.element, "mouseout", this.__leaveEvent);
-  }
-};
-
-Chart.prototype.__updateOptions = function __updateOptions (options) {
-  var updateRefresh = options.refresh && options.refresh !== this.options.refresh;
-  this.options = merge(Chartkick.options, options);
-  if (updateRefresh) {
-    this.stopRefresh();
-    this.startRefresh();
-  }
-};
-
-Chart.prototype.__render = function __render () {
-  this.data = this.__processData();
-  renderChart(this.__chartName(), this);
-};
-
-Chart.prototype.__config = function __config () {
-  return config;
-};
-
-var LineChart = (function (Chart) {
-  function LineChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) LineChart.__proto__ = Chart;
-  LineChart.prototype = Object.create( Chart && Chart.prototype );
-  LineChart.prototype.constructor = LineChart;
-
-  LineChart.prototype.__processData = function __processData () {
-    return processSeries(this);
-  };
-
-  LineChart.prototype.__chartName = function __chartName () {
-    return "LineChart";
-  };
-
-  return LineChart;
-}(Chart));
-
-var PieChart = (function (Chart) {
-  function PieChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) PieChart.__proto__ = Chart;
-  PieChart.prototype = Object.create( Chart && Chart.prototype );
-  PieChart.prototype.constructor = PieChart;
-
-  PieChart.prototype.__processData = function __processData () {
-    return processSimple(this);
-  };
-
-  PieChart.prototype.__chartName = function __chartName () {
-    return "PieChart";
-  };
-
-  return PieChart;
-}(Chart));
-
-var ColumnChart = (function (Chart) {
-  function ColumnChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) ColumnChart.__proto__ = Chart;
-  ColumnChart.prototype = Object.create( Chart && Chart.prototype );
-  ColumnChart.prototype.constructor = ColumnChart;
-
-  ColumnChart.prototype.__processData = function __processData () {
-    return processSeries(this, null, true);
-  };
-
-  ColumnChart.prototype.__chartName = function __chartName () {
-    return "ColumnChart";
-  };
-
-  return ColumnChart;
-}(Chart));
-
-var BarChart = (function (Chart) {
-  function BarChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) BarChart.__proto__ = Chart;
-  BarChart.prototype = Object.create( Chart && Chart.prototype );
-  BarChart.prototype.constructor = BarChart;
-
-  BarChart.prototype.__processData = function __processData () {
-    return processSeries(this, null, true);
-  };
-
-  BarChart.prototype.__chartName = function __chartName () {
-    return "BarChart";
-  };
-
-  return BarChart;
-}(Chart));
-
-var AreaChart = (function (Chart) {
-  function AreaChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) AreaChart.__proto__ = Chart;
-  AreaChart.prototype = Object.create( Chart && Chart.prototype );
-  AreaChart.prototype.constructor = AreaChart;
-
-  AreaChart.prototype.__processData = function __processData () {
-    return processSeries(this);
-  };
-
-  AreaChart.prototype.__chartName = function __chartName () {
-    return "AreaChart";
-  };
-
-  return AreaChart;
-}(Chart));
-
-var GeoChart = (function (Chart) {
-  function GeoChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) GeoChart.__proto__ = Chart;
-  GeoChart.prototype = Object.create( Chart && Chart.prototype );
-  GeoChart.prototype.constructor = GeoChart;
-
-  GeoChart.prototype.__processData = function __processData () {
-    return processSimple(this);
-  };
-
-  GeoChart.prototype.__chartName = function __chartName () {
-    return "GeoChart";
-  };
-
-  return GeoChart;
-}(Chart));
-
-var ScatterChart = (function (Chart) {
-  function ScatterChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) ScatterChart.__proto__ = Chart;
-  ScatterChart.prototype = Object.create( Chart && Chart.prototype );
-  ScatterChart.prototype.constructor = ScatterChart;
-
-  ScatterChart.prototype.__processData = function __processData () {
-    return processSeries(this, "number");
-  };
-
-  ScatterChart.prototype.__chartName = function __chartName () {
-    return "ScatterChart";
-  };
-
-  return ScatterChart;
-}(Chart));
-
-var BubbleChart = (function (Chart) {
-  function BubbleChart () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) BubbleChart.__proto__ = Chart;
-  BubbleChart.prototype = Object.create( Chart && Chart.prototype );
-  BubbleChart.prototype.constructor = BubbleChart;
-
-  BubbleChart.prototype.__processData = function __processData () {
-    return processSeries(this, "bubble");
-  };
-
-  BubbleChart.prototype.__chartName = function __chartName () {
-    return "BubbleChart";
-  };
-
-  return BubbleChart;
-}(Chart));
-
-var Timeline = (function (Chart) {
-  function Timeline () {
-    Chart.apply(this, arguments);
-  }
-
-  if ( Chart ) Timeline.__proto__ = Chart;
-  Timeline.prototype = Object.create( Chart && Chart.prototype );
-  Timeline.prototype.constructor = Timeline;
-
-  Timeline.prototype.__processData = function __processData () {
-    var i, data = this.rawData;
-    for (i = 0; i < data.length; i++) {
-      data[i][1] = toDate(data[i][1]);
-      data[i][2] = toDate(data[i][2]);
-    }
-    return data;
-  };
-
-  Timeline.prototype.__chartName = function __chartName () {
-    return "Timeline";
-  };
-
-  return Timeline;
-}(Chart));
-
-var Chartkick = {
-  LineChart: LineChart,
-  PieChart: PieChart,
-  ColumnChart: ColumnChart,
-  BarChart: BarChart,
-  AreaChart: AreaChart,
-  GeoChart: GeoChart,
-  ScatterChart: ScatterChart,
-  BubbleChart: BubbleChart,
-  Timeline: Timeline,
-  charts: {},
-  configure: function (options) {
-    for (var key in options) {
-      if (options.hasOwnProperty(key)) {
-        config[key] = options[key];
-      }
-    }
-  },
-  eachChart: function (callback) {
-    for (var chartId in Chartkick.charts) {
-      if (Chartkick.charts.hasOwnProperty(chartId)) {
-        callback(Chartkick.charts[chartId]);
-      }
-    }
-  },
-  config: config,
-  options: {},
-  adapters: adapters,
-  addAdapter: addAdapter
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (Chartkick);
-
-
-/***/ }),
-/* 92 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var pSlice = Array.prototype.slice;
-var objectKeys = __webpack_require__(93);
-var isArguments = __webpack_require__(94);
-
-var deepEqual = module.exports = function (actual, expected, opts) {
-  if (!opts) opts = {};
-  // 7.1. All identical values are equivalent, as determined by ===.
-  if (actual === expected) {
-    return true;
-
-  } else if (actual instanceof Date && expected instanceof Date) {
-    return actual.getTime() === expected.getTime();
-
-  // 7.3. Other pairs that do not both pass typeof value == 'object',
-  // equivalence is determined by ==.
-  } else if (!actual || !expected || typeof actual != 'object' && typeof expected != 'object') {
-    return opts.strict ? actual === expected : actual == expected;
-
-  // 7.4. For all other Object pairs, including Array objects, equivalence is
-  // determined by having the same number of owned properties (as verified
-  // with Object.prototype.hasOwnProperty.call), the same set of keys
-  // (although not necessarily the same order), equivalent values for every
-  // corresponding key, and an identical 'prototype' property. Note: this
-  // accounts for both named and indexed properties on Arrays.
-  } else {
-    return objEquiv(actual, expected, opts);
-  }
-}
-
-function isUndefinedOrNull(value) {
-  return value === null || value === undefined;
-}
-
-function isBuffer (x) {
-  if (!x || typeof x !== 'object' || typeof x.length !== 'number') return false;
-  if (typeof x.copy !== 'function' || typeof x.slice !== 'function') {
-    return false;
-  }
-  if (x.length > 0 && typeof x[0] !== 'number') return false;
-  return true;
-}
-
-function objEquiv(a, b, opts) {
-  var i, key;
-  if (isUndefinedOrNull(a) || isUndefinedOrNull(b))
-    return false;
-  // an identical 'prototype' property.
-  if (a.prototype !== b.prototype) return false;
-  //~~~I've managed to break Object.keys through screwy arguments passing.
-  //   Converting to array solves the problem.
-  if (isArguments(a)) {
-    if (!isArguments(b)) {
-      return false;
-    }
-    a = pSlice.call(a);
-    b = pSlice.call(b);
-    return deepEqual(a, b, opts);
-  }
-  if (isBuffer(a)) {
-    if (!isBuffer(b)) {
-      return false;
-    }
-    if (a.length !== b.length) return false;
-    for (i = 0; i < a.length; i++) {
-      if (a[i] !== b[i]) return false;
-    }
-    return true;
-  }
-  try {
-    var ka = objectKeys(a),
-        kb = objectKeys(b);
-  } catch (e) {//happens when one is a string literal and the other isn't
-    return false;
-  }
-  // having the same number of owned properties (keys incorporates
-  // hasOwnProperty)
-  if (ka.length != kb.length)
-    return false;
-  //the same set of keys (although not necessarily the same order),
-  ka.sort();
-  kb.sort();
-  //~~~cheap key test
-  for (i = ka.length - 1; i >= 0; i--) {
-    if (ka[i] != kb[i])
-      return false;
-  }
-  //equivalent values for every corresponding key, and
-  //~~~possibly expensive deep test
-  for (i = ka.length - 1; i >= 0; i--) {
-    key = ka[i];
-    if (!deepEqual(a[key], b[key], opts)) return false;
-  }
-  return typeof a === typeof b;
-}
-
-
-/***/ }),
-/* 93 */
-/***/ (function(module, exports) {
-
-exports = module.exports = typeof Object.keys === 'function'
-  ? Object.keys : shim;
-
-exports.shim = shim;
-function shim (obj) {
-  var keys = [];
-  for (var key in obj) keys.push(key);
-  return keys;
-}
-
-
-/***/ }),
-/* 94 */
-/***/ (function(module, exports) {
-
-var supportsArgumentsClass = (function(){
-  return Object.prototype.toString.call(arguments)
-})() == '[object Arguments]';
-
-exports = module.exports = supportsArgumentsClass ? supported : unsupported;
-
-exports.supported = supported;
-function supported(object) {
-  return Object.prototype.toString.call(object) == '[object Arguments]';
-};
-
-exports.unsupported = unsupported;
-function unsupported(object){
-  return object &&
-    typeof object == 'object' &&
-    typeof object.length == 'number' &&
-    Object.prototype.hasOwnProperty.call(object, 'callee') &&
-    !Object.prototype.propertyIsEnumerable.call(object, 'callee') ||
-    false;
-};
-
-
-/***/ }),
-/* 95 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var isMergeableObject = function isMergeableObject(value) {
-	return isNonNullObject(value)
-		&& !isSpecial(value)
-};
-
-function isNonNullObject(value) {
-	return !!value && typeof value === 'object'
-}
-
-function isSpecial(value) {
-	var stringValue = Object.prototype.toString.call(value);
-
-	return stringValue === '[object RegExp]'
-		|| stringValue === '[object Date]'
-		|| isReactElement(value)
-}
-
-// see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
-var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
-var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
-
-function isReactElement(value) {
-	return value.$$typeof === REACT_ELEMENT_TYPE
-}
-
-function emptyTarget(val) {
-	return Array.isArray(val) ? [] : {}
-}
-
-function cloneUnlessOtherwiseSpecified(value, options) {
-	return (options.clone !== false && options.isMergeableObject(value))
-		? deepmerge(emptyTarget(value), value, options)
-		: value
-}
-
-function defaultArrayMerge(target, source, options) {
-	return target.concat(source).map(function(element) {
-		return cloneUnlessOtherwiseSpecified(element, options)
-	})
-}
-
-function mergeObject(target, source, options) {
-	var destination = {};
-	if (options.isMergeableObject(target)) {
-		Object.keys(target).forEach(function(key) {
-			destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
-		});
-	}
-	Object.keys(source).forEach(function(key) {
-		if (!options.isMergeableObject(source[key]) || !target[key]) {
-			destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
-		} else {
-			destination[key] = deepmerge(target[key], source[key], options);
-		}
-	});
-	return destination
-}
-
-function deepmerge(target, source, options) {
-	options = options || {};
-	options.arrayMerge = options.arrayMerge || defaultArrayMerge;
-	options.isMergeableObject = options.isMergeableObject || isMergeableObject;
-
-	var sourceIsArray = Array.isArray(source);
-	var targetIsArray = Array.isArray(target);
-	var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
-
-	if (!sourceAndTargetTypesMatch) {
-		return cloneUnlessOtherwiseSpecified(source, options)
-	} else if (sourceIsArray) {
-		return options.arrayMerge(target, source, options)
-	} else {
-		return mergeObject(target, source, options)
-	}
-}
-
-deepmerge.all = function deepmergeAll(array, options) {
-	if (!Array.isArray(array)) {
-		throw new Error('first argument should be an array')
-	}
-
-	return array.reduce(function(prev, next) {
-		return deepmerge(prev, next, options)
-	}, {})
-};
-
-var deepmerge_1 = deepmerge;
-
-/* harmony default export */ __webpack_exports__["a"] = (deepmerge_1);
-
-
-/***/ }),
-/* 96 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 97 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 98 */,
-/* 99 */,
-/* 100 */,
-/* 101 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(102);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(103)("9760efec", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-287ddc52\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TimelineAcara.vue", function() {
-     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-287ddc52\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./TimelineAcara.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 102 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 103 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-var listToStyles = __webpack_require__(104)
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-module.exports = function (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = listToStyles(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = listToStyles(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
 /* 104 */
 /***/ (function(module, exports) {
 
-/**
- * Translates the list format produced by css-loader into something
- * easier to manipulate.
- */
-module.exports = function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
-    var part = {
-      id: parentId + ':' + i,
-      css: css,
-      media: media,
-      sourceMap: sourceMap
-    }
-    if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
-    } else {
-      newStyles[id].parts.push(part)
-    }
-  }
-  return styles
-}
-
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 105 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(106)
-/* template */
-var __vue_template__ = __webpack_require__(107)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/components/Navbar.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6dde423b", Component.options)
-  } else {
-    hotAPI.reload("data-v-6dde423b", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 106 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            nav__overlay: true,
-            overlayActive: false,
-            navActive: 'home'
-        };
-    },
-
-    methods: {
-        to: function to(element) {
-            this.overlayActive = false;
-            this.navActive = element;
-            var el = window.querySelector("#" + element);
-            window.scrollTo(0, el.offsetTop);
-        }
-    },
-    mounted: function mounted() {
-        feather.replace();
-    }
-});
-
-/***/ }),
-/* 107 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("nav", { staticClass: "position-fixed main-nav navbar__desktop" }, [
-      _c(
-        "div",
-        {
-          staticClass: "main-nav__button d-flex justify-content-center",
-          on: {
-            click: function($event) {
-              _vm.overlayActive = !_vm.overlayActive
-            }
-          }
-        },
-        [
-          _c("i", {
-            staticClass: "text-white align-self-center",
-            attrs: { "data-feather": "menu" }
-          })
-        ]
-      ),
-      _vm._v(" "),
-      _vm._m(0),
-      _vm._v(" "),
-      _vm._m(1)
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        class: {
-          nav__overlay: _vm.nav__overlay,
-          overlayActive: _vm.overlayActive
-        }
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "nav__overlay__button d-flex justify-content-center",
-            on: {
-              click: function($event) {
-                _vm.overlayActive = !_vm.overlayActive
-              }
-            }
-          },
-          [
-            _c("i", {
-              staticClass: "text-white align-self-center",
-              attrs: { "data-feather": "x" }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "d-flex flex-column h-100 nav__overlay__items" },
-          [
-            _c(
-              "div",
-              {
-                staticClass: "d-flex flex-column justify-content-center h-100"
-              },
-              [
-                _c("ul", {}, [
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        class: { navActive: _vm.navActive == "home" },
-                        attrs: { href: "/" },
-                        on: {
-                          click: function($event) {
-                            _vm.to("home")
-                          }
-                        }
-                      },
-                      [_vm._v("Home")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        class: { navActive: _vm.navActive == "exhibition" },
-                        attrs: { href: "/#exhibition" },
-                        on: {
-                          click: function($event) {
-                            _vm.to("exhibition")
-                          }
-                        }
-                      },
-                      [_vm._v("Exhibition")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        class: { navActive: _vm.navActive == "talkshow" },
-                        attrs: { href: "/#talkshow" },
-                        on: {
-                          click: function($event) {
-                            _vm.to("talkshow")
-                          }
-                        }
-                      },
-                      [_vm._v("Talkshow")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        class: { navActive: _vm.navActive == "workshop" },
-                        attrs: { href: "/#workshop" },
-                        on: {
-                          click: function($event) {
-                            _vm.to("workshop")
-                          }
-                        }
-                      },
-                      [_vm._v("Workshop")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        class: { navActive: _vm.navActive == "contest" },
-                        attrs: { href: "/#contest" },
-                        on: {
-                          click: function($event) {
-                            _vm.to("contest")
-                          }
-                        }
-                      },
-                      [_vm._v("Contest")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        class: { navActive: _vm.navActive == "timeline" },
-                        attrs: { href: "/#timeline" },
-                        on: {
-                          click: function($event) {
-                            _vm.to("timeline")
-                          }
-                        }
-                      },
-                      [_vm._v("Timeline")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c(
-                      "a",
-                      {
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            _vm.overlayActive = !_vm.overlayActive
-                          }
-                        }
-                      },
-                      [_vm._v("Registration")]
-                    )
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _vm._m(3)
-          ]
-        )
-      ]
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "main-nav__social-media-icon-wrapper d-flex h-50 pb-3" },
-      [
-        _c(
-          "a",
-          {
-            staticClass: "align-self-end mx-auto text-orange-primary",
-            attrs: { href: "#" }
-          },
-          [_c("i", { attrs: { "data-feather": "home" } })]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "main-nav__social-media-icon-wrapper d-flex h-50 pb-3" },
-      [
-        _c(
-          "a",
-          {
-            staticClass: "align-self-end mx-auto mb-5 text-orange-primary",
-            attrs: { href: "#" }
-          },
-          [_c("i", { attrs: { "data-feather": "instagram" } })]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("div", { staticClass: "nav__overlay__items__divider" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex h-25 pb-5" }, [
-      _c(
-        "ul",
-        {
-          staticClass: "list-inline align-self-center nav__overlay__items__end"
-        },
-        [
-          _c("li", { staticClass: "list-inline-item" }, [
-            _c("a", { attrs: { href: "" } }, [
-              _c("i", { attrs: { "data-feather": "instagram" } })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "list-inline-item" }, [
-            _c("a", { attrs: { href: "" } }, [
-              _c("i", { attrs: { "data-feather": "facebook" } })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "list-inline-item" }, [
-            _c("a", { staticClass: "mt-3", attrs: { href: "" } }, [
-              _vm._v("Contacts")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "list-inline-item" }, [
-            _c("a", { staticClass: "mt-3", attrs: { href: "" } }, [
-              _vm._v("Sponsor")
-            ])
-          ])
-        ]
-      )
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6dde423b", module.exports)
-  }
-}
-
-/***/ }),
-/* 108 */,
-/* 109 */,
-/* 110 */,
-/* 111 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(112)
-/* template */
-var __vue_template__ = __webpack_require__(113)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/components/EnterButton.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-61f66e0f", Component.options)
-  } else {
-    hotAPI.reload("data-v-61f66e0f", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 112 */
 /***/ (function(module, exports) {
 
-//
-//
-//
-//
-//
-//
-//
-
-/***/ }),
-/* 113 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "a",
-    {
-      directives: [{ name: "smooth-scroll", rawName: "v-smooth-scroll" }],
-      staticClass: "d-flex justify-content-center",
-      staticStyle: { width: "50px", height: "50px", background: "#96c43e" },
-      attrs: { href: "#tentang" }
-    },
-    [
-      _c("i", {
-        staticClass: "text-white align-self-center",
-        staticStyle: { width: "20px", height: "20px" },
-        attrs: { "data-feather": "arrow-right" }
-      })
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-61f66e0f", module.exports)
-  }
-}
-
-/***/ }),
-/* 114 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = null
-/* template */
-var __vue_template__ = null
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/components/ShadowedText.vue"
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 115 */,
-/* 116 */,
-/* 117 */,
-/* 118 */,
-/* 119 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(120);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(103)("ad97163e", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3e7654f0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./HomepageCountdown.vue", function() {
-     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3e7654f0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./HomepageCountdown.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 120 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n.container-bg {\n    right: -10em;\n}\n", ""]);
-
-// exports
-
+// removed by extract-text-webpack-plugin
 
 /***/ })
-],[16]);
+],[17]);

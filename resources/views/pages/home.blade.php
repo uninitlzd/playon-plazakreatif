@@ -12,7 +12,7 @@
                             <h2 class="hero__greet__campus mr-auto">Akhir Semester ke-13 DKV UPN Jawa Timur</h2>
                             <div class="d-flex flex-row">
                                 <div>
-                                    <h2 class="hero__greet__date">21-23</h2>
+                                    <h2 class="hero__greet__date">21&mdash;23</h2>
                                 </div>
                                 <div style="margin-left: 10px">
                                     <h2 class="hero__greet__month">Desember 2018</h2>
@@ -49,13 +49,18 @@
                 <div class="col-md-6 h-100 d-flex flex-column justify-content-center">
                     <div class="tentang__content">
                         <h1 class="w-25 tentang__content__title shadowed-text" name="Tentang Playon">Tentang Playon</h1>
-                        <p class="w-75 tentang__content__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                            Accusamus aliquid autem eos et eum, impedit
-                            iusto laboriosam odio omnis porro, quam quibusdam ratione recusandae repudiandae saepe tenetur
-                            vero
-                            vitae voluptatum. Lorem ipsum dolor sit amet, consectetur adipisicing elit. At atque aut,
-                            consequuntur cumque dicta dolor ea est exercitationem explicabo harum illo magni minus odio
-                            perspiciatis placeat repellat similique vel velit.</p>
+                        <p class="w-75 tentang__content__text">Plaza Kreatif 13 berjudul “Playon” yang diambil dari salah satu bahasa
+                            jawa yang berarti berlarian. “Playon” sendiri merupakan salah satu kegiatan
+                            bermain yang paling sering dilakukan oleh anak-anak. “Playon” merupakan salah
+                            satu kalimat yang mewakili dari gambaran sebuah permainan dan “Playon”
+                            merupakan permainan yang mengasyikan serta selalu memberikan kesan yang
+                            paling menyenangkan bagi anak-anak ketika bermain bersama. Sama seperti
+                            sebuah permainan, suatu desain juga ingin memberikan dan meninggalkan
+                            sebuah kesan yang selalu melekat bagi yang menikmatinya, seperti karya-karya
+                            yang dihasilkan oleh mahasiswa DKV UPN. Serta dengan dipilihnya kata “Playon”
+                            sebagai judul Plaza Kreatif 13 , maka Plaza Kreatif 13 mampu dijadikan tempat
+                            bermain, berkumpul, dan bertemu bersama untuk memberikan kesan yang
+                            menyenangkan dan berkesan bagi seluruh penikmatnya.</p>
                         <p class="vertical-text__scroll-down">Scroll Down <i data-feather="arrow-down"></i></p>
                     </div>
                 </div>
