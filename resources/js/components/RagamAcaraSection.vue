@@ -1,8 +1,8 @@
 <template>
     <div class="" data-section-name="acara">
         <div class="row">
-            <div class="col-md-4 col-xs-0" style="padding-left: 52px">
-                <div class="d-flex flex-column justify-content-center" style="height: 100vh" v-sticky
+            <div class="col-md-4 col-xs-0">
+                <div class="d-flex flex-column justify-content-center" style="height: 100vh; margin-left: 52px" v-sticky
                      sticky-offset="offset" sticky-side="top">
                     <div class="navigation_content__wrapper" style="position: relative">
                         <h1 class="gray-text-behind w-50" v-if="linkActived == 0">Exhi <br>bition&mdash;</h1>
@@ -12,7 +12,7 @@
                         <h1 class="gray-text-behind w-50" v-if="linkActived == 4">Art Perfor <br>mance&mdash;</h1>
 
                         <div class="align-self-center">
-                            <h1 class="w-75 heading-1 mb-4" name="Ragam Acara">Ragam Acara</h1>
+                            <h1 class="w-100 heading-1 mb-4" name="Ragam Acara">Ragam Acara</h1>
                             <h4><a href="#exhibition" class="navigation_content__items active" v-smooth-scroll="{offset: 10}">Exhibition</a>
                             </h4>
                             <h4><a href="#talkshow" class="navigation_content__items" v-smooth-scroll="{offset: 10}">Talkshow</a></h4>
@@ -26,7 +26,7 @@
             <div class="col-md-8 overflow-hidden">
 
                 <homepage-countdown id="exhibition"
-                                    class="d-flex align-self-center acara_items playon-section"
+                                    class="acara_items playon-section"
                                     style="height: 100vh; position: relative"></homepage-countdown>
 
                 <talkshow-slider id="talkshow"
@@ -75,8 +75,8 @@
                     //console.log()
                     //console.log("plus: " + (section.offsetTop + section.offsetHeight))
                     if (
-                        section.offsetTop + section.offsetHeight <= this.fromTop - (section.offsetHeight / 2) &&
-                        $(section).offset().top > this.fromTop - (section.offsetHeight / 2)
+                        section.offsetTop + section.offsetHeight <= this.fromTop - (section.offsetHeight) &&
+                        $(section).offset().top > this.fromTop - (section.offsetHeight)
                     ) {
                         // console.log('add');
                         // console.log(link.classList)

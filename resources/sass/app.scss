@@ -238,7 +238,7 @@ body {
 }
 
 #exhibition {
-    @media (max-width: 576px) {
+    &.playon-section {
         height: auto !important;
     }
 }
@@ -340,12 +340,19 @@ body {
     }
 }
 
+
+
 .homepage-button__right-button-wrapper {
 
+    display: none;
+    visibility: hidden;
     margin-left: 31px;
 
     @media (max-width: 576px) {
+        display: block;
+        visibility: visible;
         margin-left: 0 !important;
+        margin-top: 2em;
     }
 }
 
@@ -401,10 +408,6 @@ h1.shadowed-text::before {
 }
 
 
-
-@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
 /* Small devices (landscape phones, 544px and up) */
 @media (min-width: 544px) {
@@ -491,6 +494,7 @@ a.navigation_content__items {
 .glide__slides {
     overflow: visible !important;
     padding: 20px !important;
+    z-index: 99;
 }
 
 .glide__slide {
@@ -586,6 +590,14 @@ a.navigation_content__items {
     }
 }
 
+.card-slider {
+    & .event-detail__title {
+        @media (max-width: 576px) {
+            font-size: 1.4em;
+        }
+    }
+}
+
 .card-slider__button-group {
 
     margin-left: 35px;
@@ -609,6 +621,28 @@ a.navigation_content__items {
     }
 }
 
+#talkshow h1.shadowed-text {
+    position: relative;
+}
+
+#talkshow h1.shadowed-text::before, #lomba h1.shadowed-text::before {
+    left: 52px;
+    top: 0.5em;
+    z-index: -9999999999999999;
+}
+
+
+#workshop h1.shadowed-text::before {
+    right: 52px;
+    top: 0.5em;
+    z-index: -9999999999999999;
+}
+
+#art-performance h1.shadowed-text::before {
+    left: 52px;
+    top: -0.5em;
+    z-index: -9999999999999999;
+}
 
 //Timeline
 
@@ -757,9 +791,6 @@ a.navigation_content__items {
 .event-detail {
     &__title {
         font-size: 3em;
-        @media (max-width: 576px) {
-            font-size: 2em;
-        }
     }
 
     &__speaker {
@@ -896,4 +927,10 @@ a.navigation_content__items {
     .col-xs-0 {
         display: none !important;
     }
+}
+
+
+#sponsors .col-md-1 {
+    width: 48% !important;
+    margin-bottom: 2em !important;
 }

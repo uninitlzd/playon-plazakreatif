@@ -254,10 +254,8 @@ body {
   top: 1em;
 }
 
-@media (max-width: 576px) {
-  #exhibition {
-    height: auto !important;
-  }
+#exhibition.playon-section {
+  height: auto !important;
 }
 
 .main-container {
@@ -365,12 +363,17 @@ body {
 }
 
 .homepage-button__right-button-wrapper {
+  display: none;
+  visibility: hidden;
   margin-left: 31px;
 }
 
 @media (max-width: 576px) {
   .homepage-button__right-button-wrapper {
+    display: block;
+    visibility: visible;
     margin-left: 0 !important;
+    margin-top: 2em;
   }
 }
 
@@ -426,19 +429,6 @@ h1.shadowed-text::before {
 
 .playon-section {
   height: 100vh;
-}
-
-@-webkit-keyframes spin {
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-
-@keyframes spin {
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
 }
 
 /* Small devices (landscape phones, 544px and up) */
@@ -536,6 +526,7 @@ a.navigation_content__items::after {
 .glide__slides {
   overflow: visible !important;
   padding: 20px !important;
+  z-index: 99;
 }
 
 .glide__slide a:focus {
@@ -647,6 +638,12 @@ a.navigation_content__items::after {
   font-size: 8pt;
 }
 
+@media (max-width: 576px) {
+  .card-slider .event-detail__title {
+    font-size: 1.4em;
+  }
+}
+
 .card-slider__button-group {
   margin-left: 35px;
 }
@@ -669,6 +666,29 @@ a.navigation_content__items::after {
 .card-slider__button-group a:hover {
   cursor: pointer;
   color: #1a1a1a !important;
+}
+
+#talkshow h1.shadowed-text {
+  position: relative;
+}
+
+#talkshow h1.shadowed-text::before,
+#lomba h1.shadowed-text::before {
+  left: 52px;
+  top: 0.5em;
+  z-index: -9999999999999999;
+}
+
+#workshop h1.shadowed-text::before {
+  right: 52px;
+  top: 0.5em;
+  z-index: -9999999999999999;
+}
+
+#art-performance h1.shadowed-text::before {
+  left: 52px;
+  top: -0.5em;
+  z-index: -9999999999999999;
 }
 
 #timeline h1.shadowed-text::before,
@@ -840,12 +860,6 @@ a.navigation_content__items::after {
   font-size: 3em;
 }
 
-@media (max-width: 576px) {
-  .event-detail__title {
-    font-size: 2em;
-  }
-}
-
 .event-detail__speaker {
   font-weight: 500;
   line-height: 1.2em;
@@ -962,5 +976,10 @@ a.navigation_content__items::after {
   .col-xs-0 {
     display: none !important;
   }
+}
+
+#sponsors .col-md-1 {
+  width: 48% !important;
+  margin-bottom: 2em !important;
 }
 

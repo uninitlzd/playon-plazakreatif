@@ -1,26 +1,30 @@
 <template>
     <div>
-        <nav class="position-fixed main-nav navbar__desktop">
-            <div class="main-nav__button d-flex justify-content-center" @click="overlayActive = !overlayActive">
-                <i data-feather="menu" class="text-white align-self-center"></i>
-            </div>
-            <div class="main-nav__social-media-icon-wrapper d-flex h-50 pb-3">
-                <a href="#" class="align-self-end mx-auto text-orange-primary" v-smooth-scroll><i data-feather="home" class=""></i></a>
-            </div>
-            <div class="main-nav__social-media-icon-wrapper d-flex h-50 pb-3">
-                <a href="https://www.instagram.com/plazakreatifupn/" class="align-self-end mx-auto mb-5 text-orange-primary"><i data-feather="instagram"
-                                                                                       class=""></i></a>
-            </div>
-        </nav>
+        <mq-layout mq="tablet+">
+            <nav class="position-fixed main-nav navbar__desktop">
+                <div class="main-nav__button d-flex justify-content-center" @click="overlayActive = !overlayActive">
+                    <i data-feather="menu" class="text-white align-self-center"></i>
+                </div>
+                <div class="main-nav__social-media-icon-wrapper d-flex h-50 pb-3">
+                    <a href="#" class="align-self-end mx-auto text-orange-primary" v-smooth-scroll><i data-feather="home" class=""></i></a>
+                </div>
+                <div class="main-nav__social-media-icon-wrapper d-flex h-50 pb-3">
+                    <a href="https://www.instagram.com/plazakreatifupn/" class="align-self-end mx-auto mb-5 text-orange-primary"><i data-feather="instagram"
+                                                                                                                                    class=""></i></a>
+                </div>
+            </nav>
+        </mq-layout>
 
-        <nav class="position-fixed main-nav navbar__mobile d-flex" v-if="$md === 'mobile'">
-            <div class="main-nav__button d-flex justify-content-center" @click="overlayActive = !overlayActive" style="width: 60px">
-                <i data-feather="menu" class="text-white align-self-center"></i>
-            </div>
-            <div class="main-nav__social-media-icon-wrapper d-flex w-100 pr-3">
-                <a href="#" class="align-self-center mx-auto text-orange-primary text-right" v-smooth-scroll style="font-weight: 600; letter-spacing: 2px">PLAYON</a>
-            </div>
-        </nav>
+        <mq-layout mq="mobile">
+            <nav class="position-fixed main-nav navbar__mobile d-flex">
+                <div class="main-nav__button d-flex justify-content-center" @click="overlayActive = !overlayActive" style="width: 60px">
+                    <i data-feather="menu" class="text-white align-self-center"></i>
+                </div>
+                <div class="main-nav__social-media-icon-wrapper d-flex w-100 pr-3">
+                    <a href="#" class="align-self-center mx-auto text-orange-primary text-right" v-smooth-scroll style="font-weight: 600; letter-spacing: 2px">PLAYON</a>
+                </div>
+            </nav>
+        </mq-layout>
 
         <transition :css="false" @enter="handleEnter" @leave="handleLeave">
             <div class="nav__overlay" id="main-overlay" v-if="overlayActive">
