@@ -5,11 +5,20 @@
                 <i data-feather="menu" class="text-white align-self-center"></i>
             </div>
             <div class="main-nav__social-media-icon-wrapper d-flex h-50 pb-3">
-                <a href="#" class="align-self-end mx-auto text-orange-primary"><i data-feather="home" class=""></i></a>
+                <a href="#" class="align-self-end mx-auto text-orange-primary" v-smooth-scroll><i data-feather="home" class=""></i></a>
             </div>
             <div class="main-nav__social-media-icon-wrapper d-flex h-50 pb-3">
-                <a href="#" class="align-self-end mx-auto mb-5 text-orange-primary"><i data-feather="instagram"
+                <a href="https://www.instagram.com/plazakreatifupn/" class="align-self-end mx-auto mb-5 text-orange-primary"><i data-feather="instagram"
                                                                                        class=""></i></a>
+            </div>
+        </nav>
+
+        <nav class="position-fixed main-nav navbar__mobile d-flex" v-if="$md === 'mobile'">
+            <div class="main-nav__button d-flex justify-content-center" @click="overlayActive = !overlayActive" style="width: 60px">
+                <i data-feather="menu" class="text-white align-self-center"></i>
+            </div>
+            <div class="main-nav__social-media-icon-wrapper d-flex w-100 pr-3">
+                <a href="#" class="align-self-center mx-auto text-orange-primary text-right" v-smooth-scroll style="font-weight: 600; letter-spacing: 2px">PLAYON</a>
             </div>
         </nav>
 
@@ -35,10 +44,10 @@
                     </div>
                     <div class="d-flex h-25 pb-5">
                         <ul class="list-inline align-self-center nav__overlay__items__end">
-                            <li class="list-inline-item"><a href=""><i data-feather="instagram"></i></a></li>
-                            <li class="list-inline-item"><a href=""><i data-feather="facebook"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.instagram.com/plazakreatifupn/"><i data-feather="instagram"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.facebook.com/PlazaKreatif/"><i data-feather="facebook"></i></a></li>
                             <li class="list-inline-item"><a href="" class="mt-3">Contacts</a></li>
-                            <li class="list-inline-item"><a href="" class="mt-3">Sponsor</a></li>
+                            <li class="list-inline-item"><a href="/#sponsors" class="mt-3" @click="to('sponsors')" v-bind:class="{navActive: (navActive == 'sponsors')}">Sponsor</a></li>
                         </ul>
                     </div>
                 </div>
@@ -66,7 +75,7 @@
             to: function (element) {
                 this.overlayActive = false;
                 this.navActive = element;
-                let el = window.querySelector("#"+element);
+                let el = window.querySelector("/#"+element);
                 window.scrollTo(0, el.offsetTop);
             },
             handleEnter: (el, done) => {

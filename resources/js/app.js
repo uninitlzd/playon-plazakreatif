@@ -30,9 +30,12 @@ Vue.component('homepage-component', require('./components/HomepageComponent.vue'
 Vue.component('homepage-countdown', require('./components/HomepageCountdown.vue'));
 Vue.component('ragam-acara', require('./components/RagamAcaraSection.vue'));
 Vue.component('fullpage-wrapper', require('./components/FullPageWrapper.vue'));
-Vue.component('card-slider', require('./components/CardSlider.vue'));
-Vue.component('workshop-slider', require('./components/WorkshopSlider.vue'));
-Vue.component('lomba-slider', require('./components/LombaSlider.vue'));
+
+Vue.component('talkshow-slider', require('./components/sliders/TalkshowSlider.vue'));
+Vue.component('workshop-slider', require('./components/sliders/WorkshopSlider.vue'));
+Vue.component('lomba-slider', require('./components/sliders/LombaSlider.vue'));
+Vue.component('artperformance-slider', require('./components/sliders/ArtPerformanceSlider'));
+
 Vue.component('timeline-acara', require('./components/TimelineAcara.vue'));
 Vue.component('card', require('./components/Card'));
 Vue.component('enter-button', require('./components/EnterButton'));
@@ -42,10 +45,19 @@ Vue.component('shadowed-text', require('./components/ShadowedText'));
 import Sticky from 'vue-sticky-directive'
 import vueSmoothScroll from 'vue-smooth-scroll'
 import VueGlide from 'vue-glide-js'
+import VueMq from 'vue-mq'
 
 Vue.use(Sticky);
 Vue.use(vueSmoothScroll)
 Vue.use(VueGlide)
+Vue.use(VueMq, {
+   breakpoints: {
+       mobile: 576,
+       tablet: 900,
+       laptop: 1250,
+       desktop: Infinity,
+   }
+})
 
 const app = new Vue({
     el: '#app',

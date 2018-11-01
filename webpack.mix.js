@@ -27,6 +27,11 @@ switch (mixEnv) {
         break
 }
 
+mix.js('resources/js/app.js', 'public/js')
+    .extract(['vue', 'jquery'])
+    .sass('resources/sass/vendor.scss', 'public/css')
+    .sass('resources/sass/app.scss', 'public/css')
+
 mix.webpackConfig({
     plugins: [
         new SWPrecacheWebpackPlugin({
@@ -57,11 +62,6 @@ mix.webpackConfig({
         })
     ]
 });
-
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/vendor.scss', 'public/css')
-    .sass('resources/sass/app.scss', 'public/css')
-    .extract(['vue']);
 
 mix.browserSync('plaza-kreatif.test');
 

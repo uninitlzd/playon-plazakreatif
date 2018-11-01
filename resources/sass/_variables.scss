@@ -4,3 +4,11 @@ $body-bg: #f8fafc;
 
 @import "variables/typography";
 @import "variables/color";
+
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+) !default;

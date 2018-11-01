@@ -1,12 +1,12 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="main-container" >
+    <div class="main-container" id="home">
         <div class="playon-section" data-section-name="home">
             <div class="row h-100">
                 <div class="col-md-5 h-100 d-flex flex-column">
                     <div class="d-flex h-100 align-items-center justify-content-center hero flex-column">
-                        <img src="{{ asset('images/playon-logo.png') }}" class="hero__logo mx-auto mb-5" alt="">
+                        <img src="{{ asset('images/playon-logo.png') }}" class="hero__logo mx-auto mb-5 w-75" alt="">
                         <div class="hero__greet">
                             <h2 class="hero__greet__title mr-auto">Pameran Karya</h2>
                             <h2 class="hero__greet__campus mr-auto">Akhir Semester ke-13 DKV UPN Jawa Timur</h2>
@@ -33,17 +33,22 @@
                 </div>
                 <div class="col-md-7 h-100 d-flex flex-column right-side-background"
                      style="background: url('{{ asset('images/homepage-bg.png') }}')">
-                    <div class="d-flex h-100 align-items-end" style="margin-left:31px">
-                        <enter-button></enter-button>
+                    <div class="d-flex h-100 align-items-end homepage-button__right-button-wrapper">
+                            <a href="#"
+                               class="col-6 text-center homepage-button__left-button d-flex justify-content-center"><span
+                                    class="align-self-center text-white">Registrasi Lomba</span></a>
+                            <a href="#"
+                               class="col-6 text-center homepage-button__left-button d-flex justify-content-center"><span
+                                    class="align-self-center text-white">Registrasi Workshop</span></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="main-container playon-section" data-section-name="about" id="tentang" style="padding-left: 52px">
+    <div class="main-container" data-section-name="about" id="tentang" style="padding-left: 52px">
         <div class="playon-section">
             <div class="row h-100">
-                <div class="col-md-6 h-100 d-flex flex-column align-self-center justify-content-center">
+                <div class="col-md-6 col-xs-0 h-100 d-flex flex-column align-self-center justify-content-center tentang__left-side">
                     <img src="{{ asset('images/playon-mozaik.png') }}" class="img-fluid align-self-center" alt="">
                 </div>
                 <div class="col-md-6 h-100 d-flex flex-column justify-content-center">
@@ -61,13 +66,13 @@
                             sebagai judul Plaza Kreatif 13 , maka Plaza Kreatif 13 mampu dijadikan tempat
                             bermain, berkumpul, dan bertemu bersama untuk memberikan kesan yang
                             menyenangkan dan berkesan bagi seluruh penikmatnya.</p>
-                        <p class="vertical-text__scroll-down">Scroll Down <i data-feather="arrow-down"></i></p>
+                        <p class="vertical-text__scroll-down col-xs-0">Scroll Down <i data-feather="arrow-down"></i></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="main-container" sticky-container data-section-name="about" style="padding-left: 52px">
+    <div class="main-container" sticky-container style="padding-left: 0px">
         <ragam-acara></ragam-acara>
     </div>
     <div class="main-container" style="padding-left: 52px" id="timeline">
