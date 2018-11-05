@@ -30628,22 +30628,24 @@ feather.replace();
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
+            rewind: false,
             classes: {},
             slide: {},
             breakpoints: {
                 576: {
-                    perView: 1
+                    perView: 1,
+                    rewind: false
                 }
             }
         };
     },
     mounted: function mounted() {
         this.slide = this.$refs['slide'];
-        console.log(this.$refs['slide']);
     },
 
     methods: {
         focusTo: function focusTo(i) {
+
             this.slide.go('=' + i);
         },
         next: function next() {
@@ -30764,7 +30766,9 @@ var render = function() {
                     ref: "slide",
                     attrs: {
                       classes: _vm.classes,
-                      breakpoints: _vm.breakpoints
+                      breakpoints: _vm.breakpoints,
+                      type: _vm.type,
+                      rewind: _vm.rewind
                     }
                   },
                   _vm._l(10, function(i) {
@@ -31078,12 +31082,13 @@ feather.replace();
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            direction: 'rtl',
+            rewind: false,
             classes: {},
             slide: {},
             breakpoints: {
                 576: {
-                    perView: 1
+                    perView: 1,
+                    rewind: false
                 }
             }
         };
@@ -31124,135 +31129,140 @@ var render = function() {
         _c(
           "h1",
           {
-            staticClass: "shadowed-text mb-5 ml-auto text-right",
-            staticStyle: { "padding-right": "52px", position: "relative" },
-            attrs: { name: "Workshop" }
+            staticClass: "shadowed-text mb-5",
+            staticStyle: { "padding-left": "52px", position: "relative" },
+            attrs: { name: "Talkshow" }
           },
-          [_vm._v("Workshop")]
+          [_vm._v("Talkshow")]
         ),
-        _vm._v(" "),
-        _c("div", { staticClass: "d-flex w-100 flex-row align-self-center" }, [
-          _c(
-            "div",
-            { staticClass: "d-flex w-50 justify-content-start" },
-            [
-              _c(
-                "vue-glide",
-                {
-                  ref: "slide",
-                  attrs: {
-                    classes: _vm.classes,
-                    breakpoints: _vm.breakpoints,
-                    direction: _vm.direction
-                  }
-                },
-                _vm._l(10, function(i) {
-                  return _c(
-                    "vue-glide-slide",
-                    { key: i },
-                    [
-                      _c(
-                        "card",
-                        {
-                          nativeOn: {
-                            click: function($event) {
-                              _vm.focusTo(i - 1)
-                            }
-                          }
-                        },
-                        [
-                          _c("div", {
-                            staticClass: "card__image h-100",
-                            staticStyle: {
-                              background: "url('/images/four.jpg')"
-                            }
-                          })
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                })
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "d-flex flex-column w-50 align-self-center pl-3",
-              staticStyle: { "padding-right": "52px" }
-            },
-            [
-              _c("h6", { staticClass: "event-detail__title mr-auto" }, [
-                _vm._v("Workshop")
-              ]),
-              _vm._v(" "),
-              _c(
-                "ul",
-                {
-                  staticClass:
-                    "list-inline d-flex flex-row align-self-center mt-3"
-                },
-                [
-                  _c(
-                    "li",
-                    {
-                      staticClass: "list-inline-item d-flex align-self-center"
-                    },
-                    [
-                      _c("img", {
-                        staticClass: "rounded-circle mr-2",
-                        staticStyle: { "object-fit": "cover" },
-                        attrs: {
-                          src: "/images/venom.jpg",
-                          alt: "",
-                          height: "50px",
-                          width: "50px"
-                        }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "list-inline-item d-flex" }, [
-                    _c(
-                      "p",
-                      {
-                        staticClass: "event-detail__speaker align-self-center"
-                      },
-                      [
-                        _vm._v("Venom"),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c(
-                          "span",
-                          { staticClass: "event-detail__speaker__detail" },
-                          [
-                            _vm._v("Villain from "),
-                            _c("i", [_vm._v("Surabaya")])
-                          ]
-                        )
-                      ]
-                    )
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "event-detail__time" }, [
-                _vm._v(
-                  "\n                    21 Des at 10.00\n                "
-                )
-              ])
-            ]
-          )
-        ]),
         _vm._v(" "),
         _c(
           "div",
           {
-            staticClass: "card-slider__button-group float-right",
-            staticStyle: { "padding-right": "52px" }
+            staticClass: "d-flex w-100 flex-row align-self-center",
+            staticStyle: { "padding-left": "52px" }
+          },
+          [
+            _c(
+              "div",
+              { staticClass: "d-flex flex-column w-50 align-self-center" },
+              [
+                _c("h6", { staticClass: "event-detail__title mr-auto" }, [
+                  _vm._v("Talkshow")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  {
+                    staticClass:
+                      "list-inline d-flex flex-row align-self-center mt-3"
+                  },
+                  [
+                    _c(
+                      "li",
+                      {
+                        staticClass: "list-inline-item d-flex align-self-center"
+                      },
+                      [
+                        _c("img", {
+                          staticClass: "rounded-circle mr-2",
+                          staticStyle: { "object-fit": "cover" },
+                          attrs: {
+                            src: "/images/venom.jpg",
+                            alt: "",
+                            height: "50px",
+                            width: "50px"
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("li", { staticClass: "list-inline-item d-flex" }, [
+                      _c(
+                        "p",
+                        {
+                          staticClass: "event-detail__speaker align-self-center"
+                        },
+                        [
+                          _vm._v("Venom"),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            { staticClass: "event-detail__speaker__detail" },
+                            [
+                              _vm._v("Villain from "),
+                              _c("i", [_vm._v("Surabaya")])
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "event-detail__time" }, [
+                  _vm._v(
+                    "\n                    21 Des at 10.00\n                "
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "d-flex w-50" },
+              [
+                _c(
+                  "vue-glide",
+                  {
+                    ref: "slide",
+                    attrs: {
+                      classes: _vm.classes,
+                      breakpoints: _vm.breakpoints,
+                      type: _vm.type,
+                      rewind: _vm.rewind
+                    }
+                  },
+                  _vm._l(10, function(i) {
+                    return _c(
+                      "vue-glide-slide",
+                      { key: i },
+                      [
+                        _c(
+                          "card",
+                          {
+                            nativeOn: {
+                              click: function($event) {
+                                _vm.focusTo(i - 1)
+                              }
+                            }
+                          },
+                          [
+                            _c("div", {
+                              staticClass: "card__image h-100",
+                              staticStyle: {
+                                background: "url('/images/four.jpg')"
+                              }
+                            })
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  })
+                )
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "card-slider__button-group",
+            staticStyle: { "padding-left": "52px" }
           },
           [
             _c("a", { on: { click: _vm.previous } }, [_vm._v("Prev")]),
@@ -31525,22 +31535,24 @@ feather.replace();
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
+            rewind: false,
             classes: {},
             slide: {},
             breakpoints: {
                 576: {
-                    perView: 1
+                    perView: 1,
+                    rewind: false
                 }
             }
         };
     },
     mounted: function mounted() {
         this.slide = this.$refs['slide'];
-        console.log(this.$refs['slide']);
     },
 
     methods: {
         focusTo: function focusTo(i) {
+
             this.slide.go('=' + i);
         },
         next: function next() {
@@ -31573,9 +31585,9 @@ var render = function() {
           {
             staticClass: "shadowed-text mb-5",
             staticStyle: { "padding-left": "52px", position: "relative" },
-            attrs: { name: "Contest" }
+            attrs: { name: "Talkshow" }
           },
-          [_vm._v("Contest")]
+          [_vm._v("Talkshow")]
         ),
         _vm._v(" "),
         _c(
@@ -31661,7 +31673,9 @@ var render = function() {
                     ref: "slide",
                     attrs: {
                       classes: _vm.classes,
-                      breakpoints: _vm.breakpoints
+                      breakpoints: _vm.breakpoints,
+                      type: _vm.type,
+                      rewind: _vm.rewind
                     }
                   },
                   _vm._l(10, function(i) {
@@ -31975,12 +31989,13 @@ feather.replace();
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            direction: 'rtl',
+            rewind: false,
             classes: {},
             slide: {},
             breakpoints: {
                 576: {
-                    perView: 1
+                    perView: 1,
+                    rewind: false
                 }
             }
         };
@@ -31991,6 +32006,7 @@ feather.replace();
 
     methods: {
         focusTo: function focusTo(i) {
+
             this.slide.go('=' + i);
         },
         next: function next() {
@@ -32021,135 +32037,140 @@ var render = function() {
         _c(
           "h1",
           {
-            staticClass: "shadowed-text mb-5 ml-auto text-right",
-            staticStyle: { "padding-right": "52px", position: "relative" },
-            attrs: { name: "Art Performance" }
+            staticClass: "shadowed-text mb-5",
+            staticStyle: { "padding-left": "52px", position: "relative" },
+            attrs: { name: "Talkshow" }
           },
-          [_vm._v("Art Performance")]
+          [_vm._v("Talkshow")]
         ),
-        _vm._v(" "),
-        _c("div", { staticClass: "d-flex w-100 flex-row align-self-center" }, [
-          _c(
-            "div",
-            { staticClass: "d-flex w-50 justify-content-start" },
-            [
-              _c(
-                "vue-glide",
-                {
-                  ref: "slide",
-                  attrs: {
-                    classes: _vm.classes,
-                    breakpoints: _vm.breakpoints,
-                    direction: _vm.direction
-                  }
-                },
-                _vm._l(10, function(i) {
-                  return _c(
-                    "vue-glide-slide",
-                    { key: i },
-                    [
-                      _c(
-                        "card",
-                        {
-                          nativeOn: {
-                            click: function($event) {
-                              _vm.focusTo(i - 1)
-                            }
-                          }
-                        },
-                        [
-                          _c("div", {
-                            staticClass: "card__image h-100",
-                            staticStyle: {
-                              background: "url('/images/four.jpg')"
-                            }
-                          })
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                })
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "d-flex flex-column w-50 align-self-center pl-3",
-              staticStyle: { "padding-right": "52px" }
-            },
-            [
-              _c("h6", { staticClass: "event-detail__title mr-auto" }, [
-                _vm._v("Workshop")
-              ]),
-              _vm._v(" "),
-              _c(
-                "ul",
-                {
-                  staticClass:
-                    "list-inline d-flex flex-row align-self-center mt-3"
-                },
-                [
-                  _c(
-                    "li",
-                    {
-                      staticClass: "list-inline-item d-flex align-self-center"
-                    },
-                    [
-                      _c("img", {
-                        staticClass: "rounded-circle mr-2",
-                        staticStyle: { "object-fit": "cover" },
-                        attrs: {
-                          src: "/images/venom.jpg",
-                          alt: "",
-                          height: "50px",
-                          width: "50px"
-                        }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "list-inline-item d-flex" }, [
-                    _c(
-                      "p",
-                      {
-                        staticClass: "event-detail__speaker align-self-center"
-                      },
-                      [
-                        _vm._v("Venom"),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c(
-                          "span",
-                          { staticClass: "event-detail__speaker__detail" },
-                          [
-                            _vm._v("Villain from "),
-                            _c("i", [_vm._v("Surabaya")])
-                          ]
-                        )
-                      ]
-                    )
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "event-detail__time" }, [
-                _vm._v(
-                  "\n                    21 Des at 10.00\n                "
-                )
-              ])
-            ]
-          )
-        ]),
         _vm._v(" "),
         _c(
           "div",
           {
-            staticClass: "card-slider__button-group float-right",
-            staticStyle: { "padding-right": "52px" }
+            staticClass: "d-flex w-100 flex-row align-self-center",
+            staticStyle: { "padding-left": "52px" }
+          },
+          [
+            _c(
+              "div",
+              { staticClass: "d-flex flex-column w-50 align-self-center" },
+              [
+                _c("h6", { staticClass: "event-detail__title mr-auto" }, [
+                  _vm._v("Talkshow")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  {
+                    staticClass:
+                      "list-inline d-flex flex-row align-self-center mt-3"
+                  },
+                  [
+                    _c(
+                      "li",
+                      {
+                        staticClass: "list-inline-item d-flex align-self-center"
+                      },
+                      [
+                        _c("img", {
+                          staticClass: "rounded-circle mr-2",
+                          staticStyle: { "object-fit": "cover" },
+                          attrs: {
+                            src: "/images/venom.jpg",
+                            alt: "",
+                            height: "50px",
+                            width: "50px"
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("li", { staticClass: "list-inline-item d-flex" }, [
+                      _c(
+                        "p",
+                        {
+                          staticClass: "event-detail__speaker align-self-center"
+                        },
+                        [
+                          _vm._v("Venom"),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            { staticClass: "event-detail__speaker__detail" },
+                            [
+                              _vm._v("Villain from "),
+                              _c("i", [_vm._v("Surabaya")])
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "event-detail__time" }, [
+                  _vm._v(
+                    "\n                    21 Des at 10.00\n                "
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "d-flex w-50" },
+              [
+                _c(
+                  "vue-glide",
+                  {
+                    ref: "slide",
+                    attrs: {
+                      classes: _vm.classes,
+                      breakpoints: _vm.breakpoints,
+                      type: _vm.type,
+                      rewind: _vm.rewind
+                    }
+                  },
+                  _vm._l(10, function(i) {
+                    return _c(
+                      "vue-glide-slide",
+                      { key: i },
+                      [
+                        _c(
+                          "card",
+                          {
+                            nativeOn: {
+                              click: function($event) {
+                                _vm.focusTo(i - 1)
+                              }
+                            }
+                          },
+                          [
+                            _c("div", {
+                              staticClass: "card__image h-100",
+                              staticStyle: {
+                                background: "url('/images/four.jpg')"
+                              }
+                            })
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  })
+                )
+              ],
+              1
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "card-slider__button-group",
+            staticStyle: { "padding-left": "52px" }
           },
           [
             _c("a", { on: { click: _vm.previous } }, [_vm._v("Prev")]),
@@ -32624,8 +32645,8 @@ var render = function() {
       attrs: { "data-section-name": "timeline" }
     },
     [
-      _c("div", { staticClass: "row h-100" }, [
-        _c("div", { staticClass: "col-md-6 h-100 d-flex flex-column" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-6 d-flex flex-column" }, [
           _c("div", { staticClass: "timeline__content__wrapper" }, [
             _c(
               "h1",

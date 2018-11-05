@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Plaza Kreatif XIIV</title>
-    <link rel="stylesheet" href="/css/vendor.css">
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="{{ mix('/css/vendor.css') }}">
+    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
@@ -15,10 +15,9 @@
     <navbar></navbar>
     @yield('content')
 </div>
-<script src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="/js/manifest.js"></script>
-<script src="/js/vendor.js"></script>
-<script src="/js/app.js"></script>
+<script src="{{ mix('/js/manifest.js') }}"></script>
+<script src="{{ mix('/js/vendor.js') }}"></script>
+<script src="{{ mix('/js/app.js') }}"></script>
 @yield('scripts')
 </body>
 </html>

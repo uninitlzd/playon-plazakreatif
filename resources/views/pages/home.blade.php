@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-md-6 h-100 d-flex flex-column justify-content-center">
                     <div class="tentang__content">
-                        <h1 class="w-25 tentang__content__title shadowed-text" name="Tentang Playon">Tentang Playon</h1>
+                        <h1 class="w-100 tentang__content__title shadowed-text mb-5" name="Tentang Playon">Tentang Playon</h1>
                         <p class="w-75 tentang__content__text">Plaza Kreatif 13 berjudul “Playon” yang diambil dari
                             salah satu bahasa
                             jawa yang berarti berlarian. “Playon” sendiri merupakan salah satu kegiatan
@@ -75,19 +75,19 @@
             </div>
         </div>
     </div>
-    <div class="main-container" sticky-container style="padding-left: 0px">
+    <div class="main-container mb-5" sticky-container style="padding-left: 0px">
         <ragam-acara></ragam-acara>
     </div>
-    <div class="main-container" style="padding-left: 52px" id="timeline">
-        <div class="playon-section" data-section-name="tentang">
-            <div class="row h-100">
+    <div class="main-container mt-5 pt-5" style="padding-left: 52px" id="timeline">
+        <div class="" data-section-name="timeline">
+            <div class="row">
                 <div class="col-md-6 h-100 d-flex flex-column">
                     <timeline-acara></timeline-acara>
                 </div>
             </div>
         </div>
     </div>
-    <div class="main-container" style="padding-left: 52px" id="sponsors">
+    <div class="main-container pt-5" style="padding-left: 52px" id="sponsors">
         <div class="playon-section" data-section-name="tentang">
             <div class="row h-100">
                 <div class="col-md-12 h-100 d-flex flex-column">

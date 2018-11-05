@@ -22,7 +22,7 @@
                     </p>
                 </div>
                 <div class="d-flex w-50">
-                    <vue-glide :classes="classes" :breakpoints="breakpoints" ref="slide">
+                    <vue-glide :classes="classes" :breakpoints="breakpoints" ref="slide" :type="type" :rewind="rewind">
                         <vue-glide-slide v-for="i in 10" :key="i">
                             <card @click.native="focusTo(i - 1)">
                                 <div class="card__image h-100" style="background: url('/images/four.jpg')">
@@ -93,21 +93,23 @@
     export default {
         data() {
             return {
+                rewind: false,
                 classes: {},
                 slide: {},
                 breakpoints: {
                     576: {
                         perView: 1,
+                        rewind: false,
                     }
                 }
             }
         },
         mounted() {
             this.slide = this.$refs['slide'];
-            console.log(this.$refs['slide'])
         },
         methods: {
             focusTo: function (i) {
+
                 this.slide.go('=' + i)
             },
             next: function () {

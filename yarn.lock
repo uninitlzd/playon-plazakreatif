@@ -2972,6 +2972,10 @@ html-minifier@^3.0.1:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
+htmler@*:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/htmler/-/htmler-0.1.0.tgz#90582b702ce51beb21caf00a594503b5b624c15a"
+
 http-deceiver@^1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/http-deceiver/-/http-deceiver-1.2.7.tgz#fa7168944ab9a519d337cb0bec7284dc3e723d87"
@@ -5648,6 +5652,12 @@ shebang-regex@^1.0.0:
 shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
+
+shine@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/shine/-/shine-0.1.1.tgz#139a8bed310e22efdce220f4dff95bc560186d14"
+  dependencies:
+    htmler "*"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"

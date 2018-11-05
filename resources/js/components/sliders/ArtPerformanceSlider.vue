@@ -1,21 +1,10 @@
 <template>
     <div class="card-slider d-flex flex-column homepage-talkshow justify-content-center  acara_items">
         <mq-layout mq="mobile">
-            <h1 class="shadowed-text mb-5 ml-auto text-right" name="Art Performance" style="padding-right: 52px; position:relative;">Art Performance</h1>
-            <div class="d-flex w-100 flex-row align-self-center">
-                <div class="d-flex w-50 justify-content-start">
-                    <vue-glide :classes="classes" :breakpoints="breakpoints" :direction="direction" ref="slide">
-                        <vue-glide-slide v-for="i in 10" :key="i">
-                            <card @click.native="focusTo(i - 1)">
-                                <div class="card__image h-100" style="background: url('/images/four.jpg')">
-
-                                </div>
-                            </card>
-                        </vue-glide-slide>
-                    </vue-glide>
-                </div>
-                <div class="d-flex flex-column w-50 align-self-center pl-3" style="padding-right: 52px">
-                    <h6 class="event-detail__title mr-auto">Workshop</h6>
+            <h1 class="shadowed-text mb-5" name="Talkshow" style="padding-left: 52px; position:relative;">Talkshow</h1>
+            <div class="d-flex w-100 flex-row align-self-center" style="padding-left: 52px">
+                <div class="d-flex flex-column w-50 align-self-center">
+                    <h6 class="event-detail__title mr-auto">Talkshow</h6>
                     <ul class="list-inline d-flex flex-row align-self-center mt-3">
                         <li class="list-inline-item d-flex align-self-center">
                             <img src="/images/venom.jpg" alt=""
@@ -32,8 +21,19 @@
                         21 Des at 10.00
                     </p>
                 </div>
+                <div class="d-flex w-50">
+                    <vue-glide :classes="classes" :breakpoints="breakpoints" ref="slide" :type="type" :rewind="rewind">
+                        <vue-glide-slide v-for="i in 10" :key="i">
+                            <card @click.native="focusTo(i - 1)">
+                                <div class="card__image h-100" style="background: url('/images/four.jpg')">
+
+                                </div>
+                            </card>
+                        </vue-glide-slide>
+                    </vue-glide>
+                </div>
             </div>
-            <div class="card-slider__button-group float-right" style="padding-right: 52px">
+            <div class="card-slider__button-group" style="padding-left: 52px">
                 <a @click="previous">Prev</a>
                 <a class="">/</a>
                 <a @click="next">Next</a>
@@ -93,22 +93,23 @@
     export default {
         data() {
             return {
-                direction: 'rtl',
+                rewind: false,
                 classes: {},
                 slide: {},
                 breakpoints: {
                     576: {
                         perView: 1,
+                        rewind: false,
                     }
                 }
             }
         },
         mounted() {
             this.slide = this.$refs['slide'];
-
         },
         methods: {
             focusTo: function (i) {
+
                 this.slide.go('=' + i)
             },
             next: function () {

@@ -1,7 +1,7 @@
 <template>
     <div class="timeline-homepage" data-section-name="timeline">
-        <div class="row h-100">
-            <div class="col-md-6 h-100 d-flex flex-column">
+        <div class="row">
+            <div class="col-md-6 d-flex flex-column">
                 <div class="timeline__content__wrapper">
                     <h1 class="timeline__content__wrapper__title shadowed-text" name="Timeline">Timeline</h1>
                     <ul class="list-inline mt-5 ml-1 timeline__dates">

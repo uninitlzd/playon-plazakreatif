@@ -13,7 +13,6 @@ body {
 
     @media (max-width: 576px) {
         background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03) 1px, transparent 0, transparent 12.5555%);
-        background-position-x: px;
     }
 }
 
@@ -119,6 +118,8 @@ body {
     left: -0.2em;
     color: #f8f8f8 !important;
     top: -0.2em;
+    font-family: Roboto;
+    font-weight: bolder;
     line-height: 1em;
     font-size: 7em;
 }
@@ -239,7 +240,9 @@ body {
 
 #exhibition {
     &.playon-section {
-        height: auto !important;
+       @media (max-width: 576px) {
+           height: auto !important;
+       }
     }
 }
 
@@ -255,7 +258,9 @@ body {
 }
 
 .main-container#home {
-    padding-top: calc(50px + 20vh);
+   @media (max-width: 576px) {
+       padding-top: calc(50px + 20vh);
+   }
 }
 
 
@@ -399,7 +404,9 @@ h1.shadowed-text::before {
     left: -10vh;
     position: absolute;
     font-size: 2em;
-    color: rgb(229, 229, 229);
+    font-family: Roboto;
+    font-weight: bolder;
+    color: #f8f8f8;
     z-index: -999999999;
 }
 
@@ -416,9 +423,6 @@ h1.shadowed-text::before {
 
 /* Medium devices (tablets, 768px and up) */
 @media (max-width: 768px) {
-    [class*=col-].h-100 {
-        height: 50% !important;
-    }
 
     .homepage-button__left-button-wrapper {
         width: calc(100%) !important;
@@ -499,6 +503,9 @@ a.navigation_content__items {
 
 .glide__slide {
     //width: 20vw !important;
+    & a:hover {
+        text-decoration: none;
+    }
 
     & a:focus {
         text-decoration: none;
@@ -747,9 +754,7 @@ a.navigation_content__items {
 /* For mobile!
  */
 @media (max-width: 768px) {
-    .card {
-        max-width: 375;
-    }
+
 
     .timeline {
         padding: 0 35.42857px;
@@ -851,53 +856,6 @@ a.navigation_content__items {
             box-shadow: 1px 3px 15px rgba(164, 202, 72, 1);
         }
     }
-}
-
-
-.vb > .vb-dragger {
-    z-index: 5;
-    width: 12px;
-    right: 0;
-}
-
-.vb > .vb-dragger > .vb-dragger-styler {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-transform: rotate3d(0,0,0,0);
-    transform: rotate3d(0,0,0,0);
-    -webkit-transition:
-        background-color 100ms ease-out,
-        margin 100ms ease-out,
-        height 100ms ease-out;
-    transition:
-        background-color 100ms ease-out,
-        margin 100ms ease-out,
-        height 100ms ease-out;
-    background-color: rgba(48, 121, 244,.1);
-    margin: 5px 5px 5px 0;
-    border-radius: 20px;
-    height: calc(100% - 10px);
-    display: block;
-}
-
-.vb.vb-scrolling-phantom > .vb-dragger > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.3);
-}
-
-.vb > .vb-dragger:hover > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.5);
-    margin: 0px;
-    height: 100%;
-}
-
-.vb.vb-dragging > .vb-dragger > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.5);
-    margin: 0px;
-    height: 100%;
-}
-
-.vb.vb-dragging-phantom > .vb-dragger > .vb-dragger-styler {
-    background-color: rgba(48, 121, 244,.5);
 }
 
 // Extra small devices (portrait phones, less than 576px)
