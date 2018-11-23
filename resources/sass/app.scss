@@ -104,7 +104,7 @@ p {
     padding-left: 0 !important;
     padding-right: 0 !important;
     margin: 0 !important;
-    overflow: visible;
+    overflow: hidden;
 }
 
 body {
@@ -261,18 +261,31 @@ body {
    @media (max-width: 576px) {
        padding-top: calc(50px + 20vh);
    }
+
+    @media (max-width: 576px) {
+        height: 200vh !important;
+    }
+
+    @media (min-width: 577px) and (max-width: 767px) {
+        height: 200vh;
+    }
 }
 
 
 #tentang {
+    padding-top: 50px;
     position: relative;
 
     & .playon-section {
-        padding: 5em 0;
+        padding: 5em 2em 5em 0em;
         margin: 10em 0 5em 0;
 
         @media (max-width: 576px) {
             margin: 10em 0 0 0;
+        }
+
+        @media (max-width: 767px) {
+            height: 150vh;
         }
     }
 
@@ -376,6 +389,12 @@ body {
     background-size: cover !important;
 }
 
+.right-side-background {
+    @media (max-width: 767px) {
+        background-position: center center !important;
+    }
+}
+
 .tentang__content {
     margin-left: 31px;
 
@@ -403,7 +422,7 @@ h1.shadowed-text::before {
     top: -20vh;
     left: -10vh;
     position: absolute;
-    font-size: 2em;
+    font-size: 1.5em;
     font-family: Roboto;
     font-weight: bolder;
     color: #f8f8f8;
@@ -434,7 +453,7 @@ a.navigation_content__items {
     transform: scale(1);
     transition: 400ms;
 
-    &.active {
+    &.is-active {
         color: $black;
         transition: 1000ms;
 
@@ -891,4 +910,16 @@ a.navigation_content__items {
 #sponsors .col-md-1 {
     width: 48% !important;
     margin-bottom: 2em !important;
+}
+
+ul.bullets {
+    list-style: disc;
+}
+
+ul {
+    list-style: disc;
+}
+
+.timeline__item ul {
+    margin-top: 5px;
 }

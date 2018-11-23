@@ -1,7 +1,7 @@
 <template>
     <div class="timeline-homepage" data-section-name="timeline">
         <div class="row">
-            <div class="col-md-6 d-flex flex-column">
+            <div class="col-md-12 d-flex flex-column">
                 <div class="timeline__content__wrapper">
                     <h1 class="timeline__content__wrapper__title shadowed-text" name="Timeline">Timeline</h1>
                     <ul class="list-inline mt-5 ml-1 timeline__dates">
@@ -13,37 +13,86 @@
                         <div class="col-md-12">
                             <div v-if="timelineOrder == 1">
                                 <ul class="timeline">
-                                    <li class="timeline__item">
+                                    <li class="timeline__item d-flex flex-row">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--red"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            10.00
+                                        <div class="timeline__time mr-3">
+                                            11.00 - 11.30
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Opening
-                                            </div>
-                                            <ul class="timeline__points">
-                                                <li>Mr. Alan Bach</li>
-                                            </ul>
-                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Opening Ceremony
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Sambutan ketua pelaksana</li>
+                                                </ul>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Registrasi Ulang
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Registrasi ulang lomba komik strip</li>
+                                                </ul>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Pendaftaran Workshop
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </li>
 
-                                    <li class="timeline__item">
+                                    <li class="timeline__item d-flex flex-row">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            11.00
+                                        <div class="timeline__time mr-3">
+                                            13.00 - 15.30
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Workshop Fasyari
+                                                </div>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Registrasi Ulang Lomba Komik Strip
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item d-flex flex-row">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            15.30 - 17.30
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Lomba Komik
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item d-flex flex-row">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            17.30 - 18.30
                                         </div>
                                         <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Design Stand Up
+                                            <div class="timeline__title-break">
+                                                ISHOMA
                                             </div>
-                                            <ul class="timeline__points">
-                                                <li>Hangouts</li>
-                                            </ul>
                                         </div>
                                     </li>
 
@@ -51,31 +100,76 @@
                                         <div class="timeline__step">
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            12.00
+                                        <div class="timeline__time mr-3">
+                                            18.30 - 19.00
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title-break">
-                                                Break
-                                            </div>
-                                        </div>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Campaign
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Campaign DKV5 Kelompok 1-3</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                     <li class="timeline__item">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            13.00
+                                        <div class="timeline__time mr-3">
+                                            19.00 - 20.00
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Talkshow
-                                            </div>
-                                            <ul class="timeline__points">
-                                                <li>How to train your dragon</li>
-                                            </ul>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Live Music Performance
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Putri Depuci</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
+                                        <div class="timeline__time mr-3">
+                                            20.00 - 20.30
+                                        </div>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Campaign
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Campaign DKV5 Kelompok 1-3</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            20.30 - 21.00
+                                        </div>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Penutupan
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Penutupan Hari 1</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                 </ul>
@@ -84,35 +178,92 @@
                                 <ul class="timeline">
                                     <li class="timeline__item">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--red"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            10.00
+                                        <div class="timeline__time mr-3">
+                                            11.00 - 11.15
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Opening
-                                            </div>
-                                            <ul class="timeline__points">
-                                                <li>Mr. Alan Poe</li>
-                                            </ul>
-                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Open Gate
+                                                </div>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Registrasi Ulang
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Registrasi ulang lomba mewarnai</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                     <li class="timeline__item">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            11.00
+                                        <div class="timeline__time mr-3">
+                                            11.15 - 14.15
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Talkshow "Lintang Pandu"
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            15.30 – 15.50
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Awarding Lomba Mewarnai bersama Ibu dan Anak
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            15.50 – 17.30
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Panggon Dolan
+                                                </div>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Bedah Karya
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            17.30 - 18.30
                                         </div>
                                         <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Design Stand Up
+                                            <div class="timeline__title-break">
+                                                ISHOMA
                                             </div>
-                                            <ul class="timeline__points">
-                                                <li>Hangouts</li>
-                                            </ul>
                                         </div>
                                     </li>
 
@@ -120,31 +271,48 @@
                                         <div class="timeline__step">
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            12.00
+                                        <div class="timeline__time mr-3">
+                                            18.30 - 19.00
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title-break">
-                                                Break
-                                            </div>
-                                        </div>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Live Music Performance “The Different”
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                     <li class="timeline__item">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            13.00
+                                        <div class="timeline__time mr-3">
+                                            19.00 - 20.00
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Talkshow
-                                            </div>
-                                            <ul class="timeline__points">
-                                                <li>How to train your dragon</li>
-                                            </ul>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Art Performance Teater “Simpang”
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
+                                        <div class="timeline__time mr-3">
+                                            20.00 – 22.00
+                                        </div>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Art Performance Nirmana 1 “DKV18” dan Penutupan
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                 </ul>
@@ -153,35 +321,88 @@
                                 <ul class="timeline">
                                     <li class="timeline__item">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--red"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            10.00
+                                        <div class="timeline__time mr-3">
+                                            11.00 – 11.20
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Opening
-                                            </div>
-                                            <ul class="timeline__points">
-                                                <li>Mr. Alan Bach</li>
-                                            </ul>
-                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Open Gate
+                                                </div>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Registrasi Ulang
+                                                </div>
+                                                <ul class="timeline__points">
+                                                    <li>Registrasi ulang Lomba Melukis Gerabah</li>
+                                                    <li>Registrasi ulang Lomba Kotak Pensil</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                     <li class="timeline__item">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            11.00
+                                        <div class="timeline__time mr-3">
+                                            11.20 – 11.30
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Persiapan Lomba
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            11.30 – 14.30
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Lomba Melukis Gerabah
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            14.30 – 17.30
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Lomba Kotak Pensil
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            17.50 – 18.30
                                         </div>
                                         <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Design Stand Up
+                                            <div class="timeline__title-break">
+                                                ISHOMA
                                             </div>
-                                            <ul class="timeline__points">
-                                                <li>Hangouts</li>
-                                            </ul>
                                         </div>
                                     </li>
 
@@ -189,31 +410,53 @@
                                         <div class="timeline__step">
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            12.00
+                                        <div class="timeline__time mr-3">
+                                            18.30 – 20.00
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title-break">
-                                                Break
-                                            </div>
-                                        </div>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Talkshow “Lulusan DKV”
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                     <li class="timeline__item">
                                         <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--blue"></div>
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
-                                        <div class="timeline__time">
-                                            13.00
+                                        <div class="timeline__time mr-3">
+                                            20.00 – 21.00
                                         </div>
-                                        <div class="timeline__content">
-                                            <div class="timeline__title">
-                                                Talkshow
-                                            </div>
-                                            <ul class="timeline__points">
-                                                <li>How to train your dragon</li>
-                                            </ul>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Talkshow Bedah Karya
+                                                </div>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Awarding Lomba Melukis Gerabah dan Kotak Pensil
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
+                                        <div class="timeline__time mr-3">
+                                            21.00 – 22.00
+                                        </div>
+                                        <ul class="">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Live Performance Guest Star dan Penutupan
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </li>
 
                                 </ul>
@@ -231,9 +474,8 @@
         data() {
             return {
                 timelineOrder: 1,
-                timelineData: [
-                    ['21 Des', 'Opening', '1789-04-29', '1797-03-03'],
-                    ['21 Des', 'Talkshow', '1797-03-03', '1801-03-03']
+                timeline1: [
+                    {time: '', }
                 ]
             }
         }

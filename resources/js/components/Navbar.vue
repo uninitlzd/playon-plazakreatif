@@ -37,26 +37,37 @@
                             <li><a href="/" @click="to('home')" v-bind:class="{navActive: (navActive == 'home')}">Home</a></li>
                             <li><a href="/#exhibition" @click="to('exhibition')" v-bind:class="{navActive: (navActive == 'exhibition')}">Exhibition</a></li>
                             <li><a href="/#talkshow" @click="to('talkshow')" v-bind:class="{navActive: (navActive == 'talkshow')}">Talkshow</a></li>
-                            <li><a href="/#workshop" @click="to('workshop')" v-bind:class="{navActive: (navActive == 'workshop')}">Workshop</a></li>
                             <li><a href="/#contest" @click="to('contest')" v-bind:class="{navActive: (navActive == 'contest')}">Contest</a></li>
                             <li>
                                 <div class="nav__overlay__items__divider"></div>
                             </li>
                             <li><a href="/#timeline" @click="to('timeline')" v-bind:class="{navActive: (navActive == 'timeline')}">Timeline</a></li>
-                            <li><a href="#" @click="overlayActive = !overlayActive">Registration</a></li>
+                            <li><a href="/#contacts" @click="overlayActive = !overlayActive">Registration</a></li>
                         </ul>
                     </div>
                     <div class="d-flex h-25 pb-5">
                         <ul class="list-inline align-self-center nav__overlay__items__end">
                             <li class="list-inline-item"><a href="https://www.instagram.com/plazakreatifupn/"><i data-feather="instagram"></i></a></li>
                             <li class="list-inline-item"><a href="https://www.facebook.com/PlazaKreatif/"><i data-feather="facebook"></i></a></li>
-                            <li class="list-inline-item"><a href="" class="mt-3">Contacts</a></li>
+                            <li class="list-inline-item"><a href="/#contacts" class="mt-3">Contacts</a></li>
                             <li class="list-inline-item"><a href="/#sponsors" class="mt-3" @click="to('sponsors')" v-bind:class="{navActive: (navActive == 'sponsors')}">Sponsor</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </transition>
+
+        <el-dialog
+            title="Contacts"
+            :visible.sync="centerDialogVisible"
+            width="30%"
+            center>
+            <span>It should be noted that the content will not be aligned in center by default</span>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="centerDialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="centerDialogVisible = false">Confirm</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -72,7 +83,7 @@
             return {
                 nav__overlay: true,
                 overlayActive: false,
-                navActive: 'home'
+                navActive: 'home',
             }
         },
         methods: {

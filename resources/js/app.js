@@ -2,6 +2,8 @@ import 'animate.css'
 import 'fullpage-vue/src/fullpage.css'
 import VueFullpage from 'fullpage-vue'
 import VueCountdown from '@chenfengyuan/vue-countdown'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -40,12 +42,18 @@ Vue.component('timeline-acara', require('./components/TimelineAcara.vue'));
 Vue.component('card', require('./components/Card'));
 Vue.component('enter-button', require('./components/EnterButton'));
 Vue.component('shadowed-text', require('./components/ShadowedText'));
+import Home from './components/Home';
+import TalkshowDetail from './components/TalkshowDetails';
+import WorkshopDetail from './components/WorkshopDetails';
+import CompetitionDetail from './components/CompetitionDetails';
 
 // or for a single instance
 import Sticky from 'vue-sticky-directive'
 import vueSmoothScroll from 'vue-smooth-scroll'
 import VueGlide from 'vue-glide-js'
 import VueMq from 'vue-mq'
+import VueScrollactive from 'vue-scrollactive';
+import VueRouter from 'vue-router';
 
 Vue.use(Sticky);
 Vue.use(vueSmoothScroll)
@@ -58,7 +66,36 @@ Vue.use(VueMq, {
        desktop: Infinity,
    }
 })
+Vue.use(VueScrollactive)
+Vue.use(VueRouter)
+Vue.use(ElementUI)
+
+const router = new VueRouter({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            name: 'home',
+            component: Home
+        },
+        {
+            path: '/talkshow/:id',
+            name: 'talkshow-detail',
+            component: TalkshowDetail
+        },
+        {
+            path: '/workshop/:id',
+            name: 'workshop-detail',
+            component: WorkshopDetail
+        },
+        {
+            path: '/competition/:id',
+            name: 'competition-detail',
+            component: CompetitionDetail
+        }
+    ],
+});
 
 const app = new Vue({
-    el: '#app',
-});
+    router
+}).$mount('#app');

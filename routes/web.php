@@ -15,11 +15,18 @@ Route::get('/', function () {
     return view('pages.home');
 });
 
-Route::get('workshop', 'WorkshopController@show');
-Route::get('talkshow', 'TalkshowController@show');
-Route::get('competition', 'CompetitionController@show');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/talkshow/{any}', function () {
+    return view('pages.home');
+});
+
+Route::get('/workshop/{any}', function () {
+    return view('pages.home');
+});
+
+Route::get('/competition/{any}', function () {
+    return view('pages.home');
+});
 
 Route::group(['prefix' => 'admin'], function () {
 

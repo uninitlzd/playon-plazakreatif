@@ -62,6 +62,3 @@ mix.webpackConfig({
         })
     ]
 });
-
-mix.browserSync('plaza-kreatif.test');
-
