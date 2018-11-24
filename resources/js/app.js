@@ -32,6 +32,7 @@ Vue.component('homepage-component', require('./components/HomepageComponent.vue'
 Vue.component('homepage-countdown', require('./components/HomepageCountdown.vue'));
 Vue.component('ragam-acara', require('./components/RagamAcaraSection.vue'));
 Vue.component('fullpage-wrapper', require('./components/FullPageWrapper.vue'));
+Vue.component('sponsors', require('./components/SponsorsList.vue'));
 
 Vue.component('talkshow-slider', require('./components/sliders/TalkshowSlider.vue'));
 Vue.component('workshop-slider', require('./components/sliders/WorkshopSlider.vue'));

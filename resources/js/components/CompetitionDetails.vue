@@ -1,12 +1,12 @@
 <template>
-    <div class="main-container" style="padding-left: 50px;">
+    <div>
         <mq-layout mq="mobile">
             <div class="row" style="height: 100vh;">
                 <div class="col-md-7 h-100 d-flex flex-column right-side-background"
                      :style="competition.images">
                 </div>
             </div>
-            <div class="row py-5">
+            <div class="row py-5" style="padding-left: 50px;">
                 <div class="col-md-5 h-100 d-flex flex-column">
                     <div class="d-flex h-100 justify-content-center event-detail flex-column">
                         <div class="event-detail__greet pr-5">
@@ -28,48 +28,53 @@
                                     <a :href=linkDaftar class="btn btn-green px-5">Daftar</a>
                                 </li>
                             </ul>
-                            <a href="/#lomba" class="text-orange-primary mt-5"><i data-feather="arrow-left"></i> Back</a>
+                            <a href="/#lomba" class="text-orange-primary mt-5"><i data-feather="arrow-left"></i>
+                                Back</a>
                         </div>
                     </div>
                 </div>
             </div>
         </mq-layout>
-        <mq-layout mq="table+">
-            <div class="playon-section" data-section-name="home">
-                <div class="row h-100">
-                    <div class="col-md-5 h-100 d-flex flex-column">
-                        <div class="d-flex h-100 justify-content-center event-detail flex-column">
-                            <div class="event-detail__greet pr-5">
-                                <h1 class="event-detail__title mr-auto">{{ competition.name }}</h1>
-                                <ul class="list-inline d-flex flex-row align-self-center mt-5">
-                                    <li class="list-inline-item event-detail__time">
-                                        {{ competition.date }} &mdash;<br> {{ competition.time }}
-                                    </li>
-                                </ul>
+        <div class="main-container" style="padding-left: 50px;">
+            <mq-layout mq="table+">
+                <div class="playon-section" data-section-name="home">
+                    <div class="row h-100">
+                        <div class="col-md-5 h-100 d-flex flex-column">
+                            <div class="d-flex h-100 justify-content-center event-detail flex-column">
+                                <div class="event-detail__greet pr-5">
+                                    <h1 class="event-detail__title mr-auto">{{ competition.name }}</h1>
+                                    <ul class="list-inline d-flex flex-row align-self-center mt-5">
+                                        <li class="list-inline-item event-detail__time">
+                                            {{ competition.date }} &mdash;<br> {{ competition.time }}
+                                        </li>
+                                    </ul>
 
-                                <ul class="bullets pl-4">
-                                    <li v-for="point in competition.points">{{ point }}</li>
-                                </ul>
+                                    <ul class="bullets pl-4">
+                                        <li v-for="point in competition.points">{{ point }}</li>
+                                    </ul>
 
-                                <ul class="list-inline d-flex flex-row align-self-center mt-3">
-                                    <li class="list-inline-item d-flex align-self-center">
-                                        <span class="event-detail__price">{{ competition.price }}</span>
-                                    </li>
-                                    <li class="list-inline-item ml-auto align-self-center">
-                                        <a :href=linkDaftar class="btn btn-green px-5">Daftar</a>
-                                    </li>
-                                </ul>
-                                <a href="/#lomba" class="text-orange-primary mt-5"><i data-feather="arrow-left"></i> Back</a>
+                                    <ul class="list-inline d-flex flex-row align-self-center mt-3">
+                                        <li class="list-inline-item d-flex align-self-center">
+                                            <span class="event-detail__price">{{ competition.price }}</span>
+                                        </li>
+                                        <li class="list-inline-item ml-auto align-self-center">
+                                            <a :href=linkDaftar class="btn btn-green px-5">Daftar</a>
+                                        </li>
+                                    </ul>
+                                    <a href="/#lomba" class="text-orange-primary mt-5"><i data-feather="arrow-left"></i>
+                                        Back</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-7 h-100 d-flex flex-column right-side-background"
-                         :style="competition.images">
+                        <div class="col-md-7 h-100 d-flex flex-column right-side-background"
+                             :style="competition.images">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </mq-layout>
+            </mq-layout>
+        </div>
     </div>
+
 </template>
 
 <script>

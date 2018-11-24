@@ -705,7 +705,9 @@ a.navigation_content__items::after {
 }
 
 #talkshow h1.shadowed-text::before,
-#lomba h1.shadowed-text::before {
+#lomba h1.shadowed-text::before,
+#contacts h1.shadowed-text::before,
+#sponsors h1.shadowed-text::before {
   left: 52px;
   top: 0.5em;
   z-index: -9999999999999999;
@@ -981,5 +983,13 @@ ul {
 
 .timeline__item ul {
   margin-top: 5px;
+}
+
+.sponsors-list li {
+  width: 150px;
+}
+
+.sponsors-list li img {
+  width: 100%;
 }
 
