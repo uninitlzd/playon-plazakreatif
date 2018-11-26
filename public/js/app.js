@@ -77979,7 +77979,7 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "mt-4" }, [
+          _c("div", { staticClass: "mt-5" }, [
             _c("h4", [_vm._v("Media Partners")]),
             _vm._v(" "),
             _c(

@@ -13,7 +13,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="mt-4">
+                <div class="mt-5">
                     <h4>Media Partners</h4>
                     <ul class="list-inline sponsors-list">
                         <li class="list-inline-item px-3 py-3" v-for="media in mediaPartners">
