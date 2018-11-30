@@ -91,8 +91,8 @@
                         speaker: 'Fahmy A - @fasyari',
                         price: 'Rp100.000',
                         images: 'background: url("/images/workshop/fasyari.jpg")',
-                        date: '22 Des',
-                        time: '11.00-14.00',
+                        date: '',
+                        time: '',
                         points: [
                             'Workshop untuk umum',
                             'Peserta mendaftar pada panitia',
