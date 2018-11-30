@@ -9,6 +9,7 @@
                             <h1 class="w-100 heading-1 mb-4" name="Ragam Acara">Ragam Acara</h1>
                             <h4><a href="#exhibition" class="navigation_content__items active scrollactive-item" v-smooth-scroll="{offset: 10}">Exhibition</a></h4>
                             <h4><a href="#talkshow" class="navigation_content__items scrollactive-item" v-smooth-scroll="{offset: 10}">Talkshow</a></h4>
+                            <h4><a href="#workshop" class="navigation_content__items scrollactive-item" v-smooth-scroll="{offset: 10}">Workshop</a></h4>
                             <h4><a href="#lomba" class="navigation_content__items scrollactive-item" v-smooth-scroll="{offset: 10}">Lomba-lomba</a></h4>
                         </scrollactive>
                     </div>
@@ -23,6 +24,10 @@
                 <talkshow-slider id="talkshow"
                              class=""
                              style="height: 100vh; position: relative"></talkshow-slider>
+
+                <workshop-slider id="workshop"
+                                 class=""
+                                 style="height: 100vh; position: relative"></workshop-slider>
 
                 <lomba-slider id="lomba"
                              class="d-flex flex-row  homepage-lomba acara_items"

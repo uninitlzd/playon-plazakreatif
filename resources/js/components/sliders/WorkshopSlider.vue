@@ -91,10 +91,7 @@
                     name: ''
                 },
                 speakers: [
-                    {id: 1, name: 'Lintang Pandu', field: 'Ilustrator & Penulis', images: 'background: url("/images/talkshow/lintang.jpg")'},
-                    {id: 2, name: 'Pak Agus', field: 'Desain Packaging', images: 'background: url("/images/talkshow/lintang.jpg")'},
-                    {id: 3, name: 'Rian Tank', field: 'Illustrator', images: 'background: url("/images/talkshow/lintang.jpg")'},
-                    {id: 4, name: 'Graphic Chapter Surabaya', field: 'Asosiasi Desain Grafis Indonesia', images: 'background: url("/images/talkshow/lintang.jpg")'}
+                    {id: 1, name: 'Fasyari', field: 'Ilustrator & Penulis', images: 'background: url("/images/talkshow/lintang.jpg")'},
                 ],
                 rewind: false,
                 classes: {},

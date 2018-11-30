@@ -77555,6 +77555,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -77663,6 +77668,26 @@ var render = function() {
                         ],
                         staticClass:
                           "navigation_content__items scrollactive-item",
+                        attrs: { href: "#workshop" }
+                      },
+                      [_vm._v("Workshop")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("h4", [
+                    _c(
+                      "a",
+                      {
+                        directives: [
+                          {
+                            name: "smooth-scroll",
+                            rawName: "v-smooth-scroll",
+                            value: { offset: 10 },
+                            expression: "{offset: 10}"
+                          }
+                        ],
+                        staticClass:
+                          "navigation_content__items scrollactive-item",
                         attrs: { href: "#lomba" }
                       },
                       [_vm._v("Lomba-lomba")]
@@ -77689,6 +77714,11 @@ var render = function() {
           _c("talkshow-slider", {
             staticStyle: { height: "100vh", position: "relative" },
             attrs: { id: "talkshow" }
+          }),
+          _vm._v(" "),
+          _c("workshop-slider", {
+            staticStyle: { height: "100vh", position: "relative" },
+            attrs: { id: "workshop" }
           }),
           _vm._v(" "),
           _c("lomba-slider", {
@@ -78642,7 +78672,7 @@ feather.replace();
             speakerDetail: {
                 name: ''
             },
-            speakers: [{ id: 1, name: 'Lintang Pandu', field: 'Ilustrator & Penulis', images: 'background: url("/images/talkshow/lintang.jpg")' }, { id: 2, name: 'Pak Agus', field: 'Desain Packaging', images: 'background: url("/images/talkshow/lintang.jpg")' }, { id: 3, name: 'Rian Tank', field: 'Illustrator', images: 'background: url("/images/talkshow/lintang.jpg")' }, { id: 4, name: 'Graphic Chapter Surabaya', field: 'Asosiasi Desain Grafis Indonesia', images: 'background: url("/images/talkshow/lintang.jpg")' }],
+            speakers: [{ id: 1, name: 'Fasyari', field: 'Ilustrator & Penulis', images: 'background: url("/images/talkshow/lintang.jpg")' }],
             rewind: false,
             classes: {},
             slide: {},
@@ -82523,7 +82553,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -82615,21 +82645,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "WorkshopDetails",
     data: function data() {
         return {
-            workshops: [{ id: 1, name: 'Wastana Haikal', field: 'Ilustrasi Cerita Anak', images: 'background: url("/images/workshop/wastana.jpg")' }, { id: 2, name: 'Fasyari', field: 'Basic Watercolor', images: 'background: url("/images/talkshow/lintang.jpg")' }]
+            workshops: [{
+                id: 1,
+                name: 'Workshop Fasyari',
+                speaker: 'Fahmy A - @fasyari',
+                price: 'Rp100.000',
+                images: 'background: url("/images/lomba/1-Mewarnai-Keluarga.jpg")',
+                date: '22 Des',
+                time: '11.00-14.00',
+                points: ['Workshop untuk umum', 'Peserta mendaftar pada panitia', 'Pendaftaran bisa dilakukan  dengan menghubungi cp yang tersedia (danna) dengan mengisi form data, dan melakukan pembayaran via transfer:', 'Peserta membawa alat tambahanya sendiri', 'Kertas disediakan panitia', 'Kertas disediakan panitia']
+            }]
         };
     },
     computed: {
         workshop: function workshop() {
             return this.workshops[this.$route.params.id - 1];
+        },
+        linkDaftar: function linkDaftar() {
+            var workshop = this.workshops[this.$route.params.id - 1];
+            return "https://wa.me/6282264755533?text=Halo, saya ingin ikutan workshop " + workshop.name + " Plaza Kreatif 13";
         }
     }
 });
@@ -82644,7 +82683,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "main-container", staticStyle: { "padding-left": "50px" } },
     [
       _c("mq-layout", { attrs: { mq: "mobile" } }, [
         _c("div", { staticClass: "row", staticStyle: { height: "100vh" } }, [
@@ -82655,264 +82693,283 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "row py-5" }, [
-          _c("div", { staticClass: "col-md-5 h-100 d-flex flex-column" }, [
+        _c(
+          "div",
+          { staticClass: "row py-5", staticStyle: { "padding-left": "50px" } },
+          [
+            _c("div", { staticClass: "col-md-5 h-100 d-flex flex-column" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "d-flex h-100 justify-content-center event-detail flex-column"
+                },
+                [
+                  _c("div", { staticClass: "event-detail__greet pr-5" }, [
+                    _c("h1", { staticClass: "event-detail__title mr-auto" }, [
+                      _vm._v(_vm._s(_vm.workshop.name))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "h5",
+                      {
+                        staticClass: "event-detail__title mr-auto text-black-50"
+                      },
+                      [_vm._v(_vm._s(_vm.workshop.speaker))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      {
+                        staticClass:
+                          "list-inline d-flex flex-row align-self-center mt-5"
+                      },
+                      [
+                        _c(
+                          "li",
+                          {
+                            staticClass: "list-inline-item event-detail__time"
+                          },
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.workshop.date) +
+                                " —"
+                            ),
+                            _c("br"),
+                            _vm._v(
+                              _vm._s(_vm.workshop.time) +
+                                "\n                            "
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      { staticClass: "bullets pl-4" },
+                      _vm._l(_vm.workshop.points, function(point) {
+                        return _c("li", [_vm._v(_vm._s(point))])
+                      })
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      {
+                        staticClass:
+                          "list-inline d-flex flex-row align-self-center mt-3"
+                      },
+                      [
+                        _c(
+                          "li",
+                          {
+                            staticClass:
+                              "list-inline-item d-flex align-self-center"
+                          },
+                          [
+                            _c("span", { staticClass: "event-detail__price" }, [
+                              _vm._v(_vm._s(_vm.workshop.price))
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "li",
+                          {
+                            staticClass:
+                              "list-inline-item ml-auto align-self-center"
+                          },
+                          [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-green px-5",
+                                attrs: { href: _vm.linkDaftar }
+                              },
+                              [_vm._v("Daftar")]
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "text-orange-primary mt-5",
+                        attrs: { href: "/#lomba" }
+                      },
+                      [
+                        _c("i", { attrs: { "data-feather": "arrow-left" } }),
+                        _vm._v("\n                            Back")
+                      ]
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "main-container",
+          staticStyle: { "padding-left": "50px" }
+        },
+        [
+          _c("mq-layout", { attrs: { mq: "table+" } }, [
             _c(
               "div",
               {
-                staticClass:
-                  "d-flex h-100 justify-content-center event-detail flex-column"
+                staticClass: "playon-section",
+                attrs: { "data-section-name": "home" }
               },
               [
-                _c("div", { staticClass: "event-detail__greet pr-5" }, [
-                  _c("h1", { staticClass: "event-detail__title mr-auto" }, [
-                    _vm._v(_vm._s(_vm.workshop.name))
-                  ]),
-                  _vm._v(" "),
+                _c("div", { staticClass: "row h-100" }, [
                   _c(
-                    "ul",
-                    {
-                      staticClass:
-                        "list-inline d-flex flex-row align-self-center mt-5"
-                    },
+                    "div",
+                    { staticClass: "col-md-5 h-100 d-flex flex-column" },
                     [
                       _c(
-                        "li",
-                        { staticClass: "list-inline-item event-detail__time" },
-                        [
-                          _vm._v("\n                                21 Des —"),
-                          _c("br"),
-                          _vm._v("10.00\n                            ")
-                        ]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("p", [
-                    _vm._v(
-                      "\n                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab atque autem commodi\n                            cupiditate, delectus excepturi illo nemo nihil nobis pariatur provident quam quia rem\n                            sapiente, suscipit tempore velit veniam voluptas.\n                        "
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "ul",
-                    {
-                      staticClass:
-                        "list-inline d-flex flex-row align-self-center mt-3"
-                    },
-                    [
-                      _c(
-                        "li",
+                        "div",
                         {
                           staticClass:
-                            "list-inline-item d-flex align-self-center"
-                        },
-                        [
-                          _c("span", { staticClass: "event-detail__price" }, [
-                            _vm._v("FREE")
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "li",
-                        {
-                          staticClass:
-                            "list-inline-item ml-auto align-self-center"
+                            "d-flex h-100 justify-content-center event-detail flex-column"
                         },
                         [
                           _c(
-                            "a",
-                            {
-                              staticClass: "btn btn-green px-5",
-                              attrs: { href: "" }
-                            },
-                            [_vm._v("Daftar")]
+                            "div",
+                            { staticClass: "event-detail__greet pr-5" },
+                            [
+                              _c(
+                                "h1",
+                                { staticClass: "event-detail__title mr-auto" },
+                                [_vm._v(_vm._s(_vm.workshop.name))]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "p",
+                                { staticClass: "mr-auto text-black-50" },
+                                [_vm._v("by " + _vm._s(_vm.workshop.speaker))]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "ul",
+                                {
+                                  staticClass:
+                                    "list-inline d-flex flex-row align-self-center mt-5"
+                                },
+                                [
+                                  _c(
+                                    "li",
+                                    {
+                                      staticClass:
+                                        "list-inline-item event-detail__time"
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                        " +
+                                          _vm._s(_vm.workshop.date) +
+                                          " —"
+                                      ),
+                                      _c("br"),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(_vm.workshop.time) +
+                                          "\n                                    "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "ul",
+                                { staticClass: "bullets pl-4" },
+                                _vm._l(_vm.workshop.points, function(point) {
+                                  return _c("li", [_vm._v(_vm._s(point))])
+                                })
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "ul",
+                                {
+                                  staticClass:
+                                    "list-inline d-flex flex-row align-self-center mt-3"
+                                },
+                                [
+                                  _c(
+                                    "li",
+                                    {
+                                      staticClass:
+                                        "list-inline-item d-flex align-self-center"
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        { staticClass: "event-detail__price" },
+                                        [_vm._v(_vm._s(_vm.workshop.price))]
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "li",
+                                    {
+                                      staticClass:
+                                        "list-inline-item ml-auto align-self-center"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          staticClass: "btn btn-green px-5",
+                                          attrs: { href: _vm.linkDaftar }
+                                        },
+                                        [_vm._v("Daftar")]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "text-orange-primary mt-5",
+                                  attrs: { href: "/#lomba" }
+                                },
+                                [
+                                  _c("i", {
+                                    attrs: { "data-feather": "arrow-left" }
+                                  }),
+                                  _vm._v(
+                                    "\n                                    Back"
+                                  )
+                                ]
+                              )
+                            ]
                           )
                         ]
                       )
                     ]
                   ),
                   _vm._v(" "),
-                  _c(
-                    "a",
-                    {
-                      staticClass: "text-orange-primary mt-5",
-                      attrs: { href: "/" }
-                    },
-                    [
-                      _c("i", { attrs: { "data-feather": "arrow-left" } }),
-                      _vm._v(" Back")
-                    ]
-                  )
+                  _c("div", {
+                    staticClass:
+                      "col-md-7 h-100 d-flex flex-column right-side-background",
+                    style: _vm.workshop.images
+                  })
                 ])
               ]
             )
           ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("mq-layout", { attrs: { mq: "tablet+" } }, [
-        _c(
-          "div",
-          {
-            staticClass: "playon-section",
-            attrs: { "data-section-name": "home" }
-          },
-          [
-            _c("div", { staticClass: "row h-100" }, [
-              _c("div", { staticClass: "col-md-5 h-100 d-flex flex-column" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "d-flex h-100 justify-content-center event-detail flex-column"
-                  },
-                  [
-                    _c("div", { staticClass: "event-detail__greet pr-5" }, [
-                      _c("h1", { staticClass: "event-detail__title mr-auto" }, [
-                        _vm._v(_vm._s(_vm.workshop.name))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "ul",
-                        {
-                          staticClass:
-                            "list-inline d-flex flex-row align-self-center mt-5"
-                        },
-                        [
-                          _c(
-                            "li",
-                            {
-                              staticClass:
-                                "list-inline-item d-flex align-self-center"
-                            },
-                            [
-                              _c("img", {
-                                staticClass: "rounded-circle mr-2",
-                                staticStyle: { "object-fit": "cover" },
-                                attrs: {
-                                  src: "/images/venom.jpg",
-                                  alt: "",
-                                  height: "50px",
-                                  width: "50px"
-                                }
-                              })
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("li", { staticClass: "list-inline-item d-flex" }, [
-                            _c(
-                              "p",
-                              {
-                                staticClass:
-                                  "event-detail__speaker align-self-center"
-                              },
-                              [
-                                _vm._v(_vm._s(_vm.workshop.name)),
-                                _c("br"),
-                                _vm._v(" "),
-                                _c(
-                                  "span",
-                                  {
-                                    staticClass: "event-detail__speaker__detail"
-                                  },
-                                  [_vm._v(_vm._s(_vm.workshop.field))]
-                                )
-                              ]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            {
-                              staticClass:
-                                "list-inline-item ml-auto event-detail__time"
-                            },
-                            [
-                              _vm._v(
-                                "\n                                21 Des —"
-                              ),
-                              _c("br"),
-                              _vm._v("10.00\n                            ")
-                            ]
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("p", [
-                        _vm._v(
-                          "\n                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab atque autem commodi\n                            cupiditate, delectus excepturi illo nemo nihil nobis pariatur provident quam quia rem\n                            sapiente, suscipit tempore velit veniam voluptas.\n                        "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "ul",
-                        {
-                          staticClass:
-                            "list-inline d-flex flex-row align-self-center mt-3"
-                        },
-                        [
-                          _c(
-                            "li",
-                            {
-                              staticClass:
-                                "list-inline-item d-flex align-self-center"
-                            },
-                            [
-                              _c(
-                                "span",
-                                { staticClass: "event-detail__price" },
-                                [_vm._v("FREE")]
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "li",
-                            {
-                              staticClass:
-                                "list-inline-item ml-auto align-self-center"
-                            },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "btn btn-green px-5",
-                                  attrs: { href: "" }
-                                },
-                                [_vm._v("Daftar")]
-                              )
-                            ]
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        {
-                          staticClass: "text-orange-primary mt-5",
-                          attrs: { href: "/" }
-                        },
-                        [
-                          _c("i", { attrs: { "data-feather": "arrow-left" } }),
-                          _vm._v(" Back")
-                        ]
-                      )
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", {
-                staticClass:
-                  "col-md-7 h-100 d-flex flex-column right-side-background",
-                style: _vm.workshop.images
-              })
-            ])
-          ]
-        )
-      ])
+        ],
+        1
+      )
     ],
     1
   )
