@@ -91,7 +91,12 @@
                     name: ''
                 },
                 speakers: [
-                    {id: 1, name: 'Fasyari', field: 'Ilustrator & Penulis', images: 'background: url("/images/talkshow/lintang.jpg")'},
+                    {
+                        id: 1,
+                        name: 'Fasyari',
+                        field: 'Ilustrator & Penulis',
+                        images: 'background: url("/images/workshop/fasyari.jpg")'
+                    },
                 ],
                 rewind: false,
                 classes: {},
@@ -132,10 +137,7 @@
                 return '/workshop/' + id;
             }
         },
-        computed: {
-        },
-        watch: {
-
-        }
+        computed: {},
+        watch: {}
     }
 </script>
