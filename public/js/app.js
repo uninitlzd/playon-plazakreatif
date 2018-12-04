@@ -78664,8 +78664,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 var feather = __webpack_require__(21);
 feather.replace();
@@ -78790,11 +78788,14 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c("p", { staticClass: "event-detail__time" }, [
-                  _vm._v(
-                    "\n                    21 Des at 10.00\n                "
-                  )
-                ])
+                _c(
+                  "a",
+                  {
+                    staticClass: "text-black-50 mt-4",
+                    attrs: { href: _vm.link(_vm.speakerDetail.id) }
+                  },
+                  [_vm._v("Detail")]
+                )
               ]
             ),
             _vm._v(" "),

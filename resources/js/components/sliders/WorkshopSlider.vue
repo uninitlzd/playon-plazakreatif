@@ -11,9 +11,7 @@
                             </p>
                         </li>
                     </ul>
-                    <p class="event-detail__time">
-                        21 Des at 10.00
-                    </p>
+                    <a class="text-black-50 mt-4" :href="link(speakerDetail.id)">Detail</a>
                 </div>
                 <div class="d-flex w-50">
                     <vue-glide :classes="classes" :breakpoints="breakpoints" ref="slide" :rewind="rewind">
