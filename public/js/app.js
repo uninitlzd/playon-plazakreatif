@@ -77924,7 +77924,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.mainSponsor[data-v-36407142] {\n    width: 30%;\n    max-width: 100%;\n    margin: 10px 0;\n}\n@media (max-width: 900px) {\n.mainSponsor[data-v-36407142] {\n        width: 100%;\n}\n}\n", ""]);
 
 // exports
 
@@ -77969,7 +77969,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     name: "SponsorsList",
     data: function data() {
         return {
-            sponsors: ['/images/sponsors/ciputra-world.png', '/images/sponsors/premier.png', '/images/sponsors/faber-caster.png', '/images/sponsors/emakde-catering.jpg', '/images/sponsors/larita.png'],
+            sponsors: ['/images/sponsors/djarum.jpg', '/images/sponsors/ciputra-world.png', '/images/sponsors/premier.png', '/images/sponsors/faber-caster.png', '/images/sponsors/emakde-catering.jpg', '/images/sponsors/larita.png'],
             mediaPartners: ['/images/sponsors/provoke.png', '/images/sponsors/event-mahasiswa.jpg', '/images/sponsors/event-narema.png', '/images/sponsors/event-pemuda.jpg', '/images/sponsors/hai-event.png', '/images/sponsors/seputar-event.png', '/images/sponsors/studio-diskom.jpg', '/images/sponsors/upn-radio.jpg', '/images/sponsors/upn-tv.png']
         };
     }
@@ -78001,10 +78001,15 @@ var render = function() {
             _c(
               "ul",
               { staticClass: "list-inline sponsors-list" },
-              _vm._l(_vm.sponsors, function(sponsor) {
-                return _c("li", { staticClass: "list-inline-item px-3 py-3" }, [
-                  _c("img", { attrs: { src: sponsor, alt: "" } })
-                ])
+              _vm._l(_vm.sponsors, function(sponsor, index) {
+                return _c(
+                  "li",
+                  {
+                    staticClass: "list-inline-item px-3 py-3",
+                    class: { mainSponsor: index === 0 }
+                  },
+                  [_c("img", { attrs: { src: sponsor, alt: "" } })]
+                )
               })
             )
           ]),

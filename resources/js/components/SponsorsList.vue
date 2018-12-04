@@ -8,7 +8,7 @@
                 <div>
                     <h4>Sponsors</h4>
                     <ul class="list-inline sponsors-list">
-                        <li class="list-inline-item px-3 py-3" v-for="sponsor in sponsors">
+                        <li class="list-inline-item px-3 py-3" v-for="(sponsor, index) in sponsors" :class="{ mainSponsor: index === 0 }">
                             <img :src="sponsor" alt="">
                         </li>
                     </ul>
@@ -33,6 +33,7 @@
         data: () => {
             return {
                 sponsors: [
+                    '/images/sponsors/djarum.jpg',
                     '/images/sponsors/ciputra-world.png',
                     '/images/sponsors/premier.png',
                     '/images/sponsors/faber-caster.png',
@@ -56,5 +57,15 @@
 </script>
 
 <style scoped>
+    .mainSponsor {
+        width: 30%;
+        max-width: 100%;
+        margin: 10px 0;
+    }
 
+    @media (max-width: 900px) {
+        .mainSponsor {
+            width: 100%;
+        }
+    }
 </style>
