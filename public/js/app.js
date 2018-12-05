@@ -77969,7 +77969,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     name: "SponsorsList",
     data: function data() {
         return {
-            sponsors: ['/images/sponsors/djarum.jpg', '/images/sponsors/ciputra-world.png', '/images/sponsors/premier.png', '/images/sponsors/faber-caster.png', '/images/sponsors/emakde-catering.jpg', '/images/sponsors/larita.png'],
+            sponsors: ['/images/sponsors/djarum.jpg', '/images/sponsors/ciputra-world.png', '/images/sponsors/premier.png', '/images/sponsors/faber-caster.png', '/images/sponsors/emakde-catering.jpg', '/images/sponsors/larita.png', '/images/sponsors/suryaprima.png', '/images/sponsors/telkomsel.png'],
             mediaPartners: ['/images/sponsors/provoke.png', '/images/sponsors/event-mahasiswa.jpg', '/images/sponsors/event-narema.png', '/images/sponsors/event-pemuda.jpg', '/images/sponsors/hai-event.png', '/images/sponsors/seputar-event.png', '/images/sponsors/studio-diskom.jpg', '/images/sponsors/upn-radio.jpg', '/images/sponsors/upn-tv.png']
         };
     }
@@ -78006,7 +78006,7 @@ var render = function() {
                   "li",
                   {
                     staticClass: "list-inline-item px-3 py-3",
-                    class: { mainSponsor: index === 0 }
+                    class: { mainSponsor: index === 0 || index === 6 }
                   },
                   [_c("img", { attrs: { src: sponsor, alt: "" } })]
                 )
