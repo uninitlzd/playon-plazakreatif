@@ -6,11 +6,14 @@
                 <div class="d-flex flex-column w-50 align-self-center">
                     <ul class="list-inline d-flex flex-row mt-3">
                         <li class="list-inline-item d-flex">
-                            <p class="event-detail__speaker align-self-center"> {{ speakerDetail.name}} <br>
-                                <span class="event-detail__speaker__detail">{{ speakerDetail.field }}</span>
+                            <p class="event-detail__speaker align-self-center"> {{ speakerDetail.field}} <br>
+                                <span class="event-detail__speaker__detail">by {{ speakerDetail.name }}</span>
                             </p>
                         </li>
                     </ul>
+                    <p class="event-detail__time w-50">
+                        {{ speakerDetail.date }} &mdash;
+                    </p>
                     <a class="text-black-50 mt-4" :href="link(speakerDetail.id)">Detail</a>
                 </div>
                 <div class="d-flex w-50">
@@ -43,8 +46,8 @@
                             <div class="card__info d-flex flex-column">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <h1 class="text-white">{{ speaker.name }}</h1>
-                                        <p class="text-white">{{ speaker.field }}</p>
+                                        <h1 class="text-white">{{ speaker.field }}</h1>
+                                        <p class="text-white">by {{ speaker.name }}</p>
                                         <a :href=link(speaker.id) class="text-white"><u>Detail</u></a>
                                     </div>
                                 </div>
@@ -92,8 +95,9 @@
                     {
                         id: 1,
                         name: 'Fasyari',
-                        field: 'Ilustrator & Penulis',
-                        images: 'background: url("/images/workshop/fasyari.jpg")'
+                        field: 'Basic Sketch Portrait',
+                        images: 'background: url("/images/workshop/fasyari.jpg")',
+                        date: '21 Des'
                     },
                 ],
                 rewind: false,

@@ -78664,6 +78664,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 var feather = __webpack_require__(21);
 feather.replace();
@@ -78678,8 +78681,9 @@ feather.replace();
             speakers: [{
                 id: 1,
                 name: 'Fasyari',
-                field: 'Ilustrator & Penulis',
-                images: 'background: url("/images/workshop/fasyari.jpg")'
+                field: 'Basic Sketch Portrait',
+                images: 'background: url("/images/workshop/fasyari.jpg")',
+                date: '21 Des'
             }],
             rewind: false,
             classes: {},
@@ -78775,17 +78779,25 @@ var render = function() {
                         staticClass: "event-detail__speaker align-self-center"
                       },
                       [
-                        _vm._v(" " + _vm._s(_vm.speakerDetail.name) + " "),
+                        _vm._v(" " + _vm._s(_vm.speakerDetail.field) + " "),
                         _c("br"),
                         _vm._v(" "),
                         _c(
                           "span",
                           { staticClass: "event-detail__speaker__detail" },
-                          [_vm._v(_vm._s(_vm.speakerDetail.field))]
+                          [_vm._v("by " + _vm._s(_vm.speakerDetail.name))]
                         )
                       ]
                     )
                   ])
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "event-detail__time w-50" }, [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.speakerDetail.date) +
+                      " —\n                "
+                  )
                 ]),
                 _vm._v(" "),
                 _c(
@@ -78887,11 +78899,11 @@ var render = function() {
                                 _c("div", { staticClass: "row" }, [
                                   _c("div", { staticClass: "col-md-8" }, [
                                     _c("h1", { staticClass: "text-white" }, [
-                                      _vm._v(_vm._s(speaker.name))
+                                      _vm._v(_vm._s(speaker.field))
                                     ]),
                                     _vm._v(" "),
                                     _c("p", { staticClass: "text-white" }, [
-                                      _vm._v(_vm._s(speaker.field))
+                                      _vm._v("by " + _vm._s(speaker.name))
                                     ]),
                                     _vm._v(" "),
                                     _c(
@@ -82663,12 +82675,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             workshops: [{
                 id: 1,
-                name: 'Workshop Fasyari',
+                name: 'Basic Sketch Portrait',
                 speaker: 'Fahmy A - @fasyari',
                 price: 'Rp100.000',
                 images: 'background: url("/images/workshop/fasyari.jpg")',
-                date: '',
-                time: '',
+                date: '21 Des 2018',
+                time: '13.00 pm',
                 points: ['Workshop untuk umum', 'Peserta mendaftar pada panitia', 'Pendaftaran bisa dilakukan  dengan menghubungi cp yang tersedia (danna) dengan mengisi form data, dan melakukan pembayaran via transfer:', 'Peserta membawa alat tambahanya sendiri', 'Kertas disediakan panitia', 'Kertas disediakan panitia']
             }]
         };

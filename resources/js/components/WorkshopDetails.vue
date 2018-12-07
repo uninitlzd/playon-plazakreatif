@@ -87,12 +87,12 @@
                 workshops: [
                     {
                         id: 1,
-                        name: 'Workshop Fasyari',
+                        name: 'Basic Sketch Portrait',
                         speaker: 'Fahmy A - @fasyari',
                         price: 'Rp100.000',
                         images: 'background: url("/images/workshop/fasyari.jpg")',
-                        date: '',
-                        time: '',
+                        date: '21 Des 2018',
+                        time: '13.00 pm',
                         points: [
                             'Workshop untuk umum',
                             'Peserta mendaftar pada panitia',
