@@ -99,7 +99,6 @@
                             'Pendaftaran bisa dilakukan  dengan menghubungi cp yang tersedia (danna) dengan mengisi form data, dan melakukan pembayaran via transfer:',
                             'Peserta membawa alat tambahanya sendiri',
                             'Kertas disediakan panitia',
-                            'Kertas disediakan panitia'
                         ],
                     }
                 ],

@@ -82576,7 +82576,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -82681,7 +82681,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 images: 'background: url("/images/workshop/fasyari.jpg")',
                 date: '21 Des 2018',
                 time: '13.00 pm',
-                points: ['Workshop untuk umum', 'Peserta mendaftar pada panitia', 'Pendaftaran bisa dilakukan  dengan menghubungi cp yang tersedia (danna) dengan mengisi form data, dan melakukan pembayaran via transfer:', 'Peserta membawa alat tambahanya sendiri', 'Kertas disediakan panitia', 'Kertas disediakan panitia']
+                points: ['Workshop untuk umum', 'Peserta mendaftar pada panitia', 'Pendaftaran bisa dilakukan  dengan menghubungi cp yang tersedia (danna) dengan mengisi form data, dan melakukan pembayaran via transfer:', 'Peserta membawa alat tambahanya sendiri', 'Kertas disediakan panitia']
             }]
         };
     },
