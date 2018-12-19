@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Plaza Kreatif 13</title>
-    <link rel="stylesheet" href="{{ mix('/css/vendor.css') }}">
-    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+    <link rel="stylesheet" href="{{ mix('/css/vendor.css') }}?rev=2">
+    <link rel="stylesheet" href="{{ mix('/css/app.css') }}?rev=2">
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
@@ -15,9 +15,9 @@
     <navbar></navbar>
     @yield('content')
 </div>
-<script src="{{ mix('/js/manifest.js') }}"></script>
-<script src="{{ mix('/js/vendor.js') }}"></script>
-<script src="{{ mix('/js/app.js') }}"></script>
+<script src="{{ mix('/js/manifest.js') }}?rev=2"></script>
+<script src="{{ mix('/js/vendor.js') }}?rev=2"></script>
+<script src="{{ mix('/js/app.js') }}?rev=2"></script>
 @yield('scripts')
 </body>
 </html>
