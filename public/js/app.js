@@ -82512,7 +82512,13 @@ var render = function() {
                                 ]
                               ),
                               _vm._v(" "),
-                              _c("p", { staticClass: "mb-5 mt-3" }),
+                              _c("p", { staticClass: "mb-5 mt-3" }, [
+                                _vm._v(
+                                  "\n                                    " +
+                                    _vm._s(_vm.talkshow.profile) +
+                                    "\n                                "
+                                )
+                              ]),
                               _vm._v(" "),
                               _c(
                                 "a",

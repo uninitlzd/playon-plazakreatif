@@ -44,7 +44,7 @@
                                         </li>
                                     </ul>
                                     <p class="mb-5 mt-3">
-
+                                        {{ talkshow.profile }}
                                     </p>
                                     <a href="/#talkshow" class="text-orange-primary"><i data-feather="arrow-left"></i>
                                         Back</a>
