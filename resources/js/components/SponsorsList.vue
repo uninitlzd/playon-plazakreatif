@@ -16,7 +16,7 @@
                 <div>
                     <h4>Sponsors</h4>
                     <ul class="list-inline sponsors-list">
-                        <li class="list-inline-item px-3 py-3" v-for="(sponsor, index) in sponsors" :class="{ mainSponsor: (index === 0), secondMainSponsor }">
+                        <li class="list-inline-item px-3 py-3" v-for="(sponsor, index) in sponsors" :class="{ mainSponsor: (index === 0), secondMainSponsor: (index === 6) }">
                             <img :src="sponsor" alt="">
                         </li>
                     </ul>

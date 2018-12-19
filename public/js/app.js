@@ -78040,7 +78040,7 @@ var render = function() {
                     staticClass: "list-inline-item px-3 py-3",
                     class: {
                       mainSponsor: index === 0,
-                      secondMainSponsor: _vm.secondMainSponsor
+                      secondMainSponsor: index === 6
                     }
                   },
                   [_c("img", { attrs: { src: sponsor, alt: "" } })]
