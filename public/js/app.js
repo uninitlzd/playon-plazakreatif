@@ -77924,7 +77924,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.mainSponsor[data-v-36407142] {\n    width: 30%;\n    max-width: 100%;\n    margin: 10px 0;\n}\n@media (max-width: 900px) {\n.mainSponsor[data-v-36407142] {\n        width: 100%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.mainSponsor[data-v-36407142] {\n    width: 30%;\n    max-width: 100%;\n    margin: 10px 0;\n}\n.secondMainSponsor[data-v-36407142] {\n    width: 20%;\n    max-width: 100%;\n    margin: 10px 0;\n}\n@media (max-width: 900px) {\n.mainSponsor[data-v-36407142] {\n        width: 100%;\n}\n}\n", ""]);
 
 // exports
 
@@ -77964,13 +77964,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "SponsorsList",
     data: function data() {
         return {
-            sponsors: ['/images/sponsors/djarum.jpg', '/images/sponsors/ciputra-world.png', '/images/sponsors/premier.png', '/images/sponsors/faber-caster.png', '/images/sponsors/emakde-catering.jpg', '/images/sponsors/larita.png', '/images/sponsors/suryaprima.png', '/images/sponsors/telkomsel.png'],
-            mediaPartners: ['/images/sponsors/provoke.png', '/images/sponsors/event-mahasiswa.jpg', '/images/sponsors/event-narema.png', '/images/sponsors/event-pemuda.jpg', '/images/sponsors/hai-event.png', '/images/sponsors/seputar-event.png', '/images/sponsors/studio-diskom.jpg', '/images/sponsors/upn-radio.jpg', '/images/sponsors/upn-tv.png']
+            supporters: ['/images/supported/DEKAVE.png', '/images/supported/HIMA.png', '/images/supported/UPN.png'],
+            sponsors: ['/images/sponsors/Djarum.png', '/images/sponsors/Emakde.png', '/images/sponsors/Faber.png', '/images/sponsors/Laritta.png', '/images/sponsors/Leeven.png', '/images/sponsors/Medash.png', '/images/sponsors/Premier.png', '/images/sponsors/Prodima.png', '/images/sponsors/Rina.png', '/images/sponsors/Surya Fancy.png', '/images/sponsors/Surya Jaya.png', '/images/sponsors/Telkomsel.png'],
+            mediaPartners: ['/images/media-partner/DiskomSTD.png', '/images/media-partner/Event Kampus.png', '/images/media-partner/Event Mahasiswa.png', '/images/media-partner/Event Pemuda.png', '/images/media-partner/Hai.png', '/images/media-partner/Narema.png', '/images/media-partner/Provoke.png', '/images/media-partner/Seputar Event.png', '/images/media-partner/UPN Radio.png', '/images/media-partner/UPN Tipi.png'],
+            communityPartners: ['/images/community-partner/Artmagic.png', '/images/community-partner/Gardacatha.png']
         };
     }
 });
@@ -77996,6 +78014,20 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", [
+            _c("h4", [_vm._v("Supported by")]),
+            _vm._v(" "),
+            _c(
+              "ul",
+              { staticClass: "list-inline sponsors-list" },
+              _vm._l(_vm.supporters, function(supporter, index) {
+                return _c("li", { staticClass: "list-inline-item px-3 py-3" }, [
+                  _c("img", { attrs: { src: supporter, alt: "" } })
+                ])
+              })
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", [
             _c("h4", [_vm._v("Sponsors")]),
             _vm._v(" "),
             _c(
@@ -78006,7 +78038,10 @@ var render = function() {
                   "li",
                   {
                     staticClass: "list-inline-item px-3 py-3",
-                    class: { mainSponsor: index === 0 || index === 6 }
+                    class: {
+                      mainSponsor: index === 0,
+                      secondMainSponsor: _vm.secondMainSponsor
+                    }
                   },
                   [_c("img", { attrs: { src: sponsor, alt: "" } })]
                 )
@@ -78023,6 +78058,20 @@ var render = function() {
               _vm._l(_vm.mediaPartners, function(media) {
                 return _c("li", { staticClass: "list-inline-item px-3 py-3" }, [
                   _c("img", { attrs: { src: media, alt: "" } })
+                ])
+              })
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "mt-5" }, [
+            _c("h4", [_vm._v("Community Partners")]),
+            _vm._v(" "),
+            _c(
+              "ul",
+              { staticClass: "list-inline sponsors-list" },
+              _vm._l(_vm.communityPartners, function(community) {
+                return _c("li", { staticClass: "list-inline-item px-3 py-3" }, [
+                  _c("img", { attrs: { src: community, alt: "" } })
                 ])
               })
             )
@@ -80021,7 +80070,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -80032,6 +80081,11 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
 //
 //
 //
@@ -80740,7 +80794,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("div", { staticClass: "timeline__time mr-3" }, [
           _vm._v(
-            "\n                                        18.30 - 19.00\n                                    "
+            "\n                                        18.30 - 19.15\n                                    "
           )
         ]),
         _vm._v(" "),
@@ -80753,7 +80807,7 @@ var staticRenderFns = [
             ]),
             _vm._v(" "),
             _c("ul", { staticClass: "timeline__points" }, [
-              _c("li", [_vm._v("Campaign DKV5 Kelompok 1-3")])
+              _c("li", [_vm._v("Campaign DKV 5 Kelompok 1-3")])
             ])
           ])
         ])
@@ -80768,7 +80822,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("div", { staticClass: "timeline__time mr-3" }, [
           _vm._v(
-            "\n                                        19.00 - 20.00\n                                    "
+            "\n                                        19.15 - 20.15\n                                    "
           )
         ]),
         _vm._v(" "),
@@ -80796,7 +80850,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("div", { staticClass: "timeline__time mr-3" }, [
           _vm._v(
-            "\n                                        20.00 - 20.30\n                                    "
+            "\n                                        20.15 - 21.00\n                                    "
           )
         ]),
         _vm._v(" "),
@@ -80809,7 +80863,7 @@ var staticRenderFns = [
             ]),
             _vm._v(" "),
             _c("ul", { staticClass: "timeline__points" }, [
-              _c("li", [_vm._v("Campaign DKV5 Kelompok 1-3")])
+              _c("li", [_vm._v("Campaign DKV5 Kelompok 4-6")])
             ])
           ])
         ])
@@ -80824,7 +80878,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("div", { staticClass: "timeline__time mr-3" }, [
           _vm._v(
-            "\n                                        20.30 - 21.00\n                                    "
+            "\n                                        21.30 - 22.00\n                                    "
           )
         ]),
         _vm._v(" "),
@@ -80902,7 +80956,7 @@ var staticRenderFns = [
           _c("li", { staticClass: "timeline__content" }, [
             _c("div", { staticClass: "timeline__title" }, [
               _vm._v(
-                '\n                                                Talkshow "Lintang Pandu"\n                                            '
+                "\n                                                Lomba Mewarnai Bersama Ibu dan Anak\n                                            "
               )
             ])
           ])
@@ -80918,31 +80972,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("div", { staticClass: "timeline__time mr-3" }, [
           _vm._v(
-            "\n                                        15.30 – 15.50\n                                    "
-          )
-        ]),
-        _vm._v(" "),
-        _c("ul", { staticClass: "timeline_contents d-flex flex-column" }, [
-          _c("li", { staticClass: "timeline__content" }, [
-            _c("div", { staticClass: "timeline__title" }, [
-              _vm._v(
-                "\n                                                Awarding Lomba Mewarnai bersama Ibu dan Anak\n                                            "
-              )
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", { staticClass: "timeline__item" }, [
-        _c("div", { staticClass: "timeline__step" }, [
-          _c("div", {
-            staticClass: "timeline__step__marker timeline__step__marker--salmon"
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "timeline__time mr-3" }, [
-          _vm._v(
-            "\n                                        15.50 – 17.30\n                                    "
+            "\n                                        14.15 – 16.00\n                                    "
           )
         ]),
         _vm._v(" "),
@@ -80951,6 +80981,38 @@ var staticRenderFns = [
             _c("div", { staticClass: "timeline__title" }, [
               _vm._v(
                 "\n                                                Panggon Dolan\n                                            "
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "timeline__content" }, [
+            _c("div", { staticClass: "timeline__title" }, [
+              _vm._v(
+                "\n                                                Talkshow Artmagic\n                                            "
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "timeline__item" }, [
+        _c("div", { staticClass: "timeline__step" }, [
+          _c("div", {
+            staticClass: "timeline__step__marker timeline__step__marker--salmon"
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "timeline__time mr-3" }, [
+          _vm._v(
+            "\n                                        16.20 - 17.30\n                                    "
+          )
+        ]),
+        _vm._v(" "),
+        _c("ul", { staticClass: "timeline_contents d-flex flex-column" }, [
+          _c("li", { staticClass: "timeline__content" }, [
+            _c("div", { staticClass: "timeline__title" }, [
+              _vm._v(
+                "\n                                                Talkshow “Lintang Pandu” – Buku ilustrasi Anak\n                                            "
               )
             ])
           ]),
@@ -81214,7 +81276,7 @@ var staticRenderFns = [
           _c("li", { staticClass: "timeline__content" }, [
             _c("div", { staticClass: "timeline__title" }, [
               _vm._v(
-                "\n                                                Talkshow “Lulusan DKV”\n                                            "
+                "\n                                                Talkshow “Dunia Kreatif”\n                                            "
               )
             ])
           ])
@@ -81270,7 +81332,7 @@ var staticRenderFns = [
           _c("li", { staticClass: "timeline__content" }, [
             _c("div", { staticClass: "timeline__title" }, [
               _vm._v(
-                "\n                                                Live Performance Guest Star dan Penutupan\n                                            "
+                "\n                                                Live Performance Sinleto dan Penutupan\n                                            "
               )
             ])
           ])
