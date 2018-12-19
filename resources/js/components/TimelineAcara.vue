@@ -101,7 +101,7 @@
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
                                         <div class="timeline__time mr-3">
-                                            18.30 - 19.00
+                                            18.30 - 19.15
                                         </div>
                                         <ul class="">
                                             <li class="timeline__content">
@@ -109,7 +109,7 @@
                                                     Campaign
                                                 </div>
                                                 <ul class="timeline__points">
-                                                    <li>Campaign DKV5 Kelompok 1-3</li>
+                                                    <li>Campaign DKV 5 Kelompok 1-3</li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -120,7 +120,7 @@
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
                                         <div class="timeline__time mr-3">
-                                            19.00 - 20.00
+                                            19.15 - 20.15
                                         </div>
                                         <ul class="">
                                             <li class="timeline__content">
@@ -139,7 +139,7 @@
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
                                         <div class="timeline__time mr-3">
-                                            20.00 - 20.30
+                                            20.15 - 21.00
                                         </div>
                                         <ul class="">
                                             <li class="timeline__content">
@@ -147,7 +147,7 @@
                                                     Campaign
                                                 </div>
                                                 <ul class="timeline__points">
-                                                    <li>Campaign DKV5 Kelompok 1-3</li>
+                                                    <li>Campaign DKV5 Kelompok 4-6</li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -158,7 +158,7 @@
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
                                         <div class="timeline__time mr-3">
-                                            20.30 - 21.00
+                                            21.30 - 22.00
                                         </div>
                                         <ul class="">
                                             <li class="timeline__content">
@@ -210,7 +210,7 @@
                                         <ul class="timeline_contents d-flex flex-column">
                                             <li class="timeline__content">
                                                 <div class="timeline__title">
-                                                    Talkshow "Lintang Pandu"
+                                                    Lomba Mewarnai Bersama Ibu dan Anak
                                                 </div>
                                             </li>
                                         </ul>
@@ -221,28 +221,33 @@
                                             <div class="timeline__step__marker timeline__step__marker--salmon"></div>
                                         </div>
                                         <div class="timeline__time mr-3">
-                                            15.30 – 15.50
-                                        </div>
-                                        <ul class="timeline_contents d-flex flex-column">
-                                            <li class="timeline__content">
-                                                <div class="timeline__title">
-                                                    Awarding Lomba Mewarnai bersama Ibu dan Anak
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="timeline__item">
-                                        <div class="timeline__step">
-                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
-                                        </div>
-                                        <div class="timeline__time mr-3">
-                                            15.50 – 17.30
+                                            14.15 – 16.00
                                         </div>
                                         <ul class="timeline_contents d-flex flex-column">
                                             <li class="timeline__content">
                                                 <div class="timeline__title">
                                                     Panggon Dolan
+                                                </div>
+                                            </li>
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Talkshow Artmagic
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="timeline__item">
+                                        <div class="timeline__step">
+                                            <div class="timeline__step__marker timeline__step__marker--salmon"></div>
+                                        </div>
+                                        <div class="timeline__time mr-3">
+                                            16.20 - 17.30
+                                        </div>
+                                        <ul class="timeline_contents d-flex flex-column">
+                                            <li class="timeline__content">
+                                                <div class="timeline__title">
+                                                    Talkshow “Lintang Pandu” – Buku ilustrasi Anak
                                                 </div>
                                             </li>
                                             <li class="timeline__content">
@@ -416,7 +421,7 @@
                                         <ul class="">
                                             <li class="timeline__content">
                                                 <div class="timeline__title">
-                                                    Talkshow “Lulusan DKV”
+                                                    Talkshow “Dunia Kreatif”
                                                 </div>
                                             </li>
                                         </ul>
@@ -453,7 +458,7 @@
                                         <ul class="">
                                             <li class="timeline__content">
                                                 <div class="timeline__title">
-                                                    Live Performance Guest Star dan Penutupan
+                                                    Live Performance Sinleto dan Penutupan
                                                 </div>
                                             </li>
                                         </ul>
