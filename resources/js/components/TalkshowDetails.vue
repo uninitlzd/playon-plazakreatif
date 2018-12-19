@@ -18,7 +18,7 @@
                                 </li>
                             </ul>
                             <p class="mb-5">
-
+                                {{ talkshow.profile }}
                             </p>
                             <a href="/#talkshow" class="text-orange-primary mt-5"><i data-feather="arrow-left"></i> Back</a>
                         </div>
@@ -73,6 +73,7 @@
                         field: 'Ilustrator & Penulis',
                         images: 'background: url("/images/talkshow/lintang-pandu.jpg")',
                         date: '22 Des',
+                        profile: 'Gadis cantik asal kota batu ini sangat menyukai bunga matahari. Dia memiliki ketertarikan ilustrasi sejak ia kecil dan mencintai dunia anak-anak khususnya pendidikan, dia mendedikasikan ilmunya untuk berkarya menjadi illustrator buku cerita anak. Dia tak hanya terkenal di dalam negeri, di luar negeripun karyanya sudah diakui'
                     },
                     {
                         id: 2,
@@ -80,20 +81,23 @@
                         field: 'Desain Packaging',
                         images: 'background: url("/images/talkshow/agus-san.jpg")',
                         date: '',
+                        profile: ''
                     },
                     {
                         id: 3,
                         name: 'Rian Tank',
                         field: 'Illustrator',
                         images: 'background: url("/images/talkshow/tank.jpg")',
-                        date: ''
+                        date: '',
+                        profile: 'Gadis cantik asal kota batu ini sangat menyukai bunga matahari. Dia memiliki ketertarikan ilustrasi sejak ia kecil dan mencintai dunia anak-anak khususnya pendidikan, dia mendedikasikan ilmunya untuk berkarya menjadi illustrator buku cerita anak. Dia tak hanya terkenal di dalam negeri, di luar negeripun karyanya sudah di akui'
                     },
                     {
                         id: 4,
-                        name: 'Pak Bayu',
+                        name: 'Bayu Prasetya',
                         field: 'Graphic Chapter Surabaya',
                         images: 'background: url("/images/talkshow/pak-bayu.jpg")',
-                        date: ''
+                        date: '',
+                        profile: 'Lulusan S1 DKV ITS, S2 MM UGM. Managing Director Graphicapter. Sekretaris Jenderal ADGI Surabaya Chapter.'
                     }
                 ]
             }

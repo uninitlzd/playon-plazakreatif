@@ -82163,7 +82163,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -82247,25 +82247,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 name: 'Lintang Pandu',
                 field: 'Ilustrator & Penulis',
                 images: 'background: url("/images/talkshow/lintang-pandu.jpg")',
-                date: '22 Des'
+                date: '22 Des',
+                profile: 'Gadis cantik asal kota batu ini sangat menyukai bunga matahari. Dia memiliki ketertarikan ilustrasi sejak ia kecil dan mencintai dunia anak-anak khususnya pendidikan, dia mendedikasikan ilmunya untuk berkarya menjadi illustrator buku cerita anak. Dia tak hanya terkenal di dalam negeri, di luar negeripun karyanya sudah diakui'
             }, {
                 id: 2,
                 name: 'Agus San',
                 field: 'Desain Packaging',
                 images: 'background: url("/images/talkshow/agus-san.jpg")',
-                date: ''
+                date: '',
+                profile: ''
             }, {
                 id: 3,
                 name: 'Rian Tank',
                 field: 'Illustrator',
                 images: 'background: url("/images/talkshow/tank.jpg")',
-                date: ''
+                date: '',
+                profile: 'Gadis cantik asal kota batu ini sangat menyukai bunga matahari. Dia memiliki ketertarikan ilustrasi sejak ia kecil dan mencintai dunia anak-anak khususnya pendidikan, dia mendedikasikan ilmunya untuk berkarya menjadi illustrator buku cerita anak. Dia tak hanya terkenal di dalam negeri, di luar negeripun karyanya sudah di akui'
             }, {
                 id: 4,
-                name: 'Pak Bayu',
+                name: 'Bayu Prasetya',
                 field: 'Graphic Chapter Surabaya',
                 images: 'background: url("/images/talkshow/pak-bayu.jpg")',
-                date: ''
+                date: '',
+                profile: 'Lulusan S1 DKV ITS, S2 MM UGM. Managing Director Graphicapter. Sekretaris Jenderal ADGI Surabaya Chapter.'
             }]
         };
     },
@@ -82339,7 +82343,13 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _c("p", { staticClass: "mb-5" }),
+                    _c("p", { staticClass: "mb-5" }, [
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(_vm.talkshow.profile) +
+                          "\n                        "
+                      )
+                    ]),
                     _vm._v(" "),
                     _c(
                       "a",
@@ -82676,7 +82686,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             workshops: [{
                 id: 1,
                 name: 'Basic Sketch Portrait',
-                speaker: 'Fahmy A - @fasyari',
+                speaker: 'Fahmy A - Seni Visual. Fraulein Studio',
                 price: 'Rp100.000',
                 images: 'background: url("/images/workshop/fasyari.jpg")',
                 date: '21 Des 2018',

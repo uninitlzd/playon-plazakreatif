@@ -88,7 +88,7 @@
                     {
                         id: 1,
                         name: 'Basic Sketch Portrait',
-                        speaker: 'Fahmy A - @fasyari',
+                        speaker: 'Fahmy A - Seni Visual. Fraulein Studio',
                         price: 'Rp100.000',
                         images: 'background: url("/images/workshop/fasyari.jpg")',
                         date: '21 Des 2018',
